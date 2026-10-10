@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atmospheric Correction untuk Kualitas Air Danau Tondano</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .code-block { background:#0f172a; color:#e2e8f0; padding:1rem 1.2rem; border-radius:10px; overflow-x:auto; font-size:.85rem; line-height:1.6; margin:1rem 0; }
+    .code-block code { font-family: "Consolas", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Remote Sensing</span>
+      <h1>Pemanfaatan Metode Atmospheric Correction dalam Pengujian Kualitas Air di Danau Tondano, Sulawesi Utara</h1>
+      <p class="post-meta">Februari 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Danau Tondano adalah danau yang cukup luas di ujung utara Pulau Sulawesi. Luasnya membuat danau ini cocok dipantau dengan penginderaan jauh, karena kondisi perairannya dapat diamati sekaligus dari citra satelit tanpa harus mengukur langsung di lapangan. Namun, citra satelit tidak selalu menggambarkan kondisi permukaan danau apa adanya. Sebelum sampai ke sensor, cahaya yang dipantulkan danau harus melewati atmosfer, dan partikel serta gas di udara menimbulkan distorsi pada nilai yang terekam. Koreksi atmosferik dilakukan untuk meminimalkan gangguan tersebut agar interpretasi citra lebih akurat.</p>
+      <p>Penelitian ini memanfaatkan koreksi atmosferik pada citra Landsat 9 untuk membandingkan kondisi dan kualitas air Danau Tondano pada musim kemarau dan musim hujan, berdasarkan tampilan citra dan profil spektralnya.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Landsat 9 OLI/TIRS C2 Level 2, 24 September 2023 (musim kemarau), path 112 row 059</td>
+              <td>Raster (GeoTIFF)</td>
+              <td>Sekunder</td>
+              <td>USGS Earth Explorer</td>
+            </tr>
+            <tr>
+              <td>Landsat 9 OLI/TIRS C2 Level 2, 19 April 2023 (musim hujan), path 112 row 059</td>
+              <td>Raster (GeoTIFF)</td>
+              <td>Sekunder</td>
+              <td>USGS Earth Explorer</td>
+            </tr>
+            <tr>
+              <td>Polygon batas Danau Tondano</td>
+              <td>Vektor</td>
+              <td>Hasil digitasi</td>
+              <td>ArcGIS Pro</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Kedua citra dipilih setelah cloud cover diperiksa, lalu band 2 sampai 7 dipakai untuk pengolahan.</p>
+
+      <h2>Metode</h2>
+
+      <p>Pengolahan dilakukan di ArcGIS Pro (dan direplikasi dengan Python). Tahapannya sebagai berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Konversi DN ke reflektan</td>
+              <td>ρλ' = Mρ · Qcal + Aρ, dengan Mρ dan Aρ dari metadata (REFLECTANCE_MULT/ADD_BAND_x)</td>
+            </tr>
+            <tr>
+              <td>2. Koreksi sudut matahari</td>
+              <td>ρλ = ρλ' / sin(θSE), dengan θSE adalah sun elevation saat perekaman</td>
+            </tr>
+            <tr>
+              <td>3. Composite band</td>
+              <td>Band 4, 3, 2 sebagai RGB true color</td>
+            </tr>
+            <tr>
+              <td>4. Clip</td>
+              <td>Pemotongan dengan polygon Danau Tondano hasil digitasi</td>
+            </tr>
+            <tr>
+              <td>5. Spectral profile</td>
+              <td>Membaca nilai reflektan per band untuk menafsirkan kondisi air tiap musim</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Hasil</h2>
+
+      <p>Citra sebelum koreksi tampak abu-abu dan kurang informatif, sedangkan setelah koreksi dan composite, kenampakan danau terlihat lebih jelas (klik gambar untuk memperbesar).</p>
+
+      <h3>Musim kemarau (24 September 2023)</h3>
+      <div class="map-grid1">
+        <figure>
+          <a href="assets/maps/tondano-kemarau-koreksi.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tondano-kemarau-koreksi.jpg" alt="Hasil atmospheric correction Danau Tondano musim kemarau">
+          </a>
+          <figcaption><strong>Setelah koreksi.</strong> Danau tampak lebih terang dibanding musim hujan.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tondano-kemarau-sebelum.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tondano-kemarau-sebelum.jpg" alt="Citra Landsat musim kemarau sebelum koreksi">
+          </a>
+          <figcaption><strong>Sebelum koreksi.</strong> Citra masih abu-abu dan kurang informatif.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tondano-profil-kemarau.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tondano-profil-kemarau.jpg" alt="Profil spektral musim kemarau">
+          </a>
+          <figcaption><strong>Profil spektral.</strong> Puncak berada di band 5.</figcaption>
+        </figure>
+      </div>
+
+      <p>Pada musim kemarau danau tampak lebih terang. Kondisi ini mengindikasikan penurunan debit air dan konsentrasi partikel tersuspensi yang relatif lebih rendah. Profil spektralnya memuncak di band 5 (NIR), yang sensitif terhadap kelembaban sehingga kelembaban tanah dan vegetasi di sekitar danau ikut memengaruhi respons spektral.</p>
+
+      <h3>Musim hujan (19 April 2023)</h3>
+      <div class="map-grid1">
+        <figure>
+          <a href="assets/maps/tondano-hujan-koreksi.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tondano-hujan-koreksi.jpg" alt="Hasil atmospheric correction Danau Tondano musim hujan">
+          </a>
+          <figcaption><strong>Setelah koreksi.</strong> Danau tampak lebih gelap dibanding musim kemarau.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tondano-hujan-sebelum.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tondano-hujan-sebelum.jpg" alt="Citra Landsat musim hujan sebelum koreksi">
+          </a>
+          <figcaption><strong>Sebelum koreksi.</strong> Citra abu-abu dengan tutupan awan.</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tondano-profil-hujan.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tondano-profil-hujan.jpg" alt="Profil spektral musim hujan">
+          </a>
+          <figcaption><strong>Profil spektral.</strong> Puncak berada di band 3.</figcaption>
+        </figure>
+      </div>
+
+      <p>Pada musim hujan danau tampak lebih gelap. Curah hujan yang lebih tinggi diduga membawa lebih banyak sedimen, partikel padat, dan material organik ke danau, sehingga kekeruhan meningkat dan kualitas air cenderung menurun. Profil spektralnya memuncak di band 3 (hijau), yang konsisten dengan dugaan adanya material tersuspensi dan organik terlarut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Musim kemarau</th>
+              <th>Musim hujan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tampilan danau</td>
+              <td>Lebih terang</td>
+              <td>Lebih gelap</td>
+            </tr>
+            <tr>
+              <td>Puncak spectral profile</td>
+              <td>Band 5 (NIR)</td>
+              <td>Band 3 (Green)</td>
+            </tr>
+            <tr>
+              <td>Dugaan kondisi air</td>
+              <td>Partikel tersuspensi lebih rendah</td>
+              <td>Sedimen dan bahan organik lebih tinggi</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Koreksi atmosferik pada citra Landsat 9 memperjelas visualisasi Danau Tondano dan memungkinkan perbandingan kondisi antar musim. Pada musim kemarau, danau tampak lebih terang dengan respons spektral dominan di band 5, sedangkan pada musim hujan danau tampak lebih gelap dengan respons dominan di band 3, yang mengindikasikan meningkatnya kekeruhan akibat partikel padat dan bahan organik. Interpretasi ini masih bersifat indikatif dan perlu diperkuat dengan indeks seperti NDTI atau data pengukuran lapangan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

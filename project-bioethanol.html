@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konversi Sekam Padi menjadi Bioethanol dan Aplikasi AgriLink di Jawa Barat</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Renewable Energy</span>
+      <h1>Pengembangan Rantai Pasok Berkelanjutan: Konversi Sekam Padi menjadi Bioethanol dan Penerapan Aplikasi AgriLink di Jawa Barat</h1>
+      <p class="post-meta">Agustus 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Pemanasan global ditandai dengan meningkatnya suhu rata-rata permukaan bumi akibat efek gas rumah kaca. Salah satu penyebab utama terjadinya pemanasan global adalah pembakaran bahan bakar fosil untuk pembangkit listrik, transportasi, dan industri. Indonesia tercatat sebagai penyumbang emisi karbon terbesar kedelapan di dunia, sementara cadangan bahan bakar fosil terus menipis dan diperkirakan habis dalam beberapa dekade ke depan. Kondisi ini mendorong transisi ke energi baru dan terbarukan (EBT), salah satunya melalui pemanfaatan biomassa.</p>
+      <p>Salah satu biomassa yang berpotensi besar di Indonesia adalah sekam padi. Sekam sering dianggap limbah tanpa nilai ekonomi dan kerap dibakar, sehingga justru menambah emisi. Padahal sekam kaya selulosa sehingga cocok diolah menjadi bioethanol. Indonesia adalah produsen padi terbesar ketiga dunia, dan Jawa Barat merupakan provinsi produsen padi terbesar kedua dengan produksi sekitar 9,1 juta ton pada 2023. Karena itu, penelitian ini memetakan potensi sekam padi dan bioethanol di Jawa Barat, serta merancang aplikasi untuk mengatasi kendala distribusinya.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Produksi padi per kabupaten/kota 2023</td>
+              <td>Tabular</td>
+              <td>Sekunder</td>
+              <td>BPS Jawa Barat</td>
+            </tr>
+            <tr>
+              <td>Rasio produksi sekam (0,2)</td>
+              <td>Tabular</td>
+              <td>Sekunder</td>
+              <td>Beagle (1978)</td>
+            </tr>
+            <tr>
+              <td>Nilai kalor dan komposisi biomassa sekam</td>
+              <td>Tabular</td>
+              <td>Sekunder</td>
+              <td>Lim dkk. (2012)</td>
+            </tr>
+            <tr>
+              <td>Rasio produksi bioethanol</td>
+              <td>Tabular</td>
+              <td>Sekunder</td>
+              <td>Kim dan Dale (2004)</td>
+            </tr>
+            <tr>
+              <td>Batas administrasi kabupaten/kota</td>
+              <td>Vektor</td>
+              <td>Sekunder</td>
+              <td>Badan Informasi Geospasial</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Potensi sekam padi dihitung dari data produksi padi tiap kabupaten/kota dengan rasio 0,2 terhadap total produksi padi, mengacu pada Beagle (1978). Hasilnya dipetakan secara spasial dalam bentuk peta tematik berskala warna, sehingga sebaran produksi padi dan potensi sekam di Jawa Barat dapat dibandingkan.</p>
+
+      <p>Potensi bioethanol dihitung dari rasio konversi biomassa padi menurut Kim dan Dale (2004), dengan asumsi ideal bahwa tidak ada kehilangan selama pengolahan dan efisiensi pengumpulan sekam mencapai 100%. Konversi sekam menjadi bioethanol sendiri melalui proses biokimia dalam tiga tahap: pretreatment untuk membuka struktur lignoselulosa, hidrolisis enzimatik untuk mengubah selulosa menjadi glukosa, dan fermentasi untuk mengubah glukosa menjadi bioethanol.</p>
+
+      <p>Untuk mengatasi kendala distribusi, dirancang AgriLink, aplikasi berbasis Internet of Things (IoT) yang menghubungkan petani dengan perusahaan pengolah. Rancangan antarmuka dibuat untuk dua jenis pengguna, yaitu petani dan perusahaan.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Produksi padi Jawa Barat pada 2023 mencapai 9.140.040 ton, dengan potensi sekam sebesar 1.828.008 ton dan potensi bioethanol sekitar 180.755 liter, setara dengan sekitar 113 ribu liter bensin. Potensi terbesar berada di wilayah utara yang ditandai warna paling gelap pada peta, yaitu Indramayu, Karawang, dan Subang.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kabupaten</th>
+              <th>Produksi Padi (Ton)</th>
+              <th>Potensi Sekam (Ton)</th>
+              <th>Potensi Ethanol (Liter)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Indramayu</td>
+              <td>1.424.303</td>
+              <td>284.861</td>
+              <td>28.167</td>
+            </tr>
+            <tr>
+              <td>Karawang</td>
+              <td>1.131.977</td>
+              <td>226.395</td>
+              <td>22.386</td>
+            </tr>
+            <tr>
+              <td>Subang</td>
+              <td>1.027.660</td>
+              <td>205.532</td>
+              <td>20.323</td>
+            </tr>
+            <tr>
+              <td>Cianjur</td>
+              <td>650.123</td>
+              <td>130.025</td>
+              <td>12.857</td>
+            </tr>
+            <tr>
+              <td>Majalengka</td>
+              <td>558.430</td>
+              <td>111.686</td>
+              <td>11.044</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total Jawa Barat</td>
+              <td>9.140.040</td>
+              <td>1.828.008</td>
+              <td>180.755</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="map-sekam-figure">
+        <a href="assets/maps/sekam-padi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/sekam-padi.jpg" alt="Peta potensi produksi sekam padi Provinsi Jawa Barat 2023">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta potensi produksi sekam padi Provinsi Jawa Barat 2023</figcaption>
+      </figure>
+
+      <p>Distribusi sekam mengikuti pola produksi padi karena jumlah sekam berbanding lurus dengan volume padi yang dihasilkan. Sekam padi memiliki nilai kalor sekitar 15,84 MJ/kg dengan kandungan hemiselulosa 28,6%, selulosa 28,6%, lignin 24,4%, dan bahan ekstraktif 18,4%, yang menunjukkan kelayakannya sebagai bahan baku bioethanol. Namun, potensi tersebut baru bermakna bila disertai pengelolaan yang baik, karena infrastruktur yang terbatas dan distribusi yang belum terintegrasi masih menjadi hambatan.</p>
+
+      <p>Untuk menjawab hambatan itu, AgriLink memungkinkan petani mempublikasikan produk sekam beserta lokasi dan ketersediaannya, sedangkan perusahaan dapat mengajukan penawaran harga secara terbuka. Petani memilih penawaran tertinggi, lalu koordinat dan detail ekspedisi dikirimkan ke perusahaan untuk pengambilan yang efisien. Aplikasi ini juga dilengkapi marketplace, dompet elektronik untuk petani, pelacakan pengiriman (track and trace), informasi titik pengambilan, dan jadwal ketersediaan waktu pengiriman.</p>
+
+      <figure class="agrilink-figure">
+        <a href="assets/maps/agrilink.png" target="_blank" rel="noopener">
+        <img src="assets/maps/agrilink.png" alt="Rancangan antarmuka aplikasi AgriLink">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Rancangan antarmuka aplikasi AgriLink</figcaption>
+      </figure>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Jawa Barat memiliki potensi besar untuk mengembangkan sekam padi menjadi bioethanol, terutama di wilayah utara sebagai sentra produksi padi. Pemanfaatan ini dapat mengurangi ketergantungan pada energi fosil sekaligus menekan emisi dari pembakaran sekam, sementara aplikasi AgriLink dirancang untuk menjembatani petani dan perusahaan agar distribusi sekam lebih efisien dan menguntungkan petani. Keberhasilannya tetap memerlukan dukungan berkelanjutan dari pemerintah dan pemangku kepentingan, mulai dari kebijakan, infrastruktur teknologi, hingga pelatihan bagi petani dan pelaku industri.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

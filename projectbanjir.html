@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemetaan Wilayah Potensi Rawan Banjir Kecamatan Wonosari, Kabupaten Gunungkidul, Daerah Istimewa Yogyakarta</title>
+  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Disaster Risk</span>
+      <h1>Pemetaan Wilayah Potensi Rawan Banjir Kecamatan Wonosari, Kabupaten Gunungkidul, Daerah Istimewa Yogyakarta</h1>
+      <p class="post-meta">April 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Indonesia terletak di pertemuan tiga lempeng tektonik utama dunia, di antara dua benua dan dua samudra, sehingga rentan terhadap berbagai bencana. BNPB mengidentifikasi 13 jenis ancaman bencana di Indonesia, dan banjir menjadi salah satu yang paling dominan. Menurut Data Informasi Bencana Indonesia (DIBI)-BNPB, pada tahun 2022 terjadi 1.524 kejadian banjir, setara dengan 43,1% dari seluruh kejadian bencana nasional.</p>
+      <p>Banjir adalah tergenangnya suatu wilayah akibat air yang melebihi kapasitas pembuangan, dan menimbulkan kerugian fisik, sosial, maupun ekonomi. Penyebabnya dapat berasal dari faktor alami, seperti curah hujan, fisiografi, erosi dan sedimentasi, serta kapasitas sungai dan drainase. Faktor lain berasal dari aktivitas manusia, seperti pembuangan sampah sembarangan, penggunaan lahan yang tidak tepat, permukiman di bantaran sungai, dan rusaknya hutan serta Daerah Aliran Sungai (DAS).</p>
+      <p>Salah satu upaya meminimalkan kerugian akibat banjir adalah mengidentifikasi kawasan rawan banjir melalui pemetaan, sehingga tingkat kerawanan suatu wilayah dapat tergambar dengan jelas. Penelitian terdahulu telah menggunakan metode seperti Topographic Wetness Index (TWI) dan AHP Pairwise Comparison dengan variabel yang mirip, yaitu curah hujan, kemiringan lereng, dan tutupan lahan. Penelitian ini menggunakan tema yang relevan, tetapi dengan metode pembobotan dan scoring, dengan variabel curah hujan, kelerengan, buffer sungai, dan penggunaan lahan.</p>
+      <p>Lokasi penelitian adalah Kecamatan Wonosari, Kabupaten Gunungkidul. Menurut data BPS, kecamatan ini mencatat sepuluh kejadian banjir sepanjang tahun 2018, menjadikannya kecamatan dengan kejadian banjir terbanyak di Kabupaten Gunungkidul. Oleh karena itu, penelitian ini ditujukan untuk memetakan wilayah rawan banjir dan pola distribusinya di Kecamatan Wonosari, sebagai dasar antisipasi dan mitigasi untuk meminimalkan dampak bagi manusia dan lingkungan di wilayah tersebut.</p>
+
+      <h2>Data yang digunakan</h2>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Format Data</th>
+        <th>Jenis Data</th>
+        <th>Sumber</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Dokumentasi dan Wawancara</td>
+        <td>Vektor dan Tabular</td>
+        <td>Primer</td>
+        <td>Survey Lapangan</td>
+      </tr>
+      <tr>
+        <td>Curah Hujan 2018 - 2022</td>
+        <td>Raster</td>
+        <td>Sekunder</td>
+        <td>CHIRPS</td>
+      </tr>
+      <tr>
+        <td>Kelerengan (DEM)</td>
+        <td>Raster</td>
+        <td>Sekunder</td>
+        <td>SRTM</td>
+      </tr>
+      <tr>
+        <td>Tutupan Lahan</td>
+        <td>Raster</td>
+        <td>Sekunder</td>
+        <td>Landsat 8</td>
+      </tr>
+      <tr>
+        <td>Buffer Sungai</td>
+        <td>Vektor</td>
+        <td>Sekunder</td>
+        <td>Inageoportal</td>
+      </tr>
+      <tr>
+        <td>Wilayah Administrasi</td>
+        <td>Vektor</td>
+        <td>Sekunder</td>
+        <td>BIG</td>
+      </tr>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+      <h2>Metode</h2>
+
+<p>Penelitian ini menggunakan metode skoring dan pembobotan dengan analisis keruangan overlay yang dikerjakan pada ArcGIS Pro. Tingkat kerawanan banjir ditentukan dari empat parameter, yaitu curah hujan, buffer sungai, tutupan lahan, dan kelerengan. Data yang digunakan terdiri atas data sekunder, yang diolah melalui tahapan skoring dan overlay, serta data primer berupa dokumentasi dan wawancara yang diperoleh langsung saat survei lapangan.</p>
+
+<p>Tahapan penelitian dimulai dari identifikasi masalah, studi literatur, pembatasan masalah, serta persiapan dan pengumpulan data. Setiap parameter kemudian diolah secara terpisah. Data DEM dianalisis menjadi peta kelas lereng melalui proses klasifikasi dan konversi raster ke vektor, sedangkan data curah hujan, tutupan lahan, dan buffer sungai diolah menjadi peta masing-masing. Seluruh peta tersebut selanjutnya digabungkan melalui analisis skoring dan pembobotan, overlay, dan analisis tingkat kerawanan banjir, lalu diakhiri dengan validasi lapangan sebelum menghasilkan peta tingkat kerawanan banjir di Kecamatan Wonosari.</p>
+
+<figure class="fig-alur">
+  <a href="assets/maps/alur-kerja.png" target="_blank" rel="noopener">
+  <img src="assets/maps/alur-kerja.png" alt="Diagram alur kerja penelitian">
+  </a>
+  <figcaption><strong>Gambar 1.</strong> Alur kerja penelitian</figcaption>
+</figure>
+
+<p>Pada tahap skoring, setiap parameter diklasifikasikan menjadi lima kelas dan diberi skor 1 sampai 5, di mana skor yang lebih tinggi menunjukkan potensi banjir yang lebih besar. Skor tersebut kemudian dikalikan dengan bobot tiap parameter, yaitu 0,4 untuk curah hujan, 0,3 untuk buffer sungai, 0,2 untuk tutupan lahan, dan 0,1 untuk kelerengan. Curah hujan diberi bobot terbesar karena pengaruhnya yang langsung terhadap limpasan permukaan, sedangkan kelerengan diberi bobot terkecil. Bobot dan klasifikasi ini mengacu pada penelitian terdahulu.</p>
+
+<p>Setelah seluruh parameter diberi skor, dilakukan overlay dengan teknik intersect untuk menyatukan layer-layer tersebut beserta tabel atributnya. Potensi banjir dihitung dengan rumus Kingma (1991), yaitu penjumlahan nilai kumulatif keempat parameter: Potensi Banjir = N(TL) + N(BS) + N(CH) + N(KL), dengan TL adalah tutupan lahan, BS buffer sungai, CH curah hujan, dan KL kelerengan. Hasil perhitungan lalu dikelompokkan menjadi tiga kelas, yaitu sangat rawan (nilai lebih dari 32), rawan (25 sampai 32), dan tidak rawan (kurang dari 25).</p>
+
+<p>Tahap terakhir adalah validasi lapangan. Peta kerja yang dilengkapi grid dan titik sampel disusun pada ArcGIS untuk memandu survei selama tiga hari, sehingga peneliti dapat menentukan lokasi sampel dengan tepat. Hasil survei digunakan untuk mencocokkan prediksi kerawanan banjir dengan kondisi sebenarnya di lapangan.</p>
+
+      <h2>Hasil</h2>
+
+<p>Hasil skoring, pembobotan, dan overlay mengklasifikasikan Kecamatan Wonosari (luas total 7.840 Ha) ke dalam tiga tingkat kerawanan banjir: tidak rawan, rawan, dan sangat rawan. Kawasan tidak rawan memiliki nilai kurang dari 25, kawasan rawan bernilai 25 sampai 32, dan kawasan sangat rawan bernilai lebih dari 32.</p>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Tingkat Kerawanan</th>
+        <th>Nilai</th>
+        <th>Luas (Ha)</th>
+        <th>Persentase (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tidak Rawan</td>
+        <td>&lt; 25</td>
+        <td>2.850</td>
+        <td>36,4</td>
+      </tr>
+      <tr>
+        <td>Rawan</td>
+        <td>25 – 32</td>
+        <td>2.894</td>
+        <td>36,9</td>
+      </tr>
+      <tr>
+        <td>Sangat Rawan</td>
+        <td>&gt; 32</td>
+        <td>2.096</td>
+        <td>26,7</td>
+      </tr>
+      <tr class="total-row">
+        <td>Total</td>
+        <td>–</td>
+        <td>7.840</td>
+        <td>100</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>Ketiga kelas kerawanan memiliki proporsi yang hampir seimbang. Kawasan rawan (36,9%) dan tidak rawan (36,4%) memiliki luasan yang nyaris sama, sedangkan kawasan sangat rawan mencakup 26,7% dari total wilayah, atau sekitar 2.096 Ha.</p>
+
+<figure class="map-banjir-figure">
+  <a href="assets/maps/rawan-banjir.jpg" target="_blank" rel="noopener">
+    <img src="assets/maps/rawan-banjir.jpg" alt="Peta kerawanan banjir Kecamatan Wonosari">
+  </a>
+  <figcaption><strong>Gambar 2.</strong> Peta kerawanan banjir Kecamatan Wonosari</figcaption>
+</figure>
+
+<p>Secara spasial, kawasan rawan dan sangat rawan cenderung berada di bagian barat, selatan, dan utara kecamatan, meliputi Desa Mulo, Wunung, Wareng, Siraman, Pulutan, Gari, Karangtengah, dan Piyaman. Sebaliknya, kawasan tidak rawan lebih banyak berada di bagian timur, yaitu Desa Wonosari, Baleharjo, Selang, Karangrejek, Kepek, dan Duwet. Desa Wunung memiliki luasan terbesar pada ketiga kelas, dengan kawasan sangat rawan seluas 260 Ha, rawan 424 Ha, dan tidak rawan 286 Ha. Kawasan sangat rawan menyebar secara acak, tetapi hampir selalu berdekatan dengan jalur sungai, sejalan dengan kejadian banjir di Wonosari yang umumnya disebabkan oleh meluapnya aliran sungai ketika kapasitasnya tidak mampu menampung debit air.</p>
+
+<p>Pola sebaran tersebut dipengaruhi oleh kombinasi beberapa faktor. Curah hujan di Wonosari tergolong tinggi, yaitu sekitar 1.500 hingga 2.500 mm per tahun, sementara tutupan lahan berupa permukiman yang mencakup sekitar 30% wilayah kecamatan memiliki daya serap air yang rendah sehingga limpasan permukaan meningkat. Kondisi topografi yang relatif datar juga membuat air mudah tergenang, terutama di daerah yang dikelilingi permukaan lebih tinggi. Untuk menguji hasil pemetaan, dilakukan pengecekan di lapangan dan diperoleh tingkat kesesuaian sebesar 70,3% pada titik sampel. Lokasi yang sesuai umumnya berupa lahan terbuka dan permukiman yang dekat dengan aliran sungai dengan kelerengan yang cukup datar, sedangkan lokasi yang tidak sesuai umumnya berupa tegalan atau ladang yang jauh dari sungai dengan lereng lebih curam. Ketidaksesuaian ini dapat disebabkan oleh faktor lain yang belum dimasukkan, seperti sistem drainase dan sejarah banjir, serta skala peta yang kecil sehingga informasi tutupan lahan, buffer sungai, dan kelerengan tergeneralisasi.</p>
+
+<h2>Kesimpulan</h2>
+
+<p>Kecamatan Wonosari memiliki potensi rawan banjir yang signifikan, dengan kelas rawan sebagai yang terluas, yaitu 2.894 Ha atau sekitar 37% dari total wilayah. Kelas tidak rawan menyusul dengan luas 2.850 Ha (36,4%), dan kelas sangat rawan seluas 2.096 Ha (26,7%). Desa Wunung menjadi desa dengan luasan terbesar pada ketiga kelas, yaitu 260 Ha sangat rawan, 424 Ha rawan, dan 286 Ha tidak rawan. Potensi banjir ini dipengaruhi oleh curah hujan, tutupan lahan, kelerengan, dan buffer sungai: curah hujan tinggi dapat menimbulkan genangan bila drainase tidak memadai, lereng curam mempercepat aliran air, tutupan lahan yang kurang menyerap air meningkatkan limpasan, dan buffer sungai yang tidak memadai membatasi kemampuan menampung luapan air.</p>
+
+<p>Pola persebaran kawasan rawan banjir bersifat acak, tetapi terkonsentrasi di daerah yang berdekatan dengan aliran sungai. Hal ini menunjukkan bahwa sungai berperan penting dalam menentukan zona rawan banjir, sehingga identifikasi wilayah di sekitar sungai dan langkah pencegahan yang sesuai perlu menjadi prioritas.</p>
+
+<a class="post-back" href="index.html#proyek">← View other projects</a>
+
+</main>
+
+    <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>

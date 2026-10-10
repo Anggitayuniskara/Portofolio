@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recycool: Aplikasi Gamifikasi Pendidikan Karakter Peduli Sampah</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .code-block { background:#0f172a; color:#e2e8f0; padding:1rem 1.2rem; border-radius:10px; overflow-x:auto; font-size:.85rem; line-height:1.6; margin:1rem 0; }
+    .code-block code { font-family: "Consolas", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Environmental Education</span>
+      <h1>Implementasi Aplikasi Recycool dalam Pendidikan Karakter guna Menyiasati Degradasi Lingkungan di Era Disrupsi Digital</h1>
+      <p class="post-meta">April 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Penimbunan sampah adalah masalah yang cenderung makin kronis seiring waktu. Jumlah penduduk Indonesia mencapai sekitar 275 juta jiwa, dan dengan asumsi SNI, yaitu 0,5 kg sampah per orang per hari, timbulan nasional mencapai sekitar 137,5 ribu ton per hari, atau sekitar 50 juta ton per tahun. Selain pertambahan penduduk, pola hidup yang makin konsumtif serta perkembangan industri dan teknologi membuat volume, jenis, dan karakter sampah makin beragam (Astawa, 2023).</p>
+      <p>Masalahnya tidak berhenti pada jumlah. Pengelolaan sampah di Indonesia juga lemah dari sisi dasar hukum, pemilahan oleh masyarakat, kapasitas tempat pembuangan akhir (TPA), dan sistem pengelolaan di TPA (Chaerul dkk., 2007). Di Jakarta, kelima kotanya masuk 10 besar penghasil timbulan sampah tahun 2023, dengan Jakarta Timur di peringkat pertama sebesar 851,6 ribu ton per tahun (SPISN, 2023). Kepadatan penduduk menjadi salah satu penyebabnya, ditambah rendahnya kepedulian masyarakat terhadap dampak sampah.</p>
+      <p>Berangkat dari argumen bahwa kebiasaan mengelola sampah tidak bisa hanya dibebankan pada infrastruktur. Ia perlu dibentuk sejak dini lewat pendidikan. UU No. 20 Tahun 2003 tentang Sisdiknas menegaskan bahwa pendidikan nasional berakar pada nilai agama, kebudayaan nasional, dan tuntutan perubahan zaman, dan UNESCO menetapkan tiga elemen pembelajaran, yaitu belajar untuk mengetahui, melakukan, dan hidup bersama. Dua elemen pertama menekankan pengetahuan dan keterampilan, sedangkan elemen ketiga menyentuh pembentukan karakter sosial dan lingkungan (Baginda, 2018). Di sisi lain, pendidikan masih kerap menghasilkan ahli di bidang sains yang kurang beretika (Marwiji dkk., 2023). Dari situ muncul pertanyaan penelitian, yakni <strong>bagaimana aplikasi berbasis gamifikasi dapat menanamkan karakter peduli lingkungan pada peserta didik di era disrupsi digital?</strong></p>
+
+      <h2>Data yang digunakan</h2>
+      <p>Project ini tidak mengumpulkan data primer. Bahan yang dipakai terdiri dari statistik persampahan, dokumen kebijakan pendidikan, dan literatur teori. Setiap bahan dipilih karena menopang satu langkah argumen, dari besarnya masalah sampai rancangan solusinya.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Bahan</th>
+              <th>Sumber</th>
+              <th>Peran dalam Analisis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Jumlah penduduk, asumsi timbulan sampah per orang</td>
+              <td>BPS (2023); SNI</td>
+              <td>Menunjukkan skala masalah sampah</td>
+            </tr>
+            <tr>
+              <td>Peringkat 10 kota penghasil sampah terbanyak 2023</td>
+              <td>SPISN (2023); Rasyid (2024)</td>
+              <td>Menunjukkan Jakarta sebagai wilayah paling terdampak</td>
+            </tr>
+            <tr>
+              <td>Studi persoalan pengelolaan sampah dan TPA</td>
+              <td>Chaerul dkk. (2007); Mahyudin (2017); Sholihah dan Hariyanto (2020)</td>
+              <td>Menjelaskan penyebab pengelolaan sampah yang buruk</td>
+            </tr>
+            <tr>
+              <td>UU No. 20/2003 (Sisdiknas), tiga elemen UNESCO, Penguatan Pendidikan Karakter (PPK)</td>
+              <td>Dokumen kebijakan dan Baginda (2018)</td>
+              <td>Landasan hukum dan konseptual pendidikan karakter</td>
+            </tr>
+            <tr>
+              <td>Studi karakter peduli lingkungan di sekolah</td>
+              <td>Ninsih dkk. (2018); Siskayanti dan Chastanti (2022); Ismail (2021)</td>
+              <td>Dasar penanaman karakter peduli lingkungan sejak usia dini</td>
+            </tr>
+            <tr>
+              <td>Teori gamifikasi dalam pembelajaran</td>
+              <td>Dicheva dkk. (2015); Jusuf (2016); Surendeleg dkk. (2014)</td>
+              <td>Dasar perancangan misi, level, dan hadiah</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+            <h2>Metode</h2>
+
+      <p>Pertanyaan penelitian ini menuntut jawaban berupa solusi yang dapat diterapkan, sehingga penelitian ini memakai pendekatan perancangan yang bersandar pada kajian pustaka. Dari bahan pada bagian data, sasaran ditetapkan pada pendidikan karakter peduli lingkungan di sekolah, khususnya dimensi olah rasa (estetis) dalam Penguatan Pendidikan Karakter, dengan isi pembelajaran yang mengacu pada tiga elemen UNESCO, yaitu belajar untuk mengetahui, melakukan, dan hidup bersama. Cara penyampaiannya memakai gamifikasi, karena pembelajaran tradisional dinilai kurang efektif dan membosankan (Dicheva dkk., 2015). Gamifikasi diturunkan dengan langkah membangun motivasi intrinsik dan ekstrinsik dari Jusuf (2016), dan setiap langkahnya diubah menjadi satu pertanyaan perancangan yang harus dijawab oleh aplikasi, seperti pada tabel berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Langkah Gamifikasi (Jusuf, 2016)</th>
+              <th>Pertanyaan Perancangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pemberian hadiah saat menyelesaikan tantangan</td>
+              <td>Kapan dan bagaimana siswa mendapat penghargaan?</td>
+            </tr>
+            <tr>
+              <td>Perancangan sistem level</td>
+              <td>Bagaimana tantangan disusun dari yang mudah ke yang sulit?</td>
+            </tr>
+            <tr>
+              <td>Pengaturan periode waktu tiap tantangan</td>
+              <td>Berapa lama siswa mengerjakan setiap tahap?</td>
+            </tr>
+            <tr>
+              <td>Penyelesaian tantangan secara berkelompok</td>
+              <td>Di tahap mana siswa perlu bekerja sama?</td>
+            </tr>
+            <tr>
+              <td>Isi tantangan (tiga elemen UNESCO)</td>
+              <td>Misi apa yang membuat siswa mengetahui, melakukan, dan hidup bersama?</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Misi yang dirancang bersifat nyata dan diverifikasi dengan bukti foto serta cerita singkat. Rancangan akhir kemudian dinilai dengan tiga pemeriksaan, yaitu kesesuaian dengan kriteria ideal gamifikasi, keterpetaan tiap misi pada nilai karakter yang dituju (tanggung jawab, peduli lingkungan, kreatif, kerja sama, dan jujur), serta hambatan implementasi seperti rendahnya partisipasi siswa yang menentukan perlunya uji coba lanjutan.</p>
+
+      <p>Rancangan Recycool menyasar dimensi olah rasa (estetis) dalam PPK. PPK sendiri adalah gerakan yang menyelaraskan olah hati (etik), olah rasa (estetis), olah pikir (literasi), dan olahraga. Olah rasa dipilih karena paling dekat dengan menumbuhkan kepedulian lingkungan.</p>
+
+      <h2>Hasil</h2>
+
+      <h3>Rancangan aplikasi Recycool</h3>
+      <p>Recycool bekerja seperti e-learning sekolah. Setiap siswa menyelesaikan 10 misi berjenjang. Tingkat kesulitannya naik di tiap misi, perkiraan waktu penyelesaian tiap level adalah 14 hari, dan misi berikutnya baru terbuka bila misi sebelumnya sudah dikumpulkan. Misi dapat dikerjakan secara individu maupun kelompok, dan siswa memperoleh hadiah ketika mencapai misi 3, 5, dan 10, yang bentuknya disesuaikan dengan keputusan pihak sekolah. Guru berperan memantau aktivitas siswa agar penerapannya berjalan lancar.</p>
+
+      <figure class="map-petai-figure">
+        <a href="assets/maps/recycool-home.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/recycool-home.jpg" alt="Tampilan halaman depan aplikasi Recycool dengan fitur deteksi sampah, informasi daur ulang, peta bank sampah, dan kreasi dari sampah">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Tampilan halaman depan lengkap dengan fitur dalam aplikasi</figcaption>
+      </figure>
+
+      <h3>Sepuluh misi Recycool</h3>
+      <p>Misi disusun mengikuti urutan belajar yang wajar, yaitu mengetahui konsep, mempraktikkan pemilahan, mengubah kebiasaan, lalu berkarya dan bekerja sama. Tiga misi pertama membangun pemahaman dan praktik dasar, misi 4 sampai 6 melatih pemilahan dan aksi lingkungan, dan misi 7 sampai 10 mendorong kolaborasi dan kreativitas.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Misi</th>
+              <th>Kegiatan</th>
+              <th>Fokus Pembelajaran</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Kuis seputar sampah</td><td>Konsep dasar, jenis, dampak, dan cara pengelolaan sampah</td></tr>
+            <tr><td>2</td><td>Pengenalan konsep 3R</td><td>Reduce, Reuse, Recycle dalam kehidupan sehari-hari</td></tr>
+            <tr><td>3</td><td>Pengumpulan sampah di lingkungan sekitar</td><td>Aksi nyata, aplikasi mendeteksi sampah dan menyarankan 3R yang tepat</td></tr>
+            <tr><td>4</td><td>Penyortiran sampah organik dan anorganik</td><td>Pemilahan sebelum dibuang, klasifikasi otomatis lewat aplikasi</td></tr>
+            <tr><td>5</td><td>Kampanye penggunaan botol minum</td><td>Pengurangan sampah plastik, dokumentasi dan cerita pengalaman</td></tr>
+            <tr><td>6</td><td>Kegiatan pembersihan lingkungan</td><td>Keterlibatan langsung di lingkungan sekitar</td></tr>
+            <tr><td>7</td><td>Menanam pohon bersama di sekolah</td><td>Penghijauan, peran pohon bagi ekosistem, kerja sama</td></tr>
+            <tr><td>8</td><td>Membuat kreasi dari sampah organik</td><td>Daur ulang dan pemanfaatan kembali bahan organik</td></tr>
+            <tr><td>9</td><td>Membuat kreasi dari sampah anorganik</td><td>Daur ulang dan pemanfaatan kembali bahan anorganik</td></tr>
+            <tr><td>10</td><td>Mendekorasi lingkungan belajar dengan kreasi siswa</td><td>Gotong royong dan suasana belajar yang menyenangkan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="map-petai-figure">
+        <a href="assets/maps/recycool-misi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/recycool-misi.jpg" alt="Tampilan halaman mission timeline, pengerjaan misi, dan hadiah pada aplikasi Recycool">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Tampilan halaman pengerjaan tiap misi</figcaption>
+      </figure>
+
+      <h3>Nilai karakter yang ditanamkan</h3>
+      <p>Rancangan ini tidak berhenti pada pengetahuan tentang sampah. Tiap misi dipetakan pada nilai karakter tertentu, sehingga tujuannya dapat ditelusuri dari aktivitas sampai ke karakter yang diharapkan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nilai Karakter</th>
+              <th>Bagaimana Ditanamkan</th>
+              <th>Misi yang Berperan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tanggung jawab</td>
+              <td>Siswa harus menyelesaikan misi yang ada, baik secara individu maupun kelompok</td>
+              <td>Seluruh misi</td>
+            </tr>
+            <tr>
+              <td>Peduli lingkungan</td>
+              <td>Bimbingan bertahap dalam suasana belajar yang mudah dan menyenangkan</td>
+              <td>Seluruh misi</td>
+            </tr>
+            <tr>
+              <td>Kreatif</td>
+              <td>Siswa membuat karya dari sampah di sekitar mereka</td>
+              <td>Misi 8 dan 9</td>
+            </tr>
+            <tr>
+              <td>Kerja sama tim</td>
+              <td>Misi melibatkan aspek sosial, siswa saling berinteraksi dan berkontribusi</td>
+              <td>Misi 7 dan 10</td>
+            </tr>
+            <tr>
+              <td>Jujur</td>
+              <td>Siswa melampirkan bukti foto proses dan mengulang materi yang dipelajari</td>
+              <td>Seluruh misi</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Pengelolaan sampah yang buruk menjadi latar belakang degradasi lingkungan yang merugikan, tidak hanya lewat penimbunan, tetapi juga lewat hilangnya hak manusia atas udara bersih. Karena itu, kesadaran peduli lingkungan perlu ditanam sejak usia dini sebagai langkah preventif yang dampaknya baru terasa jangka panjang. Recycool dirancang sebagai penunjang pendidikan karakter peduli lingkungan lewat 10 misi berjenjang yang menerapkan teori gamifikasi untuk memicu motivasi intrinsik dan ekstrinsik siswa, dengan pemetaan jelas pada nilai tanggung jawab, peduli lingkungan, kreativitas, kerja sama, dan kejujuran.</p>
+
+      <p>Agar rancangan ini berdampak, dibutuhkan kerja sama pemerintah, pelaku pendidikan, dan peserta didik. Langkah lanjutan yang paling berguna adalah uji coba di satu atau beberapa sekolah dengan pengukuran sebelum dan sesudah, yaitu pengetahuan pemilahan sampah, perilaku siswa, dan tingkat partisipasi per misi, supaya klaim efektivitasnya bisa dibuktikan dengan angka.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>

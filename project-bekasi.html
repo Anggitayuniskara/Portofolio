@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Potensi dan Tantangan Pembangunan Ekonomi Kota Bekasi</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .code-block { background:#0f172a; color:#e2e8f0; padding:1rem 1.2rem; border-radius:10px; overflow-x:auto; font-size:.85rem; line-height:1.6; margin:1rem 0; }
+    .code-block code { font-family: "Consolas", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Regional Economics</span>
+      <h1>Potensi dan Tantangan Pembangunan Ekonomi Kota Bekasi, Provinsi Jawa Barat</h1>
+      <p class="post-meta">Juni 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Produk Domestik Regional Bruto (PDRB) mengukur nilai seluruh barang dan jasa yang dihasilkan suatu wilayah dalam satu periode, sehingga laju pertumbuhannya menjadi indikator utama kemajuan ekonomi daerah. Pertumbuhan yang positif biasanya sejalan dengan meningkatnya investasi, produksi, lapangan kerja, dan kualitas layanan publik. Namun pertumbuhan yang tidak seimbang justru dapat memicu ketimpangan antarwilayah, tekanan lingkungan, dan masalah sosial.</p>
+      <p>Perbedaan laju pertumbuhan antardaerah tidak muncul begitu saja. Ia dibentuk oleh sumber daya alam, dominasi sektor ekonomi, kualitas infrastruktur, serta kualifikasi tenaga kerja. Kota Bekasi menarik dijadikan studi kasus karena berada di lingkar penyangga Jakarta, tetapi PDRB-nya tercatat menurun dari 2019 ke 2020, dan lajunya berbeda dari daerah lain di Jawa Barat.</p>
+      <p>Dari situ muncul dua pertanyaan, yakni <strong>seberapa timpang ekonomi Kota Bekasi dibandingkan Provinsi Jawa Barat, dan sektor apa yang sebenarnya menjadi keunggulannya?</strong> Jawabannya dicari dengan dua alat analisis ekonomi regional, yaitu Indeks Williamson untuk disparitas dan Location Quotient (LQ) untuk sektor unggulan.</p>
+
+      <h2>Data yang digunakan</h2>
+      <p>Seluruh data adalah data sekunder tabular dari Badan Pusat Statistik. Satu jenis data dipakai untuk dua analisis, yaitu PDRB atas dasar harga berlaku menurut lapangan usaha untuk Kota Bekasi dan Provinsi Jawa Barat, ditambah jumlah penduduk untuk menghitung PDRB per kapita.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Tahun</th>
+              <th>Sumber</th>
+              <th>Peran dalam Analisis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PDRB ADHB menurut lapangan usaha, Kota Bekasi</td>
+              <td>2019–2020</td>
+              <td>BPS Kota Bekasi</td>
+              <td>Nilai sektor di daerah studi (Si)</td>
+            </tr>
+            <tr>
+              <td>PDRB ADHB menurut lapangan usaha, Jawa Barat</td>
+              <td>2019–2020</td>
+              <td>BPS Provinsi Jawa Barat</td>
+              <td>Nilai sektor di daerah acuan (Ni)</td>
+            </tr>
+            <tr>
+              <td>Jumlah penduduk Kota Bekasi dan Jawa Barat</td>
+              <td>2019–2020</td>
+              <td>BPS</td>
+              <td>Bobot penduduk dan PDRB per kapita</td>
+            </tr>
+            <tr>
+              <td>Batas administrasi</td>
+              <td>–</td>
+              <td>INA Geoportal</td>
+              <td>Peta wilayah penelitian</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <h3>Wilayah penelitian</h3>
+      <p>Kota Bekasi terletak di 106°48'28" sampai 107°27'29" BT dan 6°10'6" sampai 6°30'6" LS. Di utara dan timur ia berbatasan dengan Kabupaten Bekasi, di selatan dengan Kabupaten Bogor, dan di barat dengan DKI Jakarta. Kota ini terdiri dari 12 kecamatan dan 56 kelurahan, dengan luas 210,49 km² dan penduduk sekitar 2,56 juta jiwa (SP2020), atau kepadatan sekitar 4.035 jiwa/km². Kepadatan setinggi ini menjadikan Bekasi kota penyangga yang ekonominya sangat bergantung pada perdagangan, jasa, dan konektivitas dengan Jakarta.</p>
+
+      <figure class="map-petai-figure">
+        <a href="assets/maps/peta-admin-bekasi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/peta-admin-bekasi.jpg" alt="Peta administrasi Kota Bekasi Provinsi Jawa Barat">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta administrasi Kota Bekasi, Provinsi Jawa Barat</figcaption>
+      </figure>
+
+      <h3>Indeks Williamson</h3>
+      <p>Indeks Williamson mengukur ketimpangan pendapatan antarwilayah dengan membandingkan PDRB per kapita suatu daerah terhadap rata-rata provinsinya, dibobot oleh proporsi penduduk. Semakin besar nilainya, semakin timpang.</p>
+      <p><strong>IW = √[ Σ (Yi − Y)² · (fi / n) ] / Y</strong></p>
+      <p>Yi adalah PDRB per kapita daerah i, Y adalah PDRB per kapita provinsi, fi adalah jumlah penduduk daerah i, dan n adalah jumlah penduduk provinsi. Hasilnya diklasifikasikan menjadi ketimpangan rendah (&lt; 0,3), sedang (0,3 sampai 0,5), dan tinggi (&gt; 0,5).</p>
+
+      <h3>Location Quotient</h3>
+      <p>LQ membandingkan porsi suatu sektor dalam ekonomi daerah dengan porsi sektor yang sama di daerah acuan. Di sini porsi dihitung dari nilai PDRB sektoral Kota Bekasi terhadap Jawa Barat.</p>
+      <p><strong>LQ = (Si / S) / (Ni / N)</strong></p>
+      <p>Bila LQ &gt; 1, sektor tersebut lebih terkonsentrasi di Bekasi daripada di provinsi, sehingga dikategorikan sektor basis (unggulan). Bila LQ = 1, kemampuannya setara provinsi. Bila LQ &lt; 1, sektor tersebut belum mampu mencukupi dirinya sendiri secara relatif.</p>
+
+      <h3>Alur pengolahan</h3>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Pengumpulan data</td>
+              <td>Mengunduh PDRB sektoral dan data penduduk dari BPS</td>
+            </tr>
+            <tr>
+              <td>2. PDRB per kapita</td>
+              <td>Membagi PDRB dengan jumlah penduduk, untuk kota dan provinsi</td>
+            </tr>
+            <tr>
+              <td>3. Indeks Williamson</td>
+              <td>Menghitung IW tahun 2019 dan 2020, lalu mengklasifikasikannya</td>
+            </tr>
+            <tr>
+              <td>4. Location Quotient</td>
+              <td>Menghitung LQ 16 lapangan usaha per tahun, lalu merata-ratakannya</td>
+            </tr>
+            <tr>
+              <td>5. Interpretasi</td>
+              <td>Menentukan sektor basis (LQ &gt; 1) dan menafsirkannya dengan konteks 2020</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <h2>Hasil</h2>
+
+      <h3>Disparitas ekonomi dengan Indeks Williamson</h3>
+      <p>PDRB Kota Bekasi turun dari Rp69.408,57 miliar (2019) menjadi Rp67.638,06 miliar (2020), atau sekitar 2,55%. Penurunan ini hampir sama besar dengan Jawa Barat secara keseluruhan (sekitar 2,52%), sehingga kontraksi Bekasi pada 2020 lebih mencerminkan guncangan pandemi yang melanda seluruh provinsi daripada kelemahan yang khas Bekasi. Pandemi menekan produksi, investasi, dan konsumsi rumah tangga sekaligus.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tahun</th>
+              <th>PDRB Bekasi (miliar Rp)</th>
+              <th>PDRB Jabar (miliar Rp)</th>
+              <th>PDRB per kapita Bekasi (juta Rp)</th>
+              <th>PDRB per kapita Jabar (juta Rp)</th>
+              <th>Indeks Williamson</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2019</td>
+              <td>69.408,57</td>
+              <td>1.490.959,69</td>
+              <td>23,03</td>
+              <td>30,23</td>
+              <td>0,059</td>
+            </tr>
+            <tr>
+              <td>2020</td>
+              <td>67.638,06</td>
+              <td>1.453.380,72</td>
+              <td>26,59</td>
+              <td>29,10</td>
+              <td>0,019</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Kedua nilai berada jauh di bawah 0,3, sehingga ketimpangan Bekasi terhadap Jawa Barat tergolong rendah. PDRB per kapita Bekasi memang masih di bawah rata-rata provinsi di kedua tahun, tetapi jaraknya menyempit dari sekitar Rp7,2 juta (2019) menjadi sekitar Rp2,5 juta (2020).</p>
+
+      <h3>Sektor unggulan dengan Location Quotient</h3>
+      <p>Dari 16 lapangan usaha, 11 memiliki LQ rata-rata di atas 1. Sektor-sektor ini menjadi basis ekonomi Kota Bekasi.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Lapangan Usaha</th>
+              <th>LQ 2019</th>
+              <th>LQ 2020</th>
+              <th>Rata-rata</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Pengadaan Listrik dan Gas</td><td>3,1649</td><td>2,9856</td><td>3,0752</td><td>Basis</td></tr>
+            <tr><td>Transportasi dan Pergudangan</td><td>1,9944</td><td>2,0407</td><td>2,0175</td><td>Basis</td></tr>
+            <tr><td>Jasa Kesehatan dan Kegiatan Sosial</td><td>1,5326</td><td>1,5414</td><td>1,5370</td><td>Basis</td></tr>
+            <tr><td>Perdagangan Besar dan Eceran; Reparasi Mobil dan Sepeda Motor</td><td>1,4671</td><td>1,5034</td><td>1,4853</td><td>Basis</td></tr>
+            <tr><td>Penyediaan Akomodasi dan Makan Minum</td><td>1,4442</td><td>1,4530</td><td>1,4486</td><td>Basis</td></tr>
+            <tr><td>Konstruksi</td><td>1,4422</td><td>1,4003</td><td>1,4212</td><td>Basis</td></tr>
+            <tr><td>Jasa Lainnya</td><td>1,3895</td><td>1,3856</td><td>1,3875</td><td>Basis</td></tr>
+            <tr><td>Real Estate</td><td>1,3946</td><td>1,3762</td><td>1,3854</td><td>Basis</td></tr>
+            <tr><td>Jasa Keuangan dan Asuransi</td><td>1,1326</td><td>1,1266</td><td>1,1296</td><td>Basis</td></tr>
+            <tr><td>Jasa Perusahaan</td><td>1,0345</td><td>1,0875</td><td>1,0610</td><td>Basis</td></tr>
+            <tr><td>Pengadaan Air, Pengelolaan Sampah, Limbah, dan Daur Ulang</td><td>1,0504</td><td>0,9682</td><td>1,0093</td><td>Basis</td></tr>
+            <tr><td>Administrasi Pemerintahan, Pertahanan, dan Jaminan Sosial Wajib</td><td>0,8437</td><td>0,8507</td><td>0,8472</td><td>Non-basis</td></tr>
+            <tr><td>Industri Pengolahan</td><td>0,7799</td><td>0,8066</td><td>0,7932</td><td>Non-basis</td></tr>
+            <tr><td>Jasa Pendidikan</td><td>0,7853</td><td>0,7533</td><td>0,7693</td><td>Non-basis</td></tr>
+            <tr><td>Informasi dan Komunikasi</td><td>0,6729</td><td>0,6705</td><td>0,6717</td><td>Non-basis</td></tr>
+            <tr><td>Pertanian, Kehutanan, dan Perikanan</td><td>0,0710</td><td>0,0703</td><td>0,0707</td><td>Non-basis</td></tr>
+            <tr><td>Pertambangan dan Penggalian</td><td>0</td><td>0</td><td>0</td><td>Non-basis</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Membaca pola sektor</h3>
+      <p>Polanya konsisten dengan karakter Bekasi sebagai kota penyangga. Sektor yang kuat adalah sektor yang melayani populasi besar dan arus barang, yaitu transportasi dan pergudangan (LQ 2,02), perdagangan (1,49), akomodasi dan makan minum (1,45), kesehatan (1,54), serta konstruksi dan real estate yang menopang kebutuhan hunian. Nilai LQ listrik dan gas yang mencapai 3,08 perlu dibaca hati-hati, karena sektor ini kecil secara absolut dan nilai tinggi sering muncul akibat basis perbandingan yang sempit.</p>
+      <p>Sebaliknya, pertanian (0,07) dan pertambangan (0) praktis tidak relevan bagi ekonomi kota yang hampir seluruhnya terbangun. Industri pengolahan yang berada di 0,79 juga menarik, sebab sektor ini lazim diasosiasikan dengan kawasan Bekasi. Namun nilai LQ di bawah 1 menunjukkan porsinya terhadap total ekonomi Bekasi lebih kecil daripada porsi industri terhadap total ekonomi Jawa Barat, yang memang memiliki kawasan industri besar di kabupaten tetangga.</p>
+
+      <h3>Batas penafsiran</h3>
+      <p>Hasil ini perlu dibaca dengan beberapa catatan. Pertama, Indeks Williamson yang paling informatif dihitung dari seluruh 27 kabupaten/kota di Jawa Barat, sedangkan di sini hanya Bekasi yang dibandingkan dengan rata-rata provinsi, sehingga angkanya menggambarkan jarak Bekasi dari provinsi dan bukan ketimpangan antardaerah se-Jawa Barat. Kedua, jumlah penduduk Bekasi turun dari 3,01 juta (2019) ke 2,54 juta (2020). Penurunan setajam ini kemungkinan mencerminkan perbedaan basis data (proyeksi dan hasil sensus), dan memengaruhi PDRB per kapita yang naik dari 2019 ke 2020. Ketiga, periode analisis hanya dua tahun yang bertepatan dengan awal pandemi, sehingga belum menunjukkan tren jangka panjang. Keempat, LQ menunjukkan konsentrasi relatif, bukan besarnya kontribusi absolut atau kemampuan ekspor sebuah sektor.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Perlambatan ekonomi Kota Bekasi pada 2019–2020 sebagian besar mengikuti guncangan yang dialami Jawa Barat. PDRB Bekasi turun sekitar 2,55% dan provinsi turun sekitar 2,52%. Disparitas PDRB per kapita Bekasi terhadap provinsi tergolong rendah (IW 0,059 pada 2019 dan 0,019 pada 2020), dan jaraknya menyempit.</p>
+
+      <p>Dari sisi struktur, ekonomi Bekasi bertumpu pada 11 sektor basis, terutama transportasi dan pergudangan, perdagangan, akomodasi dan makan minum, kesehatan, konstruksi, dan real estate, yang mencerminkan fungsinya sebagai kota jasa dan penyangga Jakarta. Industri pengolahan, informasi dan komunikasi, serta pendidikan masih berada di bawah porsi provinsi (LQ &lt; 1) sehingga menjadi ruang pengembangan.</p>
+
+      <p>Implikasinya, strategi pertumbuhan Bekasi sebaiknya memperkuat sektor basis yang sudah ada (logistik, perdagangan, dan jasa kesehatan), sambil mendorong sektor yang tertinggal melalui investasi infrastruktur dan pengembangan sumber daya manusia. Langkah lanjutan yang paling berguna adalah menghitung Indeks Williamson untuk seluruh kabupaten/kota Jawa Barat dan menambahkan analisis shift-share untuk menguraikan sumber pertumbuhan Bekasi, apakah dari struktur sektor, pertumbuhan provinsi, atau keunggulan kompetitif lokal.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>

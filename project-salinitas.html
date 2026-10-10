@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Salinitas Estuari Tanjung Kenam, Lampung</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Oceanography</span>
+      <h1>Analisis Salinitas Estuari Tanjung Kenam, Kabupaten Pesawaran, Lampung Menggunakan Citra Landsat 8</h1>
+      <p class="post-meta">Oktober 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Salinitas, yaitu kadar garam di perairan, menentukan siapa yang bisa hidup di suatu perairan pesisir, mulai dari mangrove dan lamun hingga ikan dan udang budidaya. Kadar garam ini tidak tetap. Ia naik saat penguapan tinggi dan aliran air tawar berkurang, lalu turun saat hujan dan aliran sungai meningkat. Karena itu, salinitas di pesisir selalu berubah mengikuti musim.</p>
+      <p>Tanjung Kenam, di pesisir barat daya Kabupaten Pesawaran, Lampung, adalah tempat yang tepat untuk melihat perubahan itu. Wilayah ini berhadapan langsung dengan Teluk Lampung, dikelilingi laut dan pulau-pulau kecil, serta menerima aliran dari beberapa sungai di sekitarnya, sehingga pengaruh laut dan darat bertemu di sini. Proyek ini memetakan sebaran salinitas di Tanjung Kenam pada musim hujan dan kemarau, membandingkan luas tiap kelas salinitas di antara keduanya, lalu menafsirkan dampaknya bagi ekosistem dan masyarakat pesisir.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Citra Landsat 8, musim kemarau (Juli – Agustus 2023)</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+            <tr><td>Citra Landsat 8, musim hujan (Januari – Februari 2024)</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+            <tr><td>Basemap Wilayah Kajian</td><td>Basemap</td><td>Sekunder</td><td>ArcGIS</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Untuk membandingkan dua musim, pengolahan dilakukan dengan cara yang sama pada citra kemarau dan citra hujan, di Google Earth Engine (GEE) dan ArcGIS Pro. Tahapannya:</p>
+      <ol>
+        <li>Memanggil citra Landsat 8 untuk tiap musim di GEE.</li>
+        <li>Menghitung salinitas dari citra, lalu melakukan kalibrasi.</li>
+        <li>Mengklasifikasikan hasilnya menjadi empat kelas, yaitu tawar (kurang dari 5 ppt), payau (5–16 ppt), sangat payau (16–30 ppt), dan asin (lebih dari 30 ppt).</li>
+        <li>Menyusun simbologi di ArcGIS Pro untuk menampilkan sebaran kelas, lalu menghitung luas tiap kelas dan membandingkannya antarmusim.</li>
+      </ol>
+
+      <h2>Hasil</h2>
+
+      <p>Temuan utamanya adalah hampir seluruh perairan Tanjung Kenam berkelas sangat payau di kedua musim, sehingga perbedaan antarmusim muncul pada kelas-kelas di kedua ujungnya. Pada musim kemarau, kelas asin masih ada sekitar 1.044 Ha, tetapi pada musim hujan hampir hilang. Sebaliknya, kelas tawar dan payau, yang pada musim kemarau nyaris tidak ada, melebar pada musim hujan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kelas Salinitas</th>
+              <th>Musim Kemarau (Ha)</th>
+              <th>Musim Hujan (Ha)</th>
+              <th>Perubahan (Ha)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Tawar (&lt; 5 ppt)</td><td>13,2</td><td>2.370</td><td>+2.356,8</td></tr>
+            <tr><td>Payau (5–16 ppt)</td><td>146</td><td>484</td><td>+338</td></tr>
+            <tr><td>Sangat payau (16–30 ppt)</td><td>46.973</td><td>45.310</td><td>−1.663</td></tr>
+            <tr><td>Asin (&gt; 30 ppt)</td><td>1.044</td><td>12,2</td><td>−1.031,8</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Angka tersebut menunjukkan dua hal. Pertama, kelas sangat payau menempati sekitar 97% luas kajian pada musim kemarau dan sekitar 94% pada musim hujan, sehingga ia menjadi "latar" salinitas Tanjung Kenam sepanjang tahun. Kedua, perubahan musiman terjadi di pinggirannya: kelas asin menyusut sekitar 99%, dari 1.044 Ha menjadi 12,2 Ha, sedangkan kelas tawar dan payau digabung melebar dari sekitar 159 Ha menjadi sekitar 2.854 Ha, kira-kira 18 kali lipat. Pola ini sesuai dengan kondisi musim. Penguapan yang meningkat dan aliran air tawar yang berkurang menaikkan salinitas pada musim kemarau, sedangkan aliran sungai, limpasan, dan hujan langsung di laut mengencerkan air pada musim hujan.</p>
+
+      <div class="map-grid map-grid--pair">
+        <figure>
+          <a href="assets/maps/salinitas-kemarau.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/salinitas-kemarau.jpg" alt="Peta estuari Tanjung Kenam musim kemarau 2023">
+          </a>
+          <figcaption><strong>Gambar 1. </strong>Musim kemarau (2023)</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/salinitas-hujan.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/salinitas-hujan.jpg" alt="Peta estuari Tanjung Kenam musim hujan 2024">
+          </a>
+          <figcaption><strong>Gambar 2. </strong>Musim hujan (2024)</figcaption>
+        </figure>
+      </div>
+
+      <p>Perubahan di pinggiran ini menjadi penting karena kondisi wilayahnya. Peta kedalaman memperlihatkan Tanjung Kenam didominasi elevasi kurang dari 0 hingga 2 meter di atas permukaan laut, yaitu dataran sangat rendah di sekitar pantai. Dataran serendah ini sangat peka. Sedikit pergeseran salinitas sudah dapat menjangkau perairan dan lahan di sekitarnya.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/salinitas-kedalaman.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/salinitas-kedalaman.jpg" alt="Peta kedalaman Tanjung Kenam 2024">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Peta kedalaman Tanjung Kenam 2024</figcaption>
+      </figure>
+
+      <h2>Dampak</h2>
+
+      <p>Dengan wilayah yang serendah itu, pergeseran salinitas antarmusim berpotensi memengaruhi ekosistem pesisir dan aktivitas masyarakat. Dampaknya berbeda pada tiap musim, karena yang berubah adalah kondisi yang berlawanan:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Musim kemarau (salinitas tinggi)</th>
+              <th>Musim hujan (salinitas rendah)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ekosistem pesisir</td>
+              <td>Biota yang sensitif terhadap garam tertekan; mangrove dan lamun dapat mengalami stres jika kondisi ini berlangsung lama.</td>
+              <td>Sedimen dan nutrien dari sungai meningkat; biota air laut yang tidak toleran air tawar dapat bergeser menjauhi muara.</td>
+            </tr>
+            <tr>
+              <td>Perikanan dan budidaya</td>
+              <td>Spesies air payau perlu penyesuaian kadar garam; hasil tambak dapat menurun jika salinitas melewati batas toleransi.</td>
+              <td>Salinitas yang turun mendadak dapat memicu stres pada ikan dan udang budidaya.</td>
+            </tr>
+            <tr>
+              <td>Air tanah dan lahan</td>
+              <td>Risiko intrusi air asin ke akuifer dangkal meningkat, terutama di lahan rendah dekat pantai, sehingga air sumur bisa terasa payau.</td>
+              <td>Pasokan air tawar membantu menekan intrusi, tetapi limpasan dan sedimen dapat memicu genangan di dataran rendah.</td>
+            </tr>
+            <tr>
+              <td>Kualitas air</td>
+              <td>Air lebih jernih, tetapi kadar garam tinggi membatasi pemanfaatan untuk kebutuhan sehari-hari.</td>
+              <td>Kekeruhan meningkat akibat sedimen dan limpasan permukaan.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Karena salinitas berganti mengikuti musim, pengelolaannya pun perlu adaptif. Pembudidaya perlu menyesuaikan jenis komoditas dan jadwal tebar dengan kondisi musim, sedangkan pemerintah dan masyarakat perlu memantau kualitas air tanah serta menjaga mangrove sebagai penahan intrusi dan sedimen. Analisis ini bersifat indikatif, dan dampak sebenarnya perlu diverifikasi melalui pengukuran salinitas lapangan serta survei kondisi air sumur dan budidaya setempat.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Salinitas di Tanjung Kenam berubah nyata antarmusim. Perairannya tetap didominasi kelas sangat payau sepanjang tahun, tetapi kelas asin mengecil saat hujan dan kelas tawar serta payau melebar. Perbedaan curah hujan, penguapan, dan aliran air tawar menjadi faktor utama yang membentuk pola ini. Karena wilayahnya berupa dataran sangat rendah, pergeseran tersebut berpotensi memengaruhi ekosistem mangrove dan lamun, produktivitas budidaya yang peka terhadap kadar garam, serta kualitas air tanah yang rawan intrusi air asin saat kemarau. Pengelolaan pesisir ini karena itu perlu menyesuaikan diri dengan musim, misalnya lewat penyesuaian jadwal dan komoditas budidaya, pemantauan air sumur, dan perlindungan mangrove.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

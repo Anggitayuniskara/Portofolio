@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemutakhiran Zona Iklim Schmidt-Ferguson di Papua Barat dengan Data CHIRPS</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Climate</span>
+      <h1>Pemanfaatan Data Climate Hazards Group Infrared Precipitation with Stations untuk Mendukung Pengembangan Pertanian di Provinsi Papua Barat melalui Pemutakhiran Zona Iklim Schmidt-Ferguson</h1>
+      <p class="post-meta">Maret 2023</p>
+    </header>
+
+    <article class="post-content">
+
+    <h2>Latar belakang</h2>
+
+      <h3>Iklim dan perubahan iklim</h3>
+      <p>Geografi mempelajari hubungan timbal balik antara manusia dan lingkungannya (Clifford, 2016; Johnston dkk., 2012), dan iklim termasuk salah satu objek kajiannya. Menurut WMO (2013), iklim adalah rerata kondisi cuaca pada suatu wilayah dalam kurun waktu 30 tahun atau lebih. Iklim dipengaruhi faktor geografis seperti posisi lintang, lautan, pola angin, vegetasi, dan topografi. Pengaruhnya juga berjalan sebaliknya. Perubahan iklim mencairkan es di kutub dan menaikkan permukaan air laut, sehingga garis pantai ikut berubah.</p>
+      <p>Pembahasan tentang perubahan iklim sudah berlangsung sejak 1980-an, ketika para ilmuwan mulai membahas naiknya kadar karbon dioksida di atmosfer. IPCC (2013) kemudian meneliti dampaknya terhadap alam dan manusia, dan pada 2018 menegaskan bahwa perubahan iklim terus berlangsung dan memengaruhi kesehatan, pangan, air, lingkungan, dan ekonomi. WMO (2020) menambahkan bahwa 2011 sampai 2020 adalah dekade terpanas sejak pencatatan iklim dimulai. Karena itu, geografi punya peran penting dalam merumuskan strategi menghadapi tantangan lingkungan akibat perubahan iklim.</p>
+
+      <h3>Klasifikasi iklim di Indonesia</h3>
+      <p>Di Indonesia, wilayah iklim dikelompokkan dengan tiga pendekatan. I Made Sandy (1987) membaginya berdasarkan letak geografis, misalnya wilayah iklim Sumatera, Jawa, Bali-NTB-NTT, dan Kalimantan. Edvin Aldrian membaginya berdasarkan pola iklim, yaitu monsunal, ekuatorial, dan lokal. Adapun Schmidt-Ferguson berfokus pada kebutuhan usaha pertanian yang memerlukan gambaran persebaran curah hujan.</p>
+      <p>Klasifikasi Schmidt-Ferguson (1951) memakai perbandingan antara rata-rata jumlah bulan kering (Md) dan bulan basah (Mw) dalam setahun (Tjasyono, 2006). Unsur suhu tidak dimasukkan karena amplitudo suhu di daerah tropis terukur sangat kecil.</p>
+
+      <h3>Mengapa zona iklim perlu dimutakhirkan</h3>
+      <p>Dalam sekitar 50 tahun terakhir, perubahan iklim menjadi ancaman bagi semua makhluk hidup (Sasminto dkk., 2014) dan diperkirakan terus berjalan seiring meningkatnya aktivitas manusia (Susandi, 2002). Sebagai negara agraris, Indonesia paling rentan di sektor pertanian, karena iklim yang tidak menentu dapat memicu masalah seperti kekeringan (Witman, 2021). Perubahan ini juga menggeser zona iklim di Indonesia (Alfiandy dkk., 2021; Beck dkk., 2018). Jika zona iklim yang dipakai sudah tidak sesuai kondisi terkini, perencanaan pertanian bisa meleset. Maka zona iklim perlu dimutakhirkan.</p>
+      <p>Di Papua Barat, pemutakhiran itu terbentur keterbatasan data. Provinsi ini hanya memiliki tujuh stasiun iklim, yaitu di Manokwari, Manokwari Selatan, Fakfak, Kaimana, Sorong, Raja Ampat, dan Kota Sorong. Menurut kualifikasi WMO (2010), satu stasiun hanya dapat mewakili area 100 sampai 1.000 km², sehingga tujuh stasiun belum cukup menggambarkan seluruh provinsi. Selain itu, WMO mensyaratkan data iklim minimal 30 tahun, padahal pencatatan iklim di Papua Barat baru dimulai tahun 1996 atau sekitar 26 tahun (BMKG, 2021).</p>
+      <p>Untungnya, ada jalan keluar. Data hujan hasil pemantauan satelit tersedia dengan rentang waktu lebih dari 30 tahun, di antaranya CHIRPS (<em>Climate Hazards Group Infrared Precipitation with Stations</em>) dan TerraClimate. Esai ini mengulas penelitian Faisol, Paga, dan Edowai (2022) yang memanfaatkan data CHIRPS untuk memutakhirkan zona iklim Schmidt-Ferguson di Papua Barat.</p>
+      
+    <h2>Data yang digunakan</h2>
+
+      <p>Penelitian ini bertumpu pada data hujan satelit CHIRPS, yang menggabungkan citra satelit inframerah dengan data stasiun hujan. Data yang dipakai adalah curah hujan harian dengan rentang perekaman tahun 1982 sampai 2021, atau sekitar 40 tahun. Rentang ini sudah melampaui syarat minimal 30 tahun dari WMO, sehingga menutup kekurangan data stasiun Papua Barat yang baru tercatat sejak 1996. Data dari tujuh stasiun iklim yang ada dijadikan pembanding untuk menguji apakah hasil dari CHIRPS masuk akal.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Curah hujan harian CHIRPS (1982–2021)</td><td>Raster</td><td>Sekunder</td><td>Data utama, dengan rentang lebih dari 30 tahun</td></tr>
+            <tr><td>Data hujan tujuh stasiun iklim Papua Barat</td><td>Tabular</td><td>Sekunder</td><td>Pembanding hasil CHIRPS</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Pemutakhiran zona iklim dilakukan secara bertahap, mulai dari data harian hingga menjadi peta zona iklim.</p>
+      <ol>
+        <li><strong>Inventarisasi data.</strong> Data CHIRPS hasil perekaman tahun 1982 sampai 2021 dikumpulkan lebih dulu sebagai bahan analisis.</li>
+        <li><strong>Menghitung curah hujan bulanan.</strong> Karena CHIRPS berupa data harian sedangkan klasifikasi Schmidt-Ferguson bekerja per bulan, curah hujan harian dijumlahkan menjadi curah hujan bulanan dengan persamaan Ch<sub>B</sub> = Σ Ch<sub>i</sub> (i = 1 sampai 30). Ch<sub>B</sub> adalah curah hujan bulanan (mm) dan Ch<sub>i</sub> adalah curah hujan harian (mm).</li>
+        <li><strong>Mengklasifikasikan bulan.</strong> Setiap bulan digolongkan berdasarkan curah hujannya,yakni bulan kering, bulan lembab, atau bulan basah, sesuai kriteria pada tabel di bawah. Dari tahap ini diperoleh jumlah bulan basah (BB) dan bulan kering (BK) setiap tahun.</li>
+        <li><strong>Menghitung nilai Q.</strong> Jumlah bulan kering dibandingkan dengan jumlah bulan basah selama periode pengamatan, dengan rumus Q = ΣBK<sub>i</sub> / ΣBB<sub>i</sub>. BK<sub>i</sub> adalah bulan kering tahun ke-i dan BB<sub>i</sub> adalah bulan basah tahun ke-i.</li>
+      </ol>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Jenis bulan</th>
+              <th>Curah hujan bulanan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Bulan kering</td><td>Kurang dari 60 mm</td></tr>
+            <tr><td>Bulan lembab</td><td>60 – 100 mm</td></tr>
+            <tr><td>Bulan basah</td><td>Lebih dari 100 mm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Cara membaca Q cukup sederhana. Semakin kecil nilainya, semakin banyak bulan basah dibanding bulan kering, sehingga iklimnya semakin basah. Nilai Q kemudian dicocokkan dengan tabel berikut untuk menentukan zona iklim A sampai H.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Zona</th>
+              <th>Nilai Q</th>
+              <th>Sifat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A</td><td>0 – 0,143</td><td>Sangat basah</td></tr>
+            <tr><td>B</td><td>0,143 – 0,333</td><td>Basah</td></tr>
+            <tr><td>C</td><td>0,333 – 0,600</td><td>Agak basah</td></tr>
+            <tr><td>D</td><td>0,600 – 1,000</td><td>Sedang</td></tr>
+            <tr><td>E</td><td>1,000 – 1,670</td><td>Agak kering</td></tr>
+            <tr><td>F</td><td>1,670 – 3,000</td><td>Kering</td></tr>
+            <tr><td>G</td><td>3,000 – 7,000</td><td>Sangat kering</td></tr>
+            <tr><td>H</td><td>&gt; 7,000</td><td>Ekstrem</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Hasil</h2>
+
+      <p>Hasil analisis menunjukkan bahwa sebagian besar wilayah Papua Barat memiliki nilai Q kurang dari 1. Artinya, di wilayah tersebut bulan basah lebih banyak daripada bulan kering. Wilayah ini terbagi menjadi lima zona iklim, yaitu A, B, C, D, dan E, dan zona A menjadi yang paling dominan. Zona A berarti sangat basah, yaitu wilayah dengan bulan kering yang sangat sedikit.</p>
+      <p>Temuan ini sejalan dengan data stasiun iklim yang dimiliki Papua Barat. Data stasiun menunjukkan curah hujan bulanan hampir selalu berada di atas 100 mm, yang menurut kriteria Schmidt-Ferguson tergolong bulan basah. Kecocokan antara hasil CHIRPS dan data stasiun inilah yang menjadi dasar bahwa data satelit tersebut dapat dipercaya untuk wilayah yang stasiunnya jarang.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Data CHIRPS dapat digunakan untuk memutakhirkan zona iklim Schmidt-Ferguson di Provinsi Papua Barat. Dengan rentang 40 tahun, CHIRPS memenuhi syarat panjang data dari WMO yang tidak dapat dipenuhi data stasiun, dan cakupan spasialnya menjangkau wilayah yang tidak terwakili tujuh stasiun yang ada. Zona iklim yang dihasilkan memperlihatkan Papua Barat didominasi zona sangat basah (A), dan hasil itu konsisten dengan pengukuran stasiun.</p>
+      <p>Pemutakhiran seperti ini penting karena iklim terus berubah, sedangkan pertanian bergantung pada gambaran curah hujan yang akurat. Dengan zona iklim yang diperbarui, perencanaan pertanian di Papua Barat dapat disesuaikan dengan kondisi iklim terkini dan lebih siap menghadapi dampak perubahan iklim.</p>
+
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

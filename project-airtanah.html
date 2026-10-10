@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Identifikasi Potensi Air Tanah di Pulau Jawa dengan AHP</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Groundwater</span>
+      <h1>Identifikasi Potensi Air Tanah di Pulau Jawa dengan Analytical Hierarchy Process (AHP)</h1>
+      <p class="post-meta">Juni 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Air tanah adalah air yang melekat pada butir tanah, terletak di antara butir tanah, dan tertahan di atas lapisan yang sulit ditembus air, seperti lempung dan batuan padat. Keberadaannya dipengaruhi banyak faktor sekaligus, sehingga untuk mengetahui di mana potensinya tinggi atau rendah, penilaian tidak bisa bertumpu pada satu variabel saja dan perlu mempertimbangkan beberapa kriteria dengan bobot yang berbeda.</p>
+      <p>Untuk itu, proyek ini memakai <em>Analytical Hierarchy Process</em> (AHP) yang dikembangkan oleh Thomas L. Saaty, yaitu model pendukung keputusan yang menguraikan masalah multi-kriteria yang kompleks menjadi hierarki, mulai dari tujuan, faktor, dan kriteria hingga alternatif. Dengan begitu, masalah menjadi lebih terstruktur, sistematis, dan mudah dipecahkan. AHP diterapkan untuk memetakan potensi air tanah di Pulau Jawa dengan delapan variabel dan mengelompokkannya ke dalam lima kelas potensi, dari sangat rendah hingga sangat tinggi.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Curah hujan</td><td>Raster</td><td>Sekunder</td></tr>
+            <tr><td>Geomorfologi</td><td>Vektor</td><td>Sekunder</td></tr>
+            <tr><td>Litologi</td><td>Vektor</td><td>Sekunder</td></tr>
+            <tr><td>Jenis tanah</td><td>Vektor</td><td>Sekunder</td></tr>
+            <tr><td>Tutupan lahan (land cover)</td><td>Raster</td><td>Sekunder</td></tr>
+            <tr><td>Kelerengan (DEM)</td><td>Raster</td><td>Sekunder</td></tr>
+            <tr><td>NDVI</td><td>Raster</td><td>Sekunder</td></tr>
+            <tr><td>Topographic Wetness Index (TWI)</td><td>Raster</td><td>Sekunder</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Seluruh data adalah data sekunder yang diolah dengan metode AHP. Setiap variabel dibandingkan secara berpasangan untuk menentukan bobotnya, lalu peta tiap variabel ditumpangsusunkan (overlay) berdasarkan bobot tersebut. Hasilnya diklasifikasikan menjadi lima kelas potensi air tanah: sangat rendah, rendah, sedang, tinggi, dan sangat tinggi.</p>
+
+      <p>Bobot kedelapan variabel hasil AHP ditunjukkan pada tabel berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-left">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Variabel</th>
+              <th>Bobot (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Curah hujan</td><td>30,41</td></tr>
+            <tr><td>2</td><td>Geomorfologi</td><td>16,13</td></tr>
+            <tr><td>3</td><td>Litologi</td><td>15,50</td></tr>
+            <tr><td>4</td><td>Jenis tanah</td><td>8,98</td></tr>
+            <tr><td>5</td><td>Land cover</td><td>8,97</td></tr>
+            <tr><td>6</td><td>Lereng</td><td>8,46</td></tr>
+            <tr><td>7</td><td>NDVI</td><td>6,80</td></tr>
+            <tr><td>8</td><td>Topographic Wetness Index</td><td>4,73</td></tr>
+            <tr class="total-row"><td></td><td>Consistency Ratio</td><td>0,0986</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Hasil</h2>
+
+      <p>Potensi air tanah di Pulau Jawa terbagi dalam lima kelas dan menunjukkan pola mengelompok. Potensi sangat tinggi cenderung berada di bagian barat Pulau Jawa, sedangkan potensi sangat rendah lebih banyak di bagian timur. Kelas lainnya tersebar relatif merata di hampir seluruh wilayah. Perbedaan ini mencerminkan karakteristik wilayah yang beragam, seperti lereng curam, jenis tanah andosol, dan bentuk lahan berbukit.</p>
+
+      <figure class="map-airtanah-figure">
+        <a href="assets/maps/airtanah.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/airtanah.jpg" alt="Peta persebaran potensi air tanah di Pulau Jawa">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta persebaran potensi air tanah di Pulau Jawa dengan metode AHP</figcaption>
+      </figure>
+
+      <p>Nilai Consistency Ratio sebesar 0,0986 berada di bawah batas 0,1, sehingga pembobotan dinilai cukup konsisten dan dapat diterima. Curah hujan menjadi variabel paling berpengaruh karena jumlah dan intensitasnya menentukan banyaknya air yang meresap ke dalam tanah. Geomorfologi menyusul karena bentuk lahan mengatur pergerakan dan penampungan air, lalu litologi yang menentukan kemampuan batuan menyimpan air. Variabel lain berperan lebih kecil: jenis tanah (tekstur dan bahan organik), tutupan lahan (kawasan bervegetasi menaikkan infiltrasi, sedangkan permukiman dan lahan terbangun menguranginya), lereng (laju aliran permukaan), NDVI (indikator vegetasi), dan TWI (kelembaban tanah berdasarkan topografi).</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Potensi air tanah di Pulau Jawa mengelompok, dengan potensi sangat tinggi di barat dan sangat rendah di timur. Curah hujan, geomorfologi, dan litologi menjadi tiga faktor terpenting dalam penentuan potensi tersebut. Pembobotan AHP yang digunakan cukup konsisten (CR 0,0986), tetapi hasil pemetaan ini masih berbasis data sekunder dan belum divalidasi lapangan, sehingga perlu diuji dengan survei, misalnya melalui random sampling, sebelum dijadikan acuan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

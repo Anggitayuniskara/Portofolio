@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Species Distribution Model Jalak Bali dengan Machine Learning Pipeline</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Machine Learning</span>
+      <h1>Pengembangan Model Distribusi Spesies dengan Integrasi Data Lingkungan dan Machine Learning Pipeline</h1>
+      <p class="post-meta">Juni 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Untuk melindungi suatu spesies, pertanyaan pertama yang harus dijawab adalah di mana ia hidup dan wilayah mana yang masih cocok baginya. Jalak Bali (<em>Leucopsar rothschildi</em>) adalah burung yang dikenal endemik Bali dengan habitat yang sangat terbatas, sementara data lapangan tentang sebarannya sulit dan mahal diperoleh. Karena itu, titik kemunculan spesies yang tersedia secara terbuka, seperti data GBIF, perlu dimanfaatkan semaksimal mungkin.</p>
+      <p>Salah satu caranya adalah memadukan titik kemunculan tersebut dengan data lingkungan lewat model distribusi spesies. Agar prosesnya rapi, dapat diulang, dan bisa diterapkan pada spesies lain, proyek ini membangunnya dalam sebuah <em>machine learning pipeline</em> di Python, yaitu rangkaian tahapan sistematis yang mengubah data mentah menjadi data siap olah untuk prediksi, mulai dari pembangunan, pelatihan, evaluasi, hingga penerapan model. Proyek ini menguji pipeline tersebut pada Jalak Bali, lalu menafsirkan pola sebarannya dengan elevasi, vegetasi, dan curah hujan.</p>
+
+      <h2>Data yang digunakan</h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Data</th><th>Sumber / Format</th><th>Kegunaan</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Titik kemunculan Jalak Bali</td><td>GBIF (via <em>pygbif</em>)</td><td>Data kehadiran spesies</td></tr>
+            <tr><td>Batas wilayah Indonesia</td><td>Shapefile (SHP)</td><td>Filter titik dan peta dasar</td></tr>
+            <tr><td>NDVI</td><td>Raster (<em>Ina-ndvi.tif</em>)</td><td>Prediktor: kerapatan vegetasi</td></tr>
+            <tr><td>Kepadatan penduduk (WorldPop)</td><td>Raster (<em>Ina-wpop.tif</em>)</td><td>Prediktor: tekanan manusia</td></tr>
+            <tr><td>Landform</td><td>Raster (<em>Ina-landform.tif</em>)</td><td>Prediktor: bentuk lahan</td></tr>
+            <tr><td>DEMNAS</td><td>Raster elevasi</td><td>Interpretasi habitat di Bali</td></tr>
+            <tr><td>Curah hujan (5 tahun)</td><td>Raster</td><td>Interpretasi habitat di Bali</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+      <p>Seluruh proses dikerjakan di Google Colab dengan Python, lalu interpretasi peta disusun di ArcGIS. Tahapannya:</p>
+      <ol>
+        <li><strong>Persiapan data kehadiran.</strong> Pustaka <em>pyspatialml</em>, <em>pygbif</em>, <em>geopandas</em>, <em>matplotlib</em>, dan <em>basemap</em> dipasang dan diimpor. Titik kemunculan Jalak Bali diambil dari GBIF lewat fungsi buatan sendiri, lalu diubah menjadi <em>GeoDataFrame</em> dengan CRS EPSG:4326.</li>
+        <li><strong>Titik acak dan filter wilayah.</strong> Ditambahkan 30 titik acak berlabel <em>noFoundSpecies</em> sebagai data "tidak ditemukan". Semua titik difilter dengan <em>spatial join</em> terhadap batas Indonesia, dan kelas diberi kode 1 untuk Jalak Bali dan 0 untuk titik acak.</li>
+        <li><strong>Penyusunan prediktor.</strong> Tiga raster (NDVI, WorldPop, landform) ditumpuk menjadi satu <em>raster stack</em>, lalu nilainya diekstrak pada setiap titik dan digabung dengan kelas spesies. Data dibersihkan dari nilai kosong dan kolom geometri.</li>
+        <li><strong>Pelatihan model.</strong> Pipeline dibuat dari <em>ColumnTransformer</em> (<em>OneHotEncoder</em>) dan <em>ExtraTreesRegressor</em> dengan 500 pohon, lalu dilatih dengan fitur sebagai X dan kelas sebagai y.</li>
+        <li><strong>Evaluasi dan prediksi.</strong> Model dievaluasi dengan 10-fold <em>cross validation</em> dan RMSE, <em>feature importance</em> dihitung, lalu model dipakai untuk memprediksi seluruh raster stack.</li>
+        <li><strong>Interpretasi habitat.</strong> Sebaran titik dioverlay dengan DEMNAS, NDVI, dan curah hujan di ArcGIS untuk membaca pola habitat di Provinsi Bali.</li>
+      </ol>
+
+      <h2>Hasil</h2>
+
+      <p>Ada tiga temuan utama. Pertama, data kehadiran Jalak Bali sangat timpang: hampir seluruh titik menumpuk di satu sudut area kajian, dan hanya beberapa titik yang tersebar di Bali bagian tengah dan timur. Kedua, dengan data sesempit itu dan tiga prediktor nasional (NDVI, kepadatan penduduk, landform), model belum mampu membedakan habitat yang cocok dan tidak cocok. Ketiga, ketika titik-titik tersebut dibaca langsung bersama DEMNAS, NDVI, dan curah hujan, pola yang konsisten muncul: Jalak Bali berada di wilayah tinggi, bervegetasi rapat, dan lebih basah.</p>
+
+      <p>Ketimpangan data terlihat jelas pada peta berikut. Titik Jalak Bali mengelompok padat di barat laut area kajian, dekat Pulau Jawa, sementara titik acak sebagai data pembanding tersebar di Jawa bagian barat. Spesies dengan sebaran sesempit ini hanya memberi sedikit contoh bagi model untuk belajar.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/jalakbali-sebaran.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/jalakbali-sebaran.jpg" alt="Sebaran titik Jalak Bali dan titik acak">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Sebaran titik Jalak Bali dan titik acak</figcaption>
+      </figure>
+
+      <p>Akibatnya, grafik <em>feature importance</em> tidak menunjukkan prediktor yang dominan. Nilai NDVI, kepadatan penduduk, dan landform semuanya berada di sekitar nol. Tidak ada satu pun dari ketiganya yang dapat disebut sebagai penentu utama sebaran Jalak Bali berdasarkan model ini.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/jalakbali-importance.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/jalakbali-importance.jpg" alt="Grafik feature importance model Jalak Bali">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> <em>Feature importance</em> dari model</figcaption>
+      </figure>
+
+      <p>Hal ini tercermin pada peta prediksi untuk seluruh Indonesia. Nilainya hampir seragam di semua daratan, dengan rentang yang sangat sempit (sekitar −0,1 sampai 0,1), sehingga peta ini belum bisa dipakai untuk menunjuk area yang layak dilindungi. Temuan ini penting: untuk spesies endemik dengan sebaran sempit, prediktor tingkat nasional dan sedikit titik kehadiran tidak cukup untuk menghasilkan peta kesesuaian habitat yang berguna.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/jalakbali-prediksi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/jalakbali-prediksi.jpg" alt="Hasil prediksi model distribusi Jalak Bali">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Hasil prediksi distribusi spesies</figcaption>
+      </figure>
+
+      <p>Karena model belum bisa menjawab, pola habitat dibaca langsung dari data lingkungan, dan di sini hasilnya lebih tegas. Pada peta DEMNAS, yang elevasinya berkisar dari sekitar −3 hingga 2.911, titik Jalak Bali terkonsentrasi di barat laut yang berelevasi cukup tinggi, ditambah beberapa titik di tengah dan timur Bali yang juga berada di area lebih tinggi. Sebagai burung yang bisa terbang, Jalak Bali mampu menjangkau ketinggian tersebut, dan wilayah tinggi lebih sulit dijangkau predator darat sehingga burung ini lebih terlindungi.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/jalakbali-demnas.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/jalakbali-demnas.jpg" alt="Peta DEMNAS dan sebaran Jalak Bali">
+        </a>
+        <figcaption><strong>Gambar 4.</strong> Peta sebaran Jalak Bali dengan DEMNAS</figcaption>
+      </figure>
+
+      <p>Pola yang sama muncul pada NDVI, dan di sini terlihat persoalan yang lebih besar. Bagian selatan Bali bervegetasi rendah karena sudah banyak terisi permukiman, sedangkan vegetasi rapat bertahan di wilayah yang lebih tinggi, tempat sebagian besar titik Jalak Bali berada. Dengan kata lain, vegetasi rapat yang menjadi habitat Jalak Bali kini terdesak ke wilayah tinggi, sementara wilayah rendah sudah berubah menjadi perkotaan.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/jalakbali-ndvi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/jalakbali-ndvi.jpg" alt="Peta NDVI dan sebaran Jalak Bali">
+        </a>
+        <figcaption><strong>Gambar 5.</strong> Peta sebaran Jalak Bali dengan NDVI</figcaption>
+      </figure>
+
+      <p>Curah hujan memperkuat gambaran tersebut. Variasinya kecil karena datanya dirata-ratakan selama lima tahun, tetapi curah hujan cenderung lebih besar di wilayah yang lebih tinggi, selaras dengan pola elevasi dan vegetasi. Seluruh titik Jalak Bali berada di area yang memiliki data curah hujan.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/jalakbali-hujan.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/jalakbali-hujan.jpg" alt="Peta curah hujan dan sebaran Jalak Bali">
+        </a>
+        <figcaption><strong>Gambar 6.</strong> Peta sebaran Jalak Bali dengan curah hujan</figcaption>
+      </figure>
+
+      <p>Ketiga pola tersebut saling menguatkan:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Pola di wilayah kajian</th>
+              <th>Artinya bagi Jalak Bali</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DEMNAS</td>
+              <td>Elevasi rendah di selatan dan pesisir, makin tinggi ke wilayah tengah dan barat laut.</td>
+              <td>Titik terkonsentrasi di wilayah tinggi, tempat burung ini mampu terbang dan lebih terlindung dari predator darat.</td>
+            </tr>
+            <tr>
+              <td>NDVI</td>
+              <td>Vegetasi rendah di selatan yang padat permukiman, makin rapat ke wilayah tinggi.</td>
+              <td>Sebagian besar titik berada di area bervegetasi rapat, yang kini terdesak ke wilayah tinggi.</td>
+            </tr>
+            <tr>
+              <td>Curah hujan</td>
+              <td>Variasi kecil, namun cenderung lebih besar di wilayah tinggi.</td>
+              <td>Habitat cenderung berada di wilayah yang lebih tinggi dan lebih basah.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Proyek ini menunjukkan bahwa membangun model distribusi spesies bukan sekadar menjalankan algoritma. Kualitas dan jumlah data kehadiran serta pemilihan prediktor menentukan apakah prediksinya bermakna. Pipeline berhasil mengalirkan data dari GBIF hingga peta prediksi, tetapi dengan titik kehadiran yang timpang dan tiga prediktor nasional, hasilnya masih seragam sehingga belum bisa menunjuk habitat yang layak dilindungi. Meski begitu, pembacaan langsung terhadap DEMNAS, NDVI, dan curah hujan memberi petunjuk awal bahwa habitat Jalak Bali berada di wilayah tinggi yang bervegetasi rapat dan lebih basah, sementara wilayah rendah sudah banyak terisi permukiman. Langkah berikutnya adalah menambah titik kehadiran yang sudah diverifikasi dan memakai prediktor beresolusi lebih detail di Bali, supaya pipeline ini dapat menghasilkan peta kesesuaian habitat yang berguna bagi konservasi.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

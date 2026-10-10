@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemantauan Tutupan Lahan Bogor dengan Tasseled Cap Transformation</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Remote Sensing</span>
+      <h1>Pemanfaatan Tasseled Cap Transformation untuk Pemantauan Tutupan Lahan di Wilayah Bogor Tahun 2023</h1>
+      <p class="post-meta">September 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+        <p>Pertumbuhan penduduk selalu diikuti naiknya kebutuhan lahan untuk permukiman, industri, dan pertanian. Akibatnya, hutan, lahan terbuka, dan vegetasi alami perlahan berubah fungsi. Bogor adalah salah satu contohnya. Sebagai wilayah dengan pertumbuhan penduduk yang pesat, pola penggunaan lahannya berubah signifikan akibat ekspansi perkotaan, pembangunan infrastruktur, dan intensifikasi pertanian. Karena itu, tutupan lahannya perlu dipantau secara berkala agar pembangunan tetap berjalan seimbang dengan kelestarian lingkungan.</p>
+        <p>Untuk wilayah seluas Bogor, pemantauan di lapangan tentu memakan waktu dan biaya, sehingga penginderaan jauh menjadi pilihan yang lebih efisien. Salah satu metodenya adalah <em>Tasseled Cap Transformation</em> (TCT), yang meringkas band-band citra satelit menjadi tiga komponen yang mudah dibaca: <em>brightness</em> yang menggambarkan kecerahan permukaan seperti lahan terbangun dan lahan terbuka, <em>greenness</em> yang menggambarkan kerapatan vegetasi, dan <em>wetness</em> yang menggambarkan kelembaban tanah maupun vegetasi. Ketiga komponen ini saling melengkapi untuk membedakan jenis tutupan lahan. Proyek ini menerapkan TCT pada citra Landsat 8 untuk memetakan kondisi tutupan lahan di Kabupaten dan Kota Bogor.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Citra Landsat 8 (6 September 2023), band 2–7</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+            <tr><td>Batas administrasi Kabupaten dan Kota Bogor</td><td>Shapefile</td><td>Sekunder</td><td>Ina-Geoportal</td></tr>
+            <tr><td>Citra pembanding (utara dan selatan Bogor)</td><td>Citra satelit</td><td>Sekunder</td><td>Google Earth Pro</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Pengolahan dilakukan di Google Earth Engine (GEE), kemudian tata letak peta disusun di ArcGIS Pro. Tahapannya:</p>
+      <ol>
+        <li>Mengunggah shapefile batas Kabupaten dan Kota Bogor ke GEE sebagai wilayah kajian (ROI).</li>
+        <li>Mendefinisikan koefisien Tasseled Cap Landsat dalam bentuk array 6×6.</li>
+        <li>Memanggil citra Landsat 8 dan memilih band B2, B3, B4, B5, B6, dan B7.</li>
+        <li>Mengubah citra menjadi array image 1-D dan 2-D per piksel (6×1).</li>
+        <li>Melakukan perkalian matriks antara koefisien dan array piksel, sehingga menghasilkan komponen <em>brightness</em>, <em>greenness</em>, dan <em>wetness</em>.</li>
+        <li>Memotong citra sesuai batas administrasi, lalu mengekspor hasilnya ke Google Drive.</li>
+        <li>Menyusun layout peta di ArcGIS Pro sesuai kaidah kartografi. Peta komposit memakai kombinasi RGB: merah = <em>brightness</em>, hijau = <em>greenness</em>, biru = <em>wetness</em>.</li>
+      </ol>
+
+      <h2>Hasil</h2>
+
+      <p>Peta komposit menunjukkan pola yang jelas: warna biru mendominasi bagian selatan dan warna merah mendominasi bagian utara. Biru menandakan wilayah yang cenderung lembab dan bervegetasi, sedangkan merah menandakan wilayah yang cenderung kering dengan vegetasi minim.</p>
+
+      <figure class="map-kedalaman-figure">
+        <a href="assets/maps/tct-komposit.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/tct-komposit.jpg" alt="Peta komposit Tasseled Cap Transformation wilayah Bogor 2023">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta komposit TCT wilayah Bogor tahun 2023</figcaption>
+      </figure>
+
+      <p>Bagian utara berbatasan langsung dengan kota padat penduduk seperti Tangerang Selatan, Depok, dan Bekasi, sehingga banyak permukiman tumbuh di pinggiran dan mengurangi vegetasi. Bagian selatan berbatasan dengan Kabupaten Sukabumi yang berada di dataran tinggi dekat pegunungan, sehingga vegetasinya masih banyak dan wilayahnya lebih lembab. Pola ini sesuai dengan citra pembanding dari Google Earth Pro.</p>
+
+      <div class="map-grid map-grid--pair">
+        <figure>
+          <a href="assets/maps/tct-banding-utara.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tct-banding-utara.jpg" alt="Perbandingan TCT dan citra Google Earth wilayah utara Bogor">
+          </a>
+          <figcaption><strong>Gambar 2. </strong>Perbandingan wilayah utara Bogor</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tct-banding-selatan.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tct-banding-selatan.jpg" alt="Perbandingan TCT dan citra Google Earth wilayah selatan Bogor">
+          </a>
+          <figcaption><strong>Gambar 3. </strong>Perbandingan wilayah selatan Bogor</figcaption>
+        </figure>
+      </div>
+
+      <p>Masing-masing komponen juga dipetakan terpisah:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Komponen</th>
+              <th>Rentang nilai</th>
+              <th>Interpretasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><em>Brightness</em></td>
+              <td>0,10 – 2,20</td>
+              <td>Nilai tinggi menandakan permukaan yang memantulkan banyak cahaya, seperti lahan terbangun dan tanah terbuka. Nilai rendah, yaitu bagian selatan, menandakan vegetasi yang lebih rapat. Bagian utara tampak lebih gelap pada peta, yang menandakan vegetasinya minim.</td>
+            </tr>
+            <tr>
+              <td><em>Greenness</em></td>
+              <td>-0,25 – 0,32</td>
+              <td>Semakin kuning, vegetasi semakin subur. Kuning dominan di selatan, sedangkan hijau (vegetasi minim atau lahan terbangun) dominan di utara.</td>
+            </tr>
+            <tr>
+              <td><em>Wetness</em></td>
+              <td>-1,13 – 0,14</td>
+              <td>Semakin biru gelap, wilayah semakin lembab. Nilai tertinggi ada di selatan yang berelevasi lebih tinggi dan bervegetasi, nilai terendah ada di utara yang merupakan area permukiman.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="map-grid">
+        <figure>
+          <a href="assets/maps/tct-brightness.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tct-brightness.jpg" alt="Peta Tasseled Cap Brightness Bogor 2023">
+          </a>
+          <figcaption><strong>Gambar 4. </strong>Brightness</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tct-greenness.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tct-greenness.jpg" alt="Peta Tasseled Cap Greenness Bogor 2023">
+          </a>
+          <figcaption><strong>Gambar 5. </strong>Greenness</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/tct-wetness.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/tct-wetness.jpg" alt="Peta Tasseled Cap Wetness Bogor 2023">
+          </a>
+          <figcaption><strong>Gambar 6. </strong>Wetness</figcaption>
+        </figure>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Tutupan lahan di wilayah Bogor cenderung seimbang antara vegetasi dan non-vegetasi. Bagian selatan Kabupaten Bogor masih didominasi vegetasi karena berada di dataran tinggi dekat pegunungan dan relatif sulit dijadikan permukiman. Bagian utara sudah banyak didominasi lahan non-vegetasi seperti lahan terbangun dan lahan terbuka, terutama akibat limpahan permukiman dari Depok, Bekasi, dan Tangerang Selatan. Tasseled Cap Transformation terbukti efektif memetakan pola ini lewat tiga komponennya, dan dapat dimanfaatkan untuk perencanaan penggunaan lahan berkelanjutan, identifikasi risiko bencana seperti banjir dan longsor, serta pemantauan kesehatan hutan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

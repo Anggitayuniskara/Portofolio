@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distribusi Penduduk ke Unit Piksel di Kelurahan Panjer, Denpasar</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Spatial Modeling</span>
+      <h1>Distribusi Penduduk ke Unit Piksel di Kelurahan Panjer, Denpasar: Pemanfaatan NDBI Sentinel-2 dan Uji Sensitivitasnya</h1>
+      <p class="post-meta">Oktober 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Data kependudukan resmi dilaporkan per wilayah administrasi. Untuk Kelurahan Panjer di Denpasar Selatan, misalnya, kita tahu ada 23.228 penduduk pada 2023, tetapi tidak tahu di bagian mana mereka paling padat. Padahal perencanaan layanan publik, penentuan jalur evakuasi, dan penanganan bencana membutuhkan gambaran yang lebih rinci daripada satu angka untuk seluruh kelurahan.</p>
+      <p>Salah satu caranya adalah mendistribusikan penduduk ke unit piksel citra satelit, dengan keterbangunan lahan sebagai petunjuk: lokasi terbangun diasumsikan dihuni, lahan tidak terbangun tidak. Indikator yang dipakai adalah <em>Normalized Difference Built-Up Index</em> (NDBI) dari citra Sentinel-2. Namun sebaran yang dihasilkan sangat bergantung pada pilihan analisis, yaitu ambang batas NDBI, resolusi piksel, dan cara pembobotan. Karena itu proyek ini tidak berhenti pada pembuatan peta, tetapi juga menguji seberapa sensitif hasilnya terhadap ketiga pilihan tersebut.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Citra Sentinel-2 (1 Januari – 31 Desember 2023, tutupan awan &lt; 10%), Band 8 (NIR) dan Band 11 (SWIR)</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+            <tr><td>Batas administrasi Kelurahan Panjer</td><td>Shapefile</td><td>Sekunder</td><td>Badan Informasi Geospasial</td></tr>
+            <tr><td>Area pemukiman Kelurahan Panjer</td><td>Shapefile</td><td>Sekunder</td><td>Badan Informasi Geospasial</td></tr>
+            <tr><td>Jumlah penduduk Kelurahan Panjer tahun 2023 (23.228 jiwa)</td><td>Tabular</td><td>Sekunder</td><td>BPS / Disdukcapil Kota Denpasar</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Pengolahan dilakukan di Google Earth Engine (GEE) dan ArcGIS Pro. Tahapannya:</p>
+      <ol>
+        <li><strong>Menghitung NDBI di GEE.</strong> Citra Sentinel-2 tahun 2023 disaring berdasarkan batas kelurahan dan tutupan awan di bawah 10%, lalu diambil nilai mediannya. NDBI dihitung dengan rumus (Band 11 − Band 8) / (Band 11 + Band 8), kemudian dipotong sesuai batas kelurahan dan diekspor ke ArcGIS dengan resolusi 10 m.</li>
+        <li><strong>Mengklasifikasikan area terbangun.</strong> Nilai NDBI negatif diasumsikan sebagai lahan tidak terbangun dan nilai positif sebagai lahan terbangun.</li>
+        <li><strong>Menyamakan data.</strong> Shapefile pemukiman dipotong sesuai batas kelurahan dan diubah menjadi raster dengan <em>Polygon to Raster</em>, lalu resolusinya disamakan menjadi 10 m dengan <em>Project Raster</em>. NDBI kemudian dipotong sesuai area pemukiman dengan <em>Extract by Mask</em>, difilter dengan <em>Extract by Attributes</em> (nilai lebih besar dari 0), dan diklasifikasikan ulang dengan <em>Reclassify</em>.</li>
+        <li><strong>Mendistribusikan penduduk ke piksel.</strong> <em>Zonal Statistics as Table</em> menjumlahkan nilai NDBI terbangun (1.504,19). Jumlah penduduk dibagi nilai tersebut sehingga diperoleh faktor kalibrasi 15,44. Raster Calculator mengalikan NDBI dengan faktor ini, lalu fungsi <em>Int</em> membulatkannya menjadi bilangan bulat. Hasilnya masih di bawah jumlah penduduk sebenarnya (17.102), sehingga dihitung rasio kalibrasi (jumlah penduduk asli dibagi hasil perhitungan, yaitu 1,35) lalu dikalikan kembali ke distribusi per piksel.</li>
+        <li><strong>Menentukan pemusatan.</strong> Analisis <em>Hot Spot Getis-Ord Gi*</em> dengan <em>fixed distance band</em> dipakai untuk melihat di mana penduduk terkonsentrasi.</li>
+        <li><strong>Uji sensitivitas.</strong> Proses yang sama diulang untuk tiga skenario: ambang NDBI (&gt;0, &gt;0,1, dan &gt;0,2), resolusi piksel (10 m, 30 m, dan 50 m dengan <em>resampling</em> dan proyeksi UTM zona 50S), serta pembobotan alternatif memakai luas area pemukiman sebagai pengganti NDBI.</li>
+      </ol>
+
+      <h2>Hasil</h2>
+
+      <p>Temuan utamanya: penduduk Panjer terkonsentrasi di bagian barat laut kelurahan, dan sebaran per pikselnya sangat dipengaruhi pilihan analisis. Ambang NDBI yang makin tinggi memadatkan penduduk ke piksel yang makin sedikit, resolusi menentukan seberapa dekat total penduduk dengan data resmi, dan metode pembobotan mengubah pola dari halus menjadi berblok.</p>
+
+      <p>Langkah pertama adalah memisahkan lahan terbangun dari tidak terbangun. Nilai NDBI berkisar dari −0,465 hingga 0,358. Dengan batas nol, 27.806 piksel (85%) berklasifikasi terbangun dan 4.641 piksel (15%) tidak terbangun, sehingga bangunan hampir menutupi seluruh kelurahan.</p>
+
+      <figure class="map-kedalaman-figure1">
+        <a href="assets/maps/penduduk-ndbi.png" target="_blank" rel="noopener">
+          <img src="assets/maps/penduduk-ndbi.png" alt="Peta lahan terbangun dan tidak terbangun Kelurahan Panjer berdasarkan NDBI 2023">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta lahan terbangun dan tidak terbangun di Kelurahan Panjer</figcaption>
+      </figure>
+
+      <p>Dari 23.228 penduduk yang dialokasikan ke piksel 10 m, hampir semuanya menempati piksel dengan hanya 1 sampai 3 jiwa (sekitar 98% piksel terisi), dan nilai paling sering adalah 2 jiwa per piksel. Total hasil perhitungan adalah 24.820, sekitar 7% di atas jumlah sebenarnya. Pada peta, penduduk mendominasi bagian barat laut kelurahan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Penduduk per piksel</th>
+              <th>Jumlah piksel</th>
+              <th>Penduduk × jumlah piksel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>3.494</td><td>3.494</td></tr>
+            <tr><td>2</td><td>5.232</td><td>10.464</td></tr>
+            <tr><td>3</td><td>3.248</td><td>9.744</td></tr>
+            <tr><td>4</td><td>272</td><td>1.088</td></tr>
+            <tr><td>5</td><td>6</td><td>30</td></tr>
+            <tr class="total-row"><td colspan="2">Total</td><td>24.820</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="map-kedalaman-figure1">
+        <a href="assets/maps/penduduk-distribusi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/penduduk-distribusi.jpg" alt="Peta distribusi penduduk per piksel resolusi 10 meter Kelurahan Panjer 2023">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Peta distribusi penduduk per piksel di Panjer (resolusi 10 m)</figcaption>
+      </figure>
+
+      <p>Analisis <em>hot spot</em> menegaskan pola itu: pemusatan penduduk terjadi di sisi kiri atas kelurahan, yaitu bagian tengah dari area sebaran yang terlihat pada peta sebelumnya.</p>
+
+      <figure class="map-kedalaman-figure1">
+        <a href="assets/maps/penduduk-hotspot.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/penduduk-hotspot.jpg" alt="Peta hot spot distribusi penduduk Kelurahan Panjer resolusi 10 meter">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Hot spot distribusi penduduk di Panjer (resolusi 10 m)</figcaption>
+      </figure>
+
+      <p>Sensitivitas pertama datang dari ambang batas NDBI. Semakin tinggi ambangnya, semakin sedikit piksel yang lolos, tetapi jumlah penduduk yang harus ditampung tetap sama. Akibatnya penduduk menumpuk di piksel yang tersisa: pada ambang &gt;0 terdapat 12.252 piksel dengan 1–5 jiwa per piksel, pada &gt;0,1 tersisa 8.305 piksel dengan 2–7 jiwa, dan pada &gt;0,2 hanya 130 piksel yang tersisa dengan 189–254 jiwa per piksel. Angka terakhir ini tidak masuk akal untuk piksel 10 m × 10 m, sehingga ambang yang terlalu tinggi memberi gambaran sebaran yang menyesatkan. Pada peta <em>hot spot</em>, pola pemusatan bahkan nyaris hilang di ambang ini.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ambang NDBI</th>
+              <th>Piksel terisi</th>
+              <th>Penduduk per piksel</th>
+              <th>Total penduduk</th>
+              <th>Selisih dari data resmi (23.228)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>&gt; 0</td><td>12.252</td><td>1–5</td><td>24.820</td><td>+1.592</td></tr>
+            <tr><td>&gt; 0,1</td><td>8.305</td><td>2–7</td><td>26.221</td><td>+2.993</td></tr>
+            <tr><td>&gt; 0,2</td><td>130</td><td>189–254</td><td>26.190</td><td>+2.962</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="map-grid">
+        <figure>
+          <a href="assets/maps/penduduk-threshold-0.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-threshold-0.jpg" alt="Distribusi penduduk per piksel dengan threshold lebih dari 0">
+          </a>
+          <figcaption><strong>Gambar 4. </strong>Ambang &gt;0</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/penduduk-threshold-01.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-threshold-01.jpg" alt="Distribusi penduduk per piksel dengan threshold lebih dari 0,1">
+          </a>
+          <figcaption><strong>Gambar 5. </strong>Ambang &gt;0,1</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/penduduk-threshold-02.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-threshold-02.jpg" alt="Distribusi penduduk per piksel dengan threshold lebih dari 0,2">
+          </a>
+          <figcaption><strong>Gambar 6. </strong>Ambang &gt;0,2</figcaption>
+        </figure>
+      </div>
+
+      <p>Sensitivitas kedua datang dari resolusi. Makin kasar resolusinya, makin lebar rentang jumlah penduduk per piksel, karena satu piksel mencakup area yang makin luas. Rentangnya naik dari 1–5 jiwa pada 10 m, menjadi 1–36 pada 30 m, dan 1–89 pada 50 m. Total penduduknya juga bergeser: resolusi 30 m menghasilkan angka paling dekat dengan data resmi (selisih hanya 31 jiwa), sedangkan resolusi 10 m paling jauh. Kemungkinan penyebabnya adalah pembulatan ke bilangan bulat pada piksel kecil yang hanya berisi 1–5 jiwa, yang menumpuk menjadi selisih besar saat dijumlahkan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Resolusi</th>
+              <th>Piksel terisi</th>
+              <th>Penduduk per piksel</th>
+              <th>Total penduduk</th>
+              <th>Selisih dari data resmi (23.228)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>10 m</td><td>12.252</td><td>1–5</td><td>24.820</td><td>+1.592</td></tr>
+            <tr><td>30 m</td><td>1.500</td><td>1–36</td><td>23.259</td><td>+31</td></tr>
+            <tr><td>50 m</td><td>540</td><td>1–89</td><td>23.053</td><td>−175</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="map-grid">
+        <figure>
+          <a href="assets/maps/penduduk-resolusi-10.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-resolusi-10.jpg" alt="Distribusi penduduk per piksel resolusi 10 meter">
+          </a>
+          <figcaption><strong>Gambar 7. </strong>Resolusi 10 m</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/penduduk-resolusi-30.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-resolusi-30.jpg" alt="Distribusi penduduk per piksel resolusi 30 meter">
+          </a>
+          <figcaption><strong>Gambar 8. </strong>Resolusi 30 m</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/penduduk-resolusi-50.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-resolusi-50.jpg" alt="Distribusi penduduk per piksel resolusi 50 meter">
+          </a>
+          <figcaption><strong>Gambar 9. </strong>Resolusi 50 m</figcaption>
+        </figure>
+      </div>
+
+      <p>Sensitivitas ketiga datang dari cara pembobotan. Bila NDBI diganti dengan luas area pemukiman sebagai bobot, penduduk dialokasikan menurut besar area dan total hasilnya persis 23.228, sama dengan data resmi. Pola petanya sangat berbeda: dengan NDBI, sebaran tampak lebih merata dan halus, sedangkan dengan luas pemukiman sebaran berbentuk blok-blok sesuai poligon pemukiman. Pada data yang dipakai, satu poligon besar menutupi sekitar 90% luas pemukiman sehingga menyerap sekitar 90% penduduk, dan sebarannya menjadi hampir datar di dalam poligon itu. Pembobotan ini juga tidak menangkap pemusatan penduduk di dalam poligon yang sama.</p>
+
+      <div class="map-grid map-grid--pair">
+        <figure>
+          <a href="assets/maps/penduduk-bobot-ndbi.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-bobot-ndbi.jpg" alt="Distribusi penduduk per piksel dengan bobot NDBI">
+          </a>
+          <figcaption><strong>Gambar 10. </strong>Bobot NDBI</figcaption>
+        </figure>
+        <figure>
+          <a href="assets/maps/penduduk-bobot-area.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/penduduk-bobot-area.jpg" alt="Distribusi penduduk per piksel dengan bobot area pemukiman">
+          </a>
+          <figcaption><strong>Gambar 11. </strong>Bobot luas area pemukiman</figcaption>
+        </figure>
+      </div>
+
+      <p>Kelebihan dan kekurangan kedua metode pembobotan dirangkum berikut:</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Aspek</th>
+              <th>Bobot NDBI</th>
+              <th>Bobot luas area pemukiman</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kelebihan</td>
+              <td>Dirancang untuk membedakan area terbangun dan non-terbangun, bisa mendeteksi pemusatan bangunan padat, dan mudah diterapkan pada wilayah luas karena berbasis citra satelit.</td>
+              <td>Bertumpu pada data pemukiman yang jelas, sehingga estimasi lebih akurat bila data pemukimannya akurat, dan lebih mencerminkan lokasi tempat orang benar-benar tinggal.</td>
+            </tr>
+            <tr>
+              <td>Kekurangan</td>
+              <td>Kurang cocok untuk desa dengan pemukiman yang tidak masif, dan dapat keliru pada bangunan tinggi atau penggunaan lahan yang bervariasi.</td>
+              <td>Akurasi sepenuhnya bergantung pada data pemukiman, kurang variatif karena memperhitungkan luas keseluruhan, dan tidak menangkap pemusatan (<em>hot spot</em>) kepadatan.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Penduduk di tingkat kelurahan dapat dipetakan ke tingkat piksel dengan NDBI, tetapi hasilnya bukan fakta tunggal: ambang batas, resolusi, dan bobot sama-sama mengubah sebaran dan jumlah penduduk yang dihasilkan. Ambang yang terlalu ketat menjejalkan penduduk ke sedikit piksel secara tidak realistis, resolusi yang terlalu halus membuat pembulatan lebih berpengaruh sehingga total makin menyimpang, dan pembobotan luas pemukiman menghasilkan peta yang berblok sehingga tidak menangkap pemusatan. Tidak ada metode yang unggul di semua kondisi. NDBI lebih cocok untuk wilayah perkotaan yang terbangun masif, sedangkan luas pemukiman lebih cocok untuk wilayah yang heterogen seperti pedesaan. Karena itu, sebaran penduduk per piksel yang akan dipakai untuk perencanaan atau penanganan bencana sebaiknya selalu disertai uji sensitivitas, dan pilihan ambang, resolusi, serta bobot perlu disesuaikan dengan kondisi wilayah dan tujuan analisisnya.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

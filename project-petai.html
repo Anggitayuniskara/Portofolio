@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Kesesuaian Lahan untuk Tanaman Petai di Kabupaten Majalengka</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .code-block { background:#0f172a; color:#e2e8f0; padding:1rem 1.2rem; border-radius:10px; overflow-x:auto; font-size:.85rem; line-height:1.6; margin:1rem 0; }
+    .code-block code { font-family: "Consolas", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Land Suitability</span>
+      <h1>Analisis Kesesuaian Lahan untuk Tanaman Petai di Kabupaten Majalengka</h1>
+      <p class="post-meta">Mei 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Petai (<em>Parkia speciosa</em>) adalah tanaman polong-polongan tropis berbentuk pohon setinggi sekitar 20 meter. Selain dikonsumsi luas oleh masyarakat dan dimanfaatkan dalam pengobatan tradisional, petai memiliki nilai ekonomi yang tinggi. Kabupaten Majalengka termasuk salah satu produsen petai terbesar di Jawa Barat dengan produksi mencapai 75.807 kuintal, sehingga petai menjadi komoditas unggulan daerah ini.</p>
+      <p>Persoalannya, produksi petai di Majalengka menurun dalam beberapa tahun terakhir. Penyebabnya bisa beragam, mulai dari pengelolaan kebun hingga kondisi lahan. Salah satu faktor yang dapat diuji secara spasial adalah apakah lahan yang ada masih sesuai dengan syarat tumbuh petai. Evaluasi kesesuaian lahan penting karena menentukan potensi dan kelas lahan untuk jenis penggunaan tertentu, sekaligus menjadi dasar perencanaan peningkatan produksi dan pemanfaatan lahan yang optimal.</p>
+      <p>Namun, petani petai di Majalengka belum memiliki informasi yang memadai tentang kesesuaian lahannya. Penelitian ini menjawab celah tersebut dengan pertanyaan, yakni <strong>bagaimana kesesuaian lahan untuk penanaman petai di Kabupaten Majalengka?</strong> Jawabannya dicari dengan Sistem Informasi Geografis (SIG) melalui metode skoring dan analisis overlay terhadap lima variabel syarat tumbuh.</p>
+
+      <h2>Data yang digunakan</h2>
+      <p>Seluruh data adalah data sekunder yang diperoleh dari lembaga terkait. Setiap data dipilih karena mewakili satu syarat tumbuh petai.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Tahun</th>
+              <th>Sumber</th>
+              <th>Peran dalam Analisis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kelerengan</td>
+              <td>2022</td>
+              <td>DEMNAS</td>
+              <td>Diturunkan dari DEM menjadi kelas lereng (%)</td>
+            </tr>
+            <tr>
+              <td>Ketinggian</td>
+              <td>2022</td>
+              <td>DEMNAS</td>
+              <td>Kelas ketinggian (mdpl)</td>
+            </tr>
+            <tr>
+              <td>Curah hujan</td>
+              <td>2022</td>
+              <td>CHIRPS</td>
+              <td>Kelas curah hujan (mm/tahun)</td>
+            </tr>
+            <tr>
+              <td>Suhu permukaan</td>
+              <td>2022</td>
+              <td>USGS (Landsat)</td>
+              <td>Pendekatan syarat suhu tumbuh (°C)</td>
+            </tr>
+            <tr>
+              <td>Jenis tanah</td>
+              <td>2022</td>
+              <td>FAO</td>
+              <td>Kelas jenis tanah</td>
+            </tr>
+            <tr>
+              <td>Batas administrasi</td>
+              <td>–</td>
+              <td>INA Geoportal</td>
+              <td>Batas wilayah penelitian</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <h3>Wilayah penelitian</h3>
+      <p>Kabupaten Majalengka berada di bagian utara Provinsi Jawa Barat, berbatasan dengan Indramayu di utara, Cirebon dan Kuningan di timur, Garut, Tasikmalaya, dan Ciamis di selatan, serta Sumedang di barat. Morfologinya sangat beragam. Bagian utara didominasi dataran rendah, sedangkan bagian selatan berupa perbukitan terjal hingga pegunungan, termasuk Gunung Ciremai (3.076 mdpl). Variasi ini membuat Majalengka menarik untuk analisis kesesuaian lahan, karena kondisi fisiknya berubah cukup tajam dalam jarak yang dekat.</p>
+
+      <figure class="map-petai-figure">
+        <a href="assets/maps/peta-admin-majalengka.jpg" target="_blank" rel="noopener">
+        <img src="assets/maps/peta-admin-majalengka.jpg" alt="Peta administrasi Kabupaten Majalengka">
+      </a>
+        <figcaption><strong>Gambar 1.</strong> Peta wilayah penelitian</figcaption>
+      </figure>
+
+      <h3>Variabel dan skoring</h3>
+      <p>Lima variabel dipilih berdasarkan syarat tumbuh petai. Petai tumbuh lebih baik pada lereng landai, ketinggian sekitar 500 sampai 1000 mdpl (masih dapat tumbuh hingga 1500 mdpl dengan hasil kurang optimal), curah hujan sekitar 1000 sampai 2000 mm per tahun, tanah seperti latosol dan mediteran yang bertekstur halus dengan pH sedikit asam (5,5 sampai 6), serta suhu rata-rata sekitar 18 sampai 25 °C. Setiap variabel diklasifikasikan ke dalam empat kelas dan diberi skor 1 sampai 4 berdasarkan kriteria Badan Penelitian dan Pengembangan Pertanian (2011). Semakin tinggi skor, semakin sesuai kondisinya.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kelas</th>
+              <th>Skor</th>
+              <th>Lereng</th>
+              <th>Jenis Tanah</th>
+              <th>Ketinggian (mdpl)</th>
+              <th>Curah Hujan (mm)</th>
+              <th>Suhu (°C)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sangat sesuai (S1)</td>
+              <td>4</td>
+              <td>&lt; 8%</td>
+              <td>Latosol, Mediteran, Andosol, Regosol</td>
+              <td>500 – 1000</td>
+              <td>1000 – 2000</td>
+              <td>18 – 25</td>
+            </tr>
+            <tr>
+              <td>Cukup sesuai (S2)</td>
+              <td>3</td>
+              <td>8 – 16%</td>
+              <td>Podsolik Coklat</td>
+              <td>1001 – 1500</td>
+              <td>500 – 1000; 2000 – 3000</td>
+              <td>15 – 18; 25 – 30</td>
+            </tr>
+            <tr>
+              <td>Sesuai marginal (S3)</td>
+              <td>2</td>
+              <td>16 – 30%</td>
+              <td>Litosol, Histosol</td>
+              <td>1501 – 2000</td>
+              <td>250 – 500; 3000 – 4000</td>
+              <td>10 – 15; 30 – 35</td>
+            </tr>
+            <tr>
+              <td>Tidak sesuai (N)</td>
+              <td>1</td>
+              <td>&gt; 30%</td>
+              <td>Aluvial, Inceptisol</td>
+              <td>&gt; 2000</td>
+              <td>&lt; 250; &gt; 4000</td>
+              <td>&lt; 10; &gt; 35</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Alur pengolahan</h3>
+      <p>Setelah tiap variabel diklasifikasikan dan diberi skor, kelima layer digabungkan dengan teknik overlay (intersect) di ArcGIS Pro sehingga setiap poligon hasil memuat kombinasi kelima atribut sekaligus. Kombinasi itu kemudian diberi kelas kesesuaian melalui fungsi Calculate Field, lalu masing-masing kelas dipisahkan dengan Select.</p>
+
+      <figure class="map-petai-figure">
+        <a href="assets/maps/model-petai.jpg" target="_blank" rel="noopener">
+        <img src="assets/maps/model-petai.jpg" alt="Model pengolahan data kesesuaian lahan petai" style="max-width: 560px; width: 100%; height: auto; display: block; margin: 0 auto;">
+      </a>
+        <figcaption><strong>Gambar 2.</strong> Model pengolahan data</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Pengumpulan data</td>
+              <td>Mengumpulkan data sekunder lima variabel dan batas administrasi</td>
+            </tr>
+            <tr>
+              <td>2. Klasifikasi dan skoring</td>
+              <td>Mengubah tiap variabel menjadi kelas dan skor 1 sampai 4</td>
+            </tr>
+            <tr>
+              <td>3. Overlay (Intersect)</td>
+              <td>Menggabungkan lima layer beserta tabel atributnya</td>
+            </tr>
+            <tr>
+              <td>4. Penentuan kelas</td>
+              <td>Add Field dan Calculate Field untuk menetapkan kelas S1, S2, S3, atau N</td>
+            </tr>
+            <tr>
+              <td>5. Seleksi dan luasan</td>
+              <td>Select per kelas, lalu Calculate Geometry untuk luas dan persentase</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Penentuan kelas dilakukan dengan aturan kombinasi. Sebuah poligon hanya masuk kelas sangat sesuai bila ketinggian, suhu, lereng, dan jenis tanahnya sekaligus memenuhi kriteria kelas tersebut. Poligon yang tidak memenuhi kombinasi kelas mana pun dikelompokkan sebagai tidak sesuai.</p>
+
+
+      <h2>Hasil</h2>
+
+      <h3>Sebaran kelas kesesuaian</h3>
+      <p>Hasil overlay menunjukkan bahwa sebagian besar Majalengka masuk kelas sangat sesuai (S1). Kelas ini tersebar hampir di seluruh wilayah, terutama dari bagian tengah hingga utara. Kelas cukup sesuai (S2) dan sesuai marginal (S3) hanya muncul sebagai bercak kecil di tepi timur dan selatan kabupaten.</p>
+
+      <figure class="map-petai-figure">
+        <a href="assets/maps/kesesuaian-petai1.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/kesesuaian-petai1.jpg" alt="Peta kesesuaian lahan tanaman petai Kabupaten Majalengka">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Peta kesesuaian lahan tanaman petai di Kabupaten Majalengka</figcaption>
+      </figure>
+
+      <h3>Luas tiap kelas</h3>
+      <p>Karena kelas S1 tampak dominan di peta tetapi luasnya belum pasti, luas tiap kelas dihitung dengan Calculate Geometry di ArcGIS Pro, lalu persentasenya diolah di Microsoft Excel.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kelas Kesesuaian</th>
+              <th>Luas (Ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sangat Sesuai (S1)</td>
+              <td>121.408</td>
+              <td>92,05</td>
+            </tr>
+            <tr>
+              <td>Cukup Sesuai (S2)</td>
+              <td>10.153,69</td>
+              <td>7,70</td>
+            </tr>
+            <tr>
+              <td>Sesuai Marginal (S3)</td>
+              <td>334,57</td>
+              <td>0,25</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total</td>
+              <td>131.896,26</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Dari sekitar 131.896 Ha wilayah yang dianalisis, 92,05% berada pada kelas S1, 7,70% pada S2, dan hanya 0,25% pada S3. Selisih yang sangat timpang ini menunjukkan bahwa secara biofisik Majalengka masih menyimpan lahan yang luas dan layak untuk budidaya petai.</p>
+
+      <h3>Mengapa pola kesesuaiannya demikian</h3>
+      <p>Pola ini dapat dibaca dari peta variabel penyusunnya. Bagian utara Majalengka berupa dataran rendah dengan lereng landai (0 sampai 8%), sehingga syarat lereng dan ketinggian lebih mudah terpenuhi. Sebaliknya, bagian timur yang mendekati kaki Gunung Ciremai dan bagian selatan di perbatasan Tasikmalaya dan Ciamis memiliki lereng lebih curam dan ketinggian lebih besar. Di wilayah inilah kelas S2 dan S3 mengelompok. Dengan kata lain, topografi menjadi pembeda utama antara lahan yang sangat sesuai dan lahan yang hanya cukup sesuai.</p>
+
+      <div class="map-grid map-grid--full">
+        <figure class="fig-lst">
+          <a href="assets/maps/majalengka-kelerengan.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/majalengka-kelerengan.jpg" alt="Peta kelerengan Kabupaten Majalengka">
+          </a>
+          <figcaption><strong>Gambar 4.</strong> Peta Kelerengan Kabupaten Majalengka</figcaption>
+        </figure>
+        <figure class="fig-lst">
+          <a href="assets/maps/majalengka-ketinggian.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/majalengka-ketinggian.jpg" alt="Peta ketinggian Kabupaten Majalengka">
+          </a>
+          <figcaption><strong>Gambar 5.</strong> Peta Ketinggian Kabupaten Majalengka</figcaption>
+        </figure>
+        <figure class="fig-lst">
+          <a href="assets/maps/majalengka-curah-hujan.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/majalengka-curah-hujan.jpg" alt="Peta curah hujan Kabupaten Majalengka">
+          </a>
+          <figcaption><strong>Gambar 6.</strong> Peta Curah Hujan Kabupaten Majalengka</figcaption>
+        </figure>
+        <figure class="fig-lst">
+          <a href="assets/maps/majalengka-jenis-tanah.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/majalengka-jenis-tanah.jpg" alt="Peta jenis tanah Kabupaten Majalengka">
+          </a>
+          <figcaption><strong>Gambar 7.</strong> Peta Jenis Tanah Kabupaten Majalengka</figcaption>
+        </figure>
+        <figure class="fig-lst">
+          <a href="assets/maps/majalengka-suhu.jpg" target="_blank" rel="noopener">
+            <img src="assets/maps/majalengka-suhu.jpg" alt="Peta suhu permukaan Kabupaten Majalengka">
+          </a>
+          <figcaption><strong>Gambar 8.</strong> Peta Suhu Permukaan Kabupaten Majalengka</figcaption>
+        </figure>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Berdasarkan overlay lima variabel, yaitu lereng, ketinggian, curah hujan, jenis tanah, dan suhu permukaan, mayoritas Kabupaten Majalengka (92,05% atau sekitar 121.408 Ha) tergolong sangat sesuai untuk budidaya petai. Kelas cukup sesuai mencakup 7,70% dan sesuai marginal hanya 0,25% wilayah. Lahan yang kurang sesuai terkonsentrasi di bagian timur dan selatan yang lebih tinggi dan berlereng curam, sedangkan bagian tengah hingga utara menjadi kawasan paling potensial.</p>
+
+      <p>Temuan ini membawa satu implikasi penting, hal ini karena lahan yang secara biofisik sesuai masih sangat luas, penurunan produksi petai di Majalengka kemungkinan tidak semata-mata disebabkan oleh kondisi lahan. Faktor lain seperti pengelolaan kebun, hama dan penyakit, varietas, serta alih fungsi lahan layak diperiksa pada penelitian lanjutan. Sementara itu, peta kesesuaian ini dapat langsung dipakai sebagai acuan awal bagi petani dan pemerintah daerah untuk menentukan lokasi penanaman dan pemeliharaan petai yang lebih tepat.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>

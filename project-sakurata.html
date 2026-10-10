@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAKU RATA: Strategi Evakuasi Daerah Rawan Tanah Longsor di Kecamatan Gedangsari</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Disaster Risk</span>
+      <h1>Inovasi Program SAKU RATA (Strategi Evakuasi Daerah Rawan Tanah Longsor) untuk Evakuasi Kawasan Bencana Tanah Longsor di Kecamatan Gedangsari</h1>
+      <p class="post-meta">Mei 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Indonesia berada di jalur cincin api dan memiliki curah hujan tinggi, sehingga rawan bencana hidrometeorologi, terutama tanah longsor. Pada 2022, Kabupaten Gunungkidul tercatat mengalami 392 kejadian bencana, 145 di antaranya tanah longsor, dan 57 kejadian longsor terjadi di Kecamatan Gedangsari yang berlereng curam dan memiliki pergerakan tanah tinggi.</p>
+      <p>Salah satu upaya mitigasi adalah perencanaan evakuasi yang tepat. Penelitian ini memetakan tingkat rawan longsor di Kecamatan Gedangsari dengan metode skoring dan overlay, lalu menentukan jalur evakuasi dengan network analysis. Hasilnya diwujudkan dalam gagasan website SAKU RATA, yang menyajikan titik dan jalur evakuasi sehingga masyarakat dapat menemukan rute terdekat dari lokasi mereka.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Curah hujan</td>
+              <td>Vektor</td>
+              <td>Sekunder</td>
+              <td>CHIRPS</td>
+            </tr>
+            <tr>
+              <td>Geologi (jenis batuan)</td>
+              <td>Vektor</td>
+              <td>Sekunder</td>
+              <td>Badan Geologi</td>
+            </tr>
+            <tr>
+              <td>Jenis tanah</td>
+              <td>Vektor</td>
+              <td>Sekunder</td>
+              <td>FAO</td>
+            </tr>
+            <tr>
+              <td>Kelerengan (DEM)</td>
+              <td>Raster</td>
+              <td>Sekunder</td>
+              <td>SRTM</td>
+            </tr>
+            <tr>
+              <td>Tutupan lahan</td>
+              <td>Raster</td>
+              <td>Sekunder</td>
+              <td>USGS Land Cover</td>
+            </tr>
+            <tr>
+              <td>Jaringan jalan dan batas administrasi</td>
+              <td>Vektor</td>
+              <td>Sekunder</td>
+              <td>INA Geoportal</td>
+            </tr>
+            <tr>
+              <td>Titik survei, route tracking, dan dokumentasi</td>
+              <td>Vektor dan foto</td>
+              <td>Primer</td>
+              <td>Survei lapangan</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Tingkat rawan longsor ditentukan dengan model pendugaan Puslittanak (2004) memakai lima variabel: curah hujan, jenis batuan, kelerengan, tutupan lahan, dan jenis tanah. Setiap variabel diklasifikasikan, diberi skor, lalu dikalikan bobotnya, kemudian seluruh layer digabungkan dengan overlay di ArcGIS. Skor total dihitung dengan rumus berikut dan dibagi menjadi tiga kelas, yaitu rendah (2,0 sampai 2,67), sedang (2,67 sampai 3,34), dan tinggi (3,34 sampai 4,0).</p>
+
+      <p style="text-align:center"><strong>Skor Total = 0,3 FCH + 0,2 FBD + 0,2 FKL + 0,2 FPL + 0,1 FJT</strong></p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Variabel</th>
+              <th>Bobot</th>
+              <th>Skor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Curah hujan</td><td>30%</td><td>1 sampai 5</td></tr>
+            <tr><td>Jenis batuan</td><td>20%</td><td>1 sampai 3</td></tr>
+            <tr><td>Kelerengan</td><td>20%</td><td>1 sampai 5</td></tr>
+            <tr><td>Tutupan lahan</td><td>20%</td><td>1 sampai 5</td></tr>
+            <tr><td>Jenis tanah</td><td>10%</td><td>1 sampai 5</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Peta kerja dibuat dengan tool fishnet untuk menentukan titik survei dengan teknik purposive sampling, yaitu pada kawasan rawan longsor yang berada di permukiman, memiliki titik evakuasi, dan dekat jaringan jalan. Jalur evakuasi dihitung dengan network analysis di ArcMap berdasarkan jaringan jalan, dengan permukiman rawan tinggi sebagai titik awal dan titik evakuasi sebagai titik akhir. Hasilnya divalidasi di lapangan melalui ground check dan route tracking.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Kecamatan Gedangsari terbagi menjadi tiga kelas kerawanan longsor. Hasil pemetaan awal dari data sekunder kemudian divalidasi di lapangan, dan komposisi akhirnya ditunjukkan pada tabel berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kelas Rawan</th>
+              <th>Luas (Ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Rendah</td><td>1.425</td><td>20,9</td></tr>
+            <tr><td>Sedang</td><td>3.511</td><td>51,5</td></tr>
+            <tr><td>Tinggi</td><td>1.878</td><td>27,6</td></tr>
+            <tr class="total-row"><td>Total</td><td>6.814</td><td>100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="map-longsor-figure">
+        <a href="assets/maps/longsor-sesudah.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/longsor-sesudah.jpg" alt="Peta tingkat rawan tanah longsor Kecamatan Gedangsari">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta tingkat rawan tanah longsor Kecamatan Gedangsari</figcaption>
+      </figure>
+
+      <p>Kawasan rawan tinggi dan sedang tersebar merata di seluruh desa. Desa Hargo Mulyo memiliki kawasan rawan tinggi terluas (493 Ha), terutama di bagian selatan desa yang berlereng sangat curam dan curah hujannya tinggi, sedangkan Desa Sampang terkecil (65 Ha). Desa Ngalang memiliki luas rawan tinggi yang besar di bagian utara, sementara kawasan rawan rendah dominan di bagian selatan kecamatan.</p>
+
+      <p>Dari tujuh desa yang terdampak, network analysis menghasilkan tiga jalur evakuasi dari titik rawan tinggi menuju titik evakuasi terdekat. Setelah divalidasi lewat route tracking, jarak jalur hasil analisis hanya berbeda 140 meter (7,34%) dari kondisi lapangan, sehingga ketepatannya sekitar 92,66%. Perbedaan tersebut dipengaruhi oleh kondisi jalan, dan seluruh jalur dapat dilalui kendaraan roda empat.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Jarak (m)</th>
+              <th>Jalur 1</th>
+              <th>Jalur 2</th>
+              <th>Jalur 3</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Network analysis</td><td>510</td><td>1.043</td><td>352</td><td>1.905</td></tr>
+            <tr><td>Validasi lapangan</td><td>480</td><td>965</td><td>320</td><td>1.765</td></tr>
+            <tr class="total-row"><td>Selisih</td><td>30</td><td>78</td><td>32</td><td>140</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="map-longsor-1-figure">
+        <a href="assets/maps/longsor-evakuasi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/longsor-evakuasi.jpg" alt="Peta titik dan jalur evakuasi Kecamatan Gedangsari">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Peta titik dan jalur evakuasi bencana tanah longsor Kecamatan Gedangsari</figcaption>
+      </figure>
+
+      <p>Seluruh hasil tersebut diwujudkan dalam gagasan website SAKU RATA, yang menampilkan jalur evakuasi terdekat berdasarkan lokasi pengguna, tingkat kerawanan, fasilitas kesehatan, kontak darurat, laporan aktivitas, dan simulasi kesiapsiagaan. Berbeda dengan banyak website kebencanaan yang hanya berfokus pada deteksi bencana, SAKU RATA melengkapinya dengan petunjuk evakuasi.</p>
+
+      <figure class ="saku-rata-figure">
+         <a href="assets/maps/saku-rata.png" target="_blank" rel="noopener">
+        <img src="assets/maps/saku-rata.png" alt="Ilustrasi tampilan website SAKU RATA">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Ilustrasi tampilan website SAKU RATA</figcaption>
+      </figure>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Kecamatan Gedangsari didominasi kawasan rawan sedang dan tinggi yang tersebar di seluruh desa, dengan konsentrasi rawan tinggi terutama di Desa Hargo Mulyo dan Ngalang akibat lereng yang terjal. Tiga jalur evakuasi yang dihasilkan network analysis terbukti akurat dan layak dilalui berdasarkan validasi lapangan, dengan waktu tempuh kurang dari 10 menit berjalan kaki. Melalui website SAKU RATA, informasi ini dapat diakses kapan saja sehingga masyarakat lebih siap menghadapi longsor, meskipun jalur tetap perlu dipantau karena material longsor dapat sewaktu-waktu menutup akses jalan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

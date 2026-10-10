@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Sebaran Vegetasi, Tanah, dan Air di Kabupaten Banggai</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Remote Sensing</span>
+      <h1>Analisis Sebaran Vegetasi, Tanah, dan Air di Kabupaten Banggai Memanfaatkan Penginderaan Jauh dengan Indeks NDWI, NDSoil, dan IPVI</h1>
+      <p class="post-meta">Januari 2024</p>
+    </header>
+
+    <img class="post-cover cover-portrait" src="assets/maps/banggai-indeks.png" alt="Peta gabungan indeks IPVI, NDWI, dan NDSoil Kabupaten Banggai">
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Pertumbuhan penduduk yang cepat mendorong urbanisasi dan alih fungsi lahan. Lahan vegetasi, sawah, dan hutan berubah menjadi permukiman, infrastruktur, dan industri. Perubahan ini memengaruhi tiga unsur penting lingkungan sekaligus: vegetasi yang menjadi habitat serta penyimpan karbon dan penghasil oksigen, aliran air permukaan beserta area resapannya, dan kesuburan serta sebaran jenis tanah.</p>
+      <p>Kabupaten Banggai di Sulawesi Tengah menghadapi tantangan serupa, yaitu menjaga keseimbangan antara pelestarian lingkungan dan kebutuhan infrastruktur yang meningkat. Karena itu, penelitian ini menganalisis sebaran vegetasi, tanah, dan air di Kabupaten Banggai dengan data penginderaan jauh dan tiga indeks, yaitu Infrared Percentage Vegetation Index (IPVI), Normalized Difference Water Index (NDWI), dan Normalized Difference Soil Index (NDSoil), sebagai dasar pengelolaan pembangunan dan pelestarian lingkungan yang berkelanjutan.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Citra Landsat 8 (1 Januari – 31 Desember 2023)</td>
+              <td>Raster</td>
+              <td>Sekunder</td>
+              <td>Google Earth Engine</td>
+            </tr>
+            <tr>
+              <td>Batas administrasi Kabupaten Banggai</td>
+              <td>Vektor (Shapefile)</td>
+              <td>Sekunder</td>
+              <td>Ina-Geoportal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Seluruh data yang digunakan adalah data sekunder. Shapefile Kabupaten Banggai diunduh dari Ina-Geoportal lalu diunggah ke Google Earth Engine (GEE), sedangkan citra Landsat 8 tahun 2023 dipanggil langsung melalui script di GEE dengan memilih band yang diperlukan. Tiga indeks kemudian dihitung dari band tersebut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Indeks</th>
+              <th>Rumus</th>
+              <th>Band Landsat 8</th>
+              <th>Kegunaan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>IPVI</td>
+              <td>0,5 × (NDVI + 1)</td>
+              <td>NIR (B5), Red (B4)</td>
+              <td>Sebaran vegetasi</td>
+            </tr>
+            <tr>
+              <td>NDWI</td>
+              <td>(Green − NIR) / (Green + NIR)</td>
+              <td>Green (B3), NIR (B5)</td>
+              <td>Keberadaan air dan kebasahan</td>
+            </tr>
+            <tr>
+              <td>NDSoil</td>
+              <td>(SWIR − NIR) / (SWIR + NIR)</td>
+              <td>SWIR (B6), NIR (B5)</td>
+              <td>Keterbukaan dan kondisi tanah</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Hasil perhitungan divisualisasikan di GEE dengan palet warna, lalu diekspor ke Google Drive dalam format GeoTIFF beresolusi 30 meter. Citra tersebut kemudian dimasukkan ke ArcGIS bersama shapefile kabupaten, dipotong dengan proses extract by mask agar sesuai dengan wilayah penelitian, dan divisualisasikan dalam bentuk interval nilai untuk diinterpretasikan.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Nilai IPVI berkisar 0 sampai 1, dengan nilai yang lebih tinggi menunjukkan vegetasi yang lebih padat. Vegetasi di Banggai terbagi hampir merata antara kelas padat dan rendah. Vegetasi padat cenderung berada di wilayah utara yang berbatasan dengan Teluk Tomini, kemungkinan karena wilayah itu belum banyak dijadikan kawasan bermukim dan industri. Vegetasi rendah cenderung berada di wilayah yang berdekatan dengan kabupaten lain, yang diduga lebih banyak berubah menjadi permukiman dan industri.</p>
+
+      <figure class="map-ipvi-figure">
+        <a href="assets/maps/banggai-ipvi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/banggai-ipvi.jpg" alt="Peta IPVI Kabupaten Banggai 2023">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Peta IPVI Kabupaten Banggai tahun 2023</figcaption>
+      </figure>
+
+      <p>Nilai NDWI berkisar −1 sampai 1, dengan nilai positif menunjukkan keberadaan air dan nilai negatif menunjukkan non-air seperti daratan atau vegetasi. Banggai didominasi oleh nilai yang cenderung rendah (merah hingga kuning). Hal ini sejalan dengan hasil IPVI, karena vegetasi yang padat menyerap air tanah melalui akarnya sehingga sedikit air yang tampak di permukaan pada citra.</p>
+
+      <figure class="map-ndwi-figure">
+        <a href="assets/maps/banggai-ndwi.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/banggai-ndwi.jpg" alt="Peta NDWI Kabupaten Banggai 2023">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Peta NDWI Kabupaten Banggai tahun 2023</figcaption>
+      </figure>
+
+      <p>Pada NDSoil, nilai yang mendekati 0 menandakan permukaan tanah tertutup tumbuhan, sedangkan nilai yang makin besar menandakan tanah yang makin terbuka. Banggai didominasi warna hijau dan kuning, sehingga permukaan tanahnya sebagian besar tertutup tumbuhan. Tanah dengan keterbukaan lebih tinggi cenderung berada di pesisir, sedangkan titik-titik yang tertutup air muncul di bagian tengah dan pinggir wilayah.</p>
+
+      <figure class="map-ndsoil-figure">
+        <a href="assets/maps/banggai-ndsoil.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/banggai-ndsoil.jpg" alt="Peta NDSoil Kabupaten Banggai 2023">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Peta NDSoil Kabupaten Banggai tahun 2023</figcaption>
+      </figure>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Kondisi Kabupaten Banggai masih tergolong baik dalam menjaga kualitas lingkungan, ditunjukkan oleh vegetasi yang masih dominan, kelembaban yang mengikuti sebaran vegetasi, dan tanah yang sebagian besar tertutup tanaman. Ketiga indeks saling berkaitan dan menunjukkan bahwa lonjakan pertumbuhan penduduk masih dapat dikendalikan, terlihat dari wilayah bermukim yang masih tersebar. Namun, kondisi ini dapat berubah seiring pertumbuhan penduduk dan dinamika permukaan bumi, sehingga pemantauan berkala tetap diperlukan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

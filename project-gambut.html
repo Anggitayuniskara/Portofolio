@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menjaga Gambut: Menilai Kesesuaian Lahan di Kalimantan Tengah untuk Budidaya Dyera polyphylla sebagai Upaya Konservasi</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Conservation</span>
+      <h1>Menjaga Gambut: Menilai Kesesuaian Lahan di Kalimantan Tengah untuk Budidaya <em>Dyera polyphylla</em> sebagai Upaya Konservasi</h1>
+      <p class="post-meta">September 2023</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Sekitar 10,8% daratan Indonesia merupakan ekosistem gambut. Ekosistem ini berperan sebagai tempat penyimpanan karbon, habitat berbagai flora dan fauna, penyuplai air, serta sumber hasil hutan yang menopang perekonomian. Namun manfaat tersebut terancam oleh deforestasi, degradasi, dan kebakaran lahan, baik akibat kekeringan karena anomali iklim seperti El Niño maupun pembakaran yang disengaja untuk alih fungsi lahan.</p>
+      <p>Lahan gambut di Kalimantan Tengah termasuk yang terdegradasi secara luas dan intensif. Gambut memiliki sifat mudah mengering tidak balik: setelah kadar airnya turun, gambut sulit menyerap air kembali, mudah terbakar, dan apinya dapat menjalar di bawah permukaan sehingga sulit dipadamkan. Kekeringan ini dikaitkan dengan peningkatan suhu permukaan tanah (Land Surface Temperature atau LST), karena suhu permukaan yang tinggi mempercepat penguapan dan menurunkan kelembaban tanah.</p>
+      <p>Salah satu upaya rehabilitasi adalah penanaman tanaman yang sesuai dengan karakteristik gambut, yaitu jelutung rawa (<em>Dyera polyphylla</em>). Tanaman ini memiliki daya adaptasi yang baik pada lahan gambut dan bernilai ekonomi karena getahnya dapat dijadikan bahan baku permen karet dan kayunya untuk furnitur. Penelitian ini bertujuan memetakan persebaran LST pada lahan gambut Kalimantan Tengah dan menilai kesesuaian lahannya untuk tanaman jelutung rawa sebagai upaya konservasi.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Tahun</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Land Surface Temperature (LST)</td>
+              <td>2022</td>
+              <td>Sekunder (raster)</td>
+              <td>Landsat 8</td>
+            </tr>
+            <tr>
+              <td>Suhu Udara / Air Surface Temperature (AST)</td>
+              <td>2022</td>
+              <td>Sekunder (raster, turunan LST)</td>
+              <td>Landsat 8</td>
+            </tr>
+            <tr>
+              <td>Curah Hujan</td>
+              <td>2022</td>
+              <td>Sekunder (raster)</td>
+              <td>CHIRPS</td>
+            </tr>
+            <tr>
+              <td>Ketinggian</td>
+              <td>2016</td>
+              <td>Sekunder (raster)</td>
+              <td>Badan Informasi Geospasial</td>
+            </tr>
+            <tr>
+              <td>Sebaran Lahan Gambut</td>
+              <td>2023</td>
+              <td>Sekunder (vektor, didigitasi ulang)</td>
+              <td>BRGM (PRIMS)</td>
+            </tr>
+            <tr>
+              <td>Titik Hotspot</td>
+              <td>2020</td>
+              <td>Sekunder (titik)</td>
+              <td>LAPAN</td>
+            </tr>
+            <tr>
+              <td>Batas Administrasi Kalimantan Tengah</td>
+              <td>2019</td>
+              <td>Sekunder (vektor)</td>
+              <td>Badan Informasi Geospasial</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Penelitian ini menggunakan analisis spasial overlay intersect pada ArcGIS Pro untuk menilai kesesuaian lahan, sedangkan data LST diolah dengan Google Earth Engine. Alur berpikir penelitian berawal dari lahan gambut yang terancam degradasi dan kebakaran akibat kenaikan suhu, sehingga dibutuhkan deteksi LST sebagai langkah mitigasi awal dan konservasi sebagai langkah preventif.</p>
+
+      <figure>
+        <img class="img-small" src="assets/maps/alur-berpikir.png" alt="Diagram alur berpikir penelitian">
+        <figcaption><strong>Gambar 1.</strong> Alur berpikir penelitian</figcaption>
+      </figure>
+
+      <p>LST dihitung dari citra Landsat 8 sepanjang tahun 2022 di Google Earth Engine, kemudian diklasifikasikan ke dalam lima kelas (sangat rendah, rendah, sedang, tinggi, sangat tinggi) dan dianalisis secara deskriptif. Karena data suhu udara (AST) sangat terbatas, AST diturunkan dari LST dengan asumsi AST = LST + 2,7 °C, berdasarkan penelitian Wibowo dkk. (2020) yang menyatakan AST sekitar 2 sampai 4 °C lebih tinggi daripada LST. Hasil asumsi ini selaras dengan pengamatan BMKG, yaitu suhu minimum 19,8 °C, maksimum 35,2 °C, dan rata-rata 27,1 °C.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kelas LST</th>
+              <th>Suhu Permukaan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sangat Rendah</td><td>&lt; 20 °C</td></tr>
+            <tr><td>Rendah</td><td>20 – 25 °C</td></tr>
+            <tr><td>Sedang</td><td>25 – 30 °C</td></tr>
+            <tr><td>Tinggi</td><td>30 – 35 °C</td></tr>
+            <tr><td>Sangat Tinggi</td><td>&gt; 35 °C</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Untuk kesesuaian lahan, tiga variabel syarat tumbuh jelutung rawa, yaitu suhu udara, curah hujan, dan ketinggian, masing-masing diklasifikasikan menjadi kelas sesuai dan tidak sesuai. Peta-peta tersebut kemudian ditumpangsusunkan dengan teknik intersect bersama peta sebaran lahan gambut, sehingga hasil akhirnya hanya menampilkan kesesuaian di area gambut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Variabel</th>
+              <th>Sesuai</th>
+              <th>Tidak Sesuai</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Suhu udara (AST)</td>
+              <td>23 – 28 °C</td>
+              <td>&lt; 23 °C dan &gt; 28 °C</td>
+            </tr>
+            <tr>
+              <td>Curah hujan</td>
+              <td>1.500 – 3.000 mm/tahun</td>
+              <td>&lt; 1.500 dan &gt; 3.000 mm/tahun</td>
+            </tr>
+            <tr>
+              <td>Ketinggian</td>
+              <td>0 – 300 mdpl</td>
+              <td>&gt; 300 mdpl</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Selain itu, titik hotspot dari LAPAN yang berbasis citra MODIS (resolusi 1 km × 1 km) ditumpangkan pada peta LST gambut untuk melihat hubungan antara suhu permukaan dan titik panas kebakaran.</p>
+
+      <h2>Hasil</h2>
+
+      <h3>Persebaran Land Surface Temperature</h3>
+      <p>LST di Provinsi Kalimantan Tengah berada pada tiga kelas, yaitu sangat rendah, rendah, dan sedang, dengan kelas rendah (20 – 25 °C) sebagai yang paling dominan. Meski demikian, kelas suhu yang tergolong tidak tinggi tidak berarti gambut aman dari kebakaran. Pada kejadian kebakaran Juli 2023, suhu udara mencapai 33 °C sehingga suhu permukaan tanah diperkirakan sekitar 29 – 30 °C, yang secara klasifikasi masih masuk kelas sedang. Artinya, gambut tetap berisiko terbakar ketika ada penyulutan api, baik disengaja maupun tidak.</p>
+
+      <div class="map-grid map-grid--full">
+  <figure class="fig-lst">
+    <a href="assets/maps/lst-kalteng.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/lst-kalteng.jpg" alt="Peta Land Surface Temperature Kalimantan Tengah">
+    </a>
+    <figcaption><strong>Gambar 2.</strong> Peta LST</figcaption>
+  </figure>
+  <figure class="fig-lst">
+    <a href="assets/maps/lst-hotspot.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/lst-hotspot.jpg" alt="Peta LST dan titik hotspot pada lahan gambut">
+    </a>
+    <figcaption><strong>Gambar 3.</strong> LST dan hotspot</figcaption>
+  </figure>
+</div>
+
+      <p>Titik hotspot terkonsentrasi di Kota Palangka Raya, selaras dengan kebakaran lahan gambut di kota tersebut pada tahun 2023 yang tercatat sebanyak 314 kejadian dengan total gambut terbakar seluas 197,42 Ha (BPBD, 2023). Fenomena El Niño turut mendukung potensi kekeringan yang memicu kebakaran ini.</p>
+
+      <h3>Kesesuaian lahan jelutung rawa</h3>
+      <p>Hasil overlay menunjukkan bahwa hampir seluruh lahan gambut di Kalimantan Tengah sesuai untuk penanaman <em>Dyera polyphylla</em>. Dari total 2.495.334 Ha lahan gambut, 97,4% berada pada kelas sesuai dan hanya 2,6% yang tidak sesuai.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Kelas Kesesuaian</th>
+              <th>Luas (Ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sesuai</td>
+              <td>2.430.730</td>
+              <td>97,4</td>
+            </tr>
+            <tr>
+              <td>Tidak Sesuai</td>
+              <td>64.604</td>
+              <td>2,6</td>
+            </tr>
+            <tr class="total-row">
+              <td>Total</td>
+              <td>2.495.334</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="map-dyera-figure">
+        <a href="assets/maps/kesesuaian-jelutung.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/kesesuaian-jelutung.jpg" alt="Peta kesesuaian lahan Dyera polyphylla">
+        </a>
+        <figcaption><strong>Gambar 4.</strong> Peta kesesuaian lahan tanaman <em>Dyera polyphylla</em> di lahan gambut Kalimantan Tengah</figcaption>
+      </figure>
+
+      <p>Area yang tidak sesuai berada di bagian selatan provinsi. Dari tiga variabel yang diuji, perbedaan curah hujan menjadi faktor pembatas utama, karena wilayah selatan tersebut menerima curah hujan di bawah 1.500 mm per tahun, sedangkan jelutung rawa membutuhkan 1.500 sampai 3.000 mm per tahun. Dominasi kelas sesuai ini menunjukkan potensi yang baik bagi jelutung rawa untuk dikembangkan sebagai salah satu upaya konservasi gambut, sekaligus menjaga kondisi hidrologi karena toleransinya yang tinggi terhadap muka air tanah yang tinggi dan banjir.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>LST pada lahan gambut Kalimantan Tengah berada pada kelas sangat rendah hingga sedang, dengan kelas rendah (20 – 25 °C) yang paling dominan. Namun kebakaran tetap dapat terjadi walaupun suhu permukaan di bawah 30 °C, karena dipicu oleh faktor seperti suhu udara, kurangnya air pada parit, dan angin kencang, sebagaimana tampak pada sebaran hotspot di Palangka Raya.</p>
+
+      <p>Berdasarkan analisis suhu, curah hujan, dan ketinggian, sebanyak 2.430.730 Ha (97,4%) lahan gambut di Kalimantan Tengah sesuai untuk jelutung rawa, sedangkan 64.604 Ha (2,6%) di bagian selatan tidak sesuai terutama karena curah hujan yang kurang. Peta kesesuaian ini dapat menjadi acuan lokasi penanaman jelutung rawa untuk konservasi lahan gambut. Karena persentase kelas sesuai sangat besar, penelitian lanjutan dengan variabel yang lebih beragam, seperti kedalaman gambut dan tinggi muka air tanah, akan membantu menentukan lokasi prioritas yang lebih tajam.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>

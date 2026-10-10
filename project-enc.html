@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eksplorasi dan Analisis Pelabuhan Tanjungemas Berdasarkan Peta ENC</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Nautical Charts</span>
+      <h1>Eksplorasi dan Analisis Pelabuhan Tanjungemas, Semarang Berdasarkan Peta Electronic Navigational Chart (ENC)</h1>
+      <p class="post-meta">Januari 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Peta laut berfungsi sebagai alat navigasi pelayaran sekaligus acuan perencanaan, pembangunan, dan pemeliharaan wilayah laut. Isinya mencakup kedalaman dan fisiografi dasar laut, bentuk pantai, informasi keselamatan navigasi, serta fitur-fitur di laut, dan harus mengikuti standar IHO S-44 dan SNI 7469:2010. Kini peta laut tersedia dalam bentuk digital, yaitu Electronic Navigational Chart (ENC) yang ditampilkan melalui sistem ECDIS dan mengikuti standar transfer data S-57.</p>
+      <p>Agar ENC bisa dipakai untuk pelayaran yang aman, informasi di dalamnya harus dapat dibaca dan dipahami dengan benar oleh penggunanya. Karena itu, penelitian ini mempelajari isi ENC Pelabuhan Tanjungemas, satu-satunya pelabuhan di Kota Semarang yang menjadi pusat bongkar muat, penyimpanan barang, dan logistik regional maupun internasional. Pemahaman tersebut kemudian diterapkan pada studi kasus perencanaan rute pelayaran yang aman dari Lombok ke Bali.</p>
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Peta laut digital (ENC) Pelabuhan Tanjungemas</td>
+              <td>Citra tangkapan layar (raster)</td>
+              <td>Sekunder</td>
+              <td>e-Navigasi Pushidrosal TNI AL</td>
+            </tr>
+            <tr>
+              <td>Peta laut digital Selat Lombok dan Bali untuk rute pelayaran</td>
+              <td>ENC (S-57)</td>
+              <td>Sekunder</td>
+              <td>OPENCPN</td>
+            </tr>
+            <tr>
+              <td>Arti simbol peta laut</td>
+              <td>Dokumen</td>
+              <td>Sekunder</td>
+              <td>Buku Simbol dan Singkatan Peta Laut</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Pada tahap analisis ENC, lokasi pelabuhan dipilih di laman e-Navigasi Pushidrosal TNI AL, lalu tampilan petanya diambil sebagai tangkapan layar. Simbol dan informasi pada peta, seperti area kedalaman, batas navigasi, dan rintangan, dibaca dengan merujuk pada buku Simbol dan Singkatan Peta Laut.</p>
+
+      <p>Pada studi kasus, rute pelayaran dari Dermaga Muncit di Lombok menuju Labuhan Amat di Bali direncanakan dengan perangkat lunak OpenCPN. Prosesnya terdiri dari tiga langkah: menentukan titik berangkat dan titik labuh, menetapkan titik-titik pindah haluan (way point) untuk menghindari area berbahaya, kedalaman ekstrem, dan rintangan navigasi, lalu menentukan waktu pemberangkatan. Waktu yang dipilih adalah bulan Juni agar arah pelayaran searah dengan angin musiman yang bertiup antara April hingga Oktober.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Kedalaman laut di sekitar Pelabuhan Tanjungemas berkisar sekitar 5 sampai 10 meter. Peta menampilkan beberapa simbol penting bagi navigator, yang dirangkum pada tabel berikut.</p>
+
+      <figure class="map-figure">
+        <a href="assets/maps/enc-simbol.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/enc-simbol.jpg" alt="Peta ENC Tanjungemas dengan penandaan simbol">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Simbol-simbol pada ENC Pelabuhan Tanjungemas</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Simbol</th>
+              <th>Fungsi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Area lego jangkar (Lingkaran hijau)</td><td>Lokasi khusus bagi kapal untuk menjatuhkan atau mengangkat jangkar, biasanya untuk kapal yang menunggu giliran sandar</td></tr>
+            <tr><td>Angka kedalaman (Lingkaran hitam)</td><td>Informasi kedalaman air agar kapal tidak menyentuh dasar laut yang dangkal</td></tr>
+            <tr><td>Pancang tenggeran (Lingkaran jingga)</td><td>Penanda navigasi atau pembatas jalur pelayaran</td></tr>
+            <tr><td>Tanda bahaya terpencil (Lingkaran ungu)</td><td>Penanda bahaya yang berdiri di atas tempat berbahaya yang masih dapat dilayari sekitarnya</td></tr>
+            <tr><td>Kerangka berbahaya (Lingkaran merah)</td><td>Penanda potensi bahaya dengan kedalaman yang tidak diketahui</td></tr>
+            <tr><td>Pelampung (Lingkaran biru)</td><td>Penanda pelampung instalasi minyak atau gas</td></tr>
+            <tr><td>Lingkaran pink</td><td>Penanda pelampung pengepil</td></tr>
+            <tr><td>Persegi merah</td><td>Penanda mercusuar</td></tr>
+            <tr><td>Garis ungu</td><td>Penanda simbol area lego jangkar</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Pada studi kasus, rute Lombok–Bali disusun dengan tujuh way point dan melewati beberapa kali pindah haluan untuk menghindari kerangka berbahaya, area berbahaya, bangkai kapal, dan karang. Rute juga diarahkan menjauhi perairan dengan kedalaman ekstrem. Perpindahan haluan terbesar terjadi pada way point 004 untuk menghindari area berbahaya, dan way point 007 menjadi titik akhir dengan jarak terpendek dari titik sebelumnya.</p>
+
+      <figure class="map-figure">
+        <a href="assets/maps/enc-rute.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/enc-rute.jpg" alt="Rencana rute pelayaran dari Lombok ke Bali">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Rencana rute pelayaran dari Lombok ke Bali</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Way Point</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Course</th>
+              <th>Jarak</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>001</td><td>08° 41,6' S</td><td>116° 03,8' E</td><td>–</td><td>–</td></tr>
+            <tr><td>002</td><td>08° 40,2' S</td><td>115° 56,3' E</td><td>280 °T</td><td>7,60 NMi</td></tr>
+            <tr><td>003</td><td>08° 35,4' S</td><td>115° 53,5' E</td><td>331 °T</td><td>5,49 NMi</td></tr>
+            <tr><td>004</td><td>08° 28,6' S</td><td>115° 52,2' E</td><td>349 °T</td><td>6,96 NMi</td></tr>
+            <tr><td>005</td><td>08° 20,1' S</td><td>115° 47,2' E</td><td>330 °T</td><td>9,84 NMi</td></tr>
+            <tr><td>006</td><td>08° 18,6' S</td><td>115° 41,8' E</td><td>285 °T</td><td>5,54 NMi</td></tr>
+            <tr><td>007</td><td>08° 19,8' S</td><td>115° 38,4' E</td><td>251 °T</td><td>3,59 NMi</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>ENC memberikan gambaran yang jelas tentang struktur perairan, fasilitas pelabuhan, dan rute navigasi yang aman, meskipun membaca simbol-simbolnya memerlukan keahlian. Pada studi kasus, ENC memudahkan penentuan way point untuk menghindari area berbahaya dan memilih jalur yang optimal sehingga pelayaran lebih aman dan efisien. Karena datanya terus diperbarui sesuai kondisi lapangan, ENC bukan sekadar kebutuhan, tetapi alat penting bagi keselamatan pelayaran dan efisiensi operasional kapal.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

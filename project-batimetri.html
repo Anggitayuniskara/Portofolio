@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis dan Visualisasi Batimetri di Laut Jawa</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Bathymetry</span>
+      <h1>Analisis dan Visualisasi Batimetri di Laut Jawa dengan Memanfaatkan GEBCO dan Teknik Interpolasi</h1>
+      <p class="post-meta">Februari 2024</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Informasi kedalaman perairan sangat penting untuk pemanfaatan ruang di wilayah laut. Batimetri, yaitu pengukuran dan pemetaan topografi dasar laut, menyajikan informasi tersebut dalam bentuk kedalaman beserta garis konturnya. Pengukuran batimetri kini dilakukan secara modern dengan metode hidrografi akustik, yaitu single beam atau multi beam echosounder yang dipadukan dengan sensor posisi GNSS.</p>
+      <p>The General Bathymetric Chart of The Oceans (GEBCO) adalah program di bawah Organisasi Hidrografi Internasional (IHO) yang bertujuan memetakan seluruh dasar laut dan menyediakan salah satu data batimetri beresolusi terbaik, yaitu 30 arc second atau sekitar 1 kilometer di ekuator. Penelitian ini memilih Laut Jawa karena kedalamannya yang relatif dangkal, sehingga cocok untuk pemetaan batimetri dengan akurasi tinggi, serta karena keragaman fitur dasar lautnya. Tujuannya adalah membandingkan beberapa teknik interpolasi untuk memvisualisasikan batimetri dan memilih metode yang paling sesuai.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Batimetri GEBCO 2023 (utara Pulau Jawa)</td>
+              <td>Raster (GeoTIFF)</td>
+              <td>Sekunder</td>
+              <td>GEBCO</td>
+            </tr>
+            <tr>
+              <td>Peta dasar dan garis pantai</td>
+              <td>Vektor</td>
+              <td>Sekunder</td>
+              <td>Peta RBI Indonesia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Data batimetri diunduh dari situs GEBCO dengan membuat area of interest (AOI) di utara Pulau Jawa, lalu diekspor dalam format GeoTIFF. Data kemudian diolah di ArcGIS Pro. Pertama, dibuat titik-titik sampel pada wilayah kajian dengan tool Create Fishnet, lalu nilai piksel kedalaman dipindahkan ke titik-titik tersebut dengan Extract Multi Values to Points.</p>
+
+      <p>Titik-titik tersebut diinterpolasi dengan beberapa teknik untuk memperkirakan kedalaman di lokasi yang tidak memiliki data, kemudian dibandingkan hasilnya.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Teknik Interpolasi</th>
+              <th>Prinsip Kerja</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>IDW</td>
+              <td>Bobot titik sampel berbanding terbalik dengan jaraknya ke titik yang diestimasi</td>
+            </tr>
+            <tr>
+              <td>Kriging (ordinary dan universal)</td>
+              <td>Memakai semivariogram untuk memodelkan korelasi spasial antar titik</td>
+            </tr>
+            <tr>
+              <td>Natural Neighbor</td>
+              <td>Hanya memakai titik tetangga terdekat dengan pembobotan proporsional (diagram Voronoi)</td>
+            </tr>
+            <tr>
+              <td>Spline</td>
+              <td>Menyusun permukaan halus dari polinomial kubik pada tiap segmen</td>
+            </tr>
+            <tr>
+              <td>Trend</td>
+              <td>Menyesuaikan fungsi matematis untuk menangkap pola umum kedalaman</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Setiap hasil interpolasi disusun menjadi peta batimetri lengkap dengan judul, skala, dan legenda. Gradasi biru dipakai untuk menunjukkan kedalaman: biru gelap untuk perairan lebih dalam dan biru terang untuk perairan lebih dangkal.</p>
+
+      <h2>Hasil</h2>
+
+<p>Lima teknik interpolasi menghasilkan peta batimetri yang berbeda-beda. Berikut hasil masing-masing metode beserta catatan singkatnya (klik gambar untuk memperbesar).</p>
+
+<div class="map-grid">
+
+  <figure>
+    <a href="assets/maps/batimetri-idw.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/batimetri-idw.jpg" alt="Peta batimetri interpolasi IDW">
+    </a>
+    <figcaption><strong>IDW.</strong> Pola kurang halus, kontur tidak mulus sehingga lebih sulit diinterpretasikan.</figcaption>
+  </figure>
+
+  <figure>
+    <a href="assets/maps/batimetri-kriging-ordinary.png" target="_blank" rel="noopener">
+      <img src="assets/maps/batimetri-kriging-ordinary.png" alt="Peta batimetri kriging ordinary">
+    </a>
+    <figcaption><strong>Kriging ordinary.</strong> Model spherical, circular, exponential, dan linear sangat mirip; gaussian paling kurang halus.</figcaption>
+  </figure>
+
+  <figure>
+    <a href="assets/maps/batimetri-kriging-universal.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/batimetri-kriging-universal.jpg" alt="Peta batimetri kriging universal">
+    </a>
+    <figcaption><strong>Kriging universal.</strong> Hasil antar model berbeda; quadratic drift lebih rinci dibanding linear drift.</figcaption>
+  </figure>
+
+  <figure>
+    <a href="assets/maps/batimetri-nn.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/batimetri-nn.jpg" alt="Peta batimetri natural neighbor">
+    </a>
+    <figcaption><strong>Natural neighbor.</strong> Permukaan halus, kontinu, dan detail; pola kedalaman tergambar jelas.</figcaption>
+  </figure>
+
+  <figure>
+    <a href="assets/maps/batimetri-spline.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/batimetri-spline.jpg" alt="Peta batimetri spline">
+    </a>
+    <figcaption><strong>Spline.</strong> Halus dan detail, struktur bawah air serta variasi kedalaman terlihat jelas.</figcaption>
+  </figure>
+
+  <figure>
+    <a href="assets/maps/batimetri-trend.jpg" target="_blank" rel="noopener">
+      <img src="assets/maps/batimetri-trend.jpg" alt="Peta batimetri trend">
+    </a>
+    <figcaption><strong>Trend.</strong> Paling berbeda; hanya gradasi umum sehingga informasi kedalaman terlalu tergeneralisasi.</figcaption>
+  </figure>
+
+</div>
+
+<p>Natural neighbor dipilih sebagai metode terbaik karena mampu menangkap variasi spasial yang kompleks dan menghasilkan permukaan yang merata. Pada petanya, kedalaman terbagi dalam delapan kelas dengan titik terdalam sekitar 91 meter yang berada cukup jauh dari daratan. Area ini termasuk zona epipelagik, lapisan atas laut yang masih diterangi cahaya matahari. Fitur dasar laut yang mungkin ada meliputi paparan dangkal di dekat daratan, continental shelf di bagian tengah, dan pulau-pulau kecil di sekitar Pulau Jawa.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Teknik interpolasi memungkinkan data batimetri yang tersebar tidak merata diubah menjadi permukaan kedalaman yang kontinu sehingga lebih mudah divisualisasikan dan dianalisis. Dari lima metode yang dibandingkan, natural neighbor memberikan hasil yang paling halus, detail, dan representatif untuk Laut Jawa, sedangkan IDW kurang mulus dan trend terlalu umum. Pemilihan metode tetap perlu menyesuaikan karakteristik data dan tujuan analisis.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
