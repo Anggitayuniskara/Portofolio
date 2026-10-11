@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sebaran Daerah yang Dipimpin oleh Penjabat Sementara Tahun 2024</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <!-- 1. JUDUL + HIGHLIGHT RINGKASAN -->
+    <header class="post-header">
+      <h1>Sebaran Penjabat Sementara dan Calon Tunggal pada Pilkada Tahun 2024</h1>
+      <p class="post-highlight">
+        Sebanyak 62 kabupaten/kota dan 28 provinsi di Indonesia saat ini dipimpin oleh penjabat sementara,
+        yang ditunjuk untuk menjaga kelangsungan pemerintahan hingga Pilkada pada 27 November 2024.
+      </p>
+    </header>
+
+    <!-- 2. PETA -->
+    <figure class="post-map">
+      <img src="assets/maps/penjabat-pilkada.jpg" alt="Peta sebaran daerah yang dipimpin penjabat sementara dan memiliki calon tunggal pada Pilkada 2024">
+      <figcaption><strong>Gambar 1.</strong> Sebaran daerah yang dipimpin oleh penjabat sementara dan daerah dengan calon tunggal, Pilkada 2024</figcaption>
+    </figure>
+
+    <!-- 3. NARASI -->
+    <article class="post-content">
+      <p>
+        Terdapat 62 kabupaten/kota dan 28 provinsi di Indonesia yang dipimpin oleh penjabat sementara saat ini.
+        Penjabat sementara ialah penjabat yang ditugaskan untuk memimpin daerah ketika masa jabatan kepala daerah
+        sebelumnya telah berakhir, sebelum pemilihan ulang diadakan. Penunjukan penjabat sementara ini diatur oleh
+        pemerintah pusat untuk memastikan bahwa pemerintahan daerah tetap berjalan dengan baik meskipun belum ada
+        kepala daerah yang definitif. Penjabat sementara biasanya berasal dari kalangan birokrasi yang dinilai mampu
+        menjaga stabilitas daerah dan melanjutkan program-program pemerintahan yang sedang berjalan. Di atas ini adalah
+        peta sebaran dari penjabat sementara di Indonesia tahun 2024. Terlihat bahwa penjabat sementara mendominasi di
+        Pulau Sumatera kemudian disusul oleh Papua.
+      </p>
+
+      <p>
+        Masa jabatan dari penjabat sementara ini akan berakhir dikarenakan dalam waktu dekat, tepatnya 27 November,
+        akan diadakan Pilkada. Salah satu fenomena menarik dari Pilkada tahun ini adalah kehadiran calon tunggal di
+        beberapa daerah. Tercatat, sebanyak 41 daerah yang terdiri atas 35 kabupaten, 5 kota, dan 1 provinsi
+        menghadapi situasi tersebut. Kondisi ini bukanlah hal baru dalam Pilkada di Indonesia. Pemerintah telah
+        menetapkan aturan khusus untuk mengatur fenomena calon tunggal melalui Undang-Undang Nomor 10 Tahun 2016
+        tentang Pilkada. Dalam UU tersebut, disebutkan bahwa jika hanya ada satu pasangan calon yang mendaftar, maka
+        lawan yang akan dihadapi dalam pemilihan adalah kotak kosong. Sebaran wilayah yang memiliki calon tunggal
+        tertera pada peta. Terlihat bahwa fenomena calon tunggal ini tersebar hampir di seluruh pulau besar, baik
+        Sumatera, Jawa, Kalimantan, Sulawesi, hingga Papua.
+      </p>
+
+      <p>
+        Kedua fenomena ini, yakni calon tunggal dan penjabat sementara, tidak akan menjadi masalah jika terjadi pada
+        wilayah yang berbeda. Namun, ketika keduanya terjadi di wilayah yang sama, kekhawatiran muncul. Jika "kotak
+        kosong" memenangkan Pilkada, maka penjabat sementara kemungkinan besar akan terus memimpin daerah tersebut
+        hingga Pilkada ulang diadakan. Situasi ini terjadi karena tidak ada pasangan calon yang terpilih secara sah,
+        sehingga pemerintah pusat harus memperpanjang masa tugas penjabat sementara demi menjaga kelangsungan
+        pemerintahan. Akibatnya, kekosongan kepemimpinan definitif dapat berlarut-larut, yang berpotensi
+        mempengaruhi stabilitas dan arah kebijakan daerah hingga Pilkada selanjutnya.
+      </p>
+    </article>
+
+    <!-- 4. SUMBER -->
+    <section class="post-sources">
+      <h2>Sumber</h2>
+      <ul>
+        <li>
+          <a href="https://www.kpu.go.id/berita/baca/12600/pendaftaran-pasangan-calon-kepala-daerahpemilihan-serentak-tahun-2024" target="_blank" rel="noopener">
+            Komisi Pemilihan Umum (KPU), Pendaftaran Pasangan Calon Kepala Daerah Pemilihan Serentak Tahun 2024
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <a class="post-back" href="index.html#proyek">← View other projects</a>
+
+  </main>
+
+</body>
+</html>
+
+<footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

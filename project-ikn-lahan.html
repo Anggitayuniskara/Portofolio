@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transformasi Lahan Akibat Pembangunan Ibu Kota Negara</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <!-- 1. JUDUL + HIGHLIGHT RINGKASAN -->
+    <header class="post-header">
+      <h1>Transformasi Lahan Akibat Pembangunan Ibu Kota Negara</h1>
+      <p class="post-highlight">
+        Pembangunan IKN berkonsep hijau tetapi berisiko lingkungan.
+      </p>
+    </header>
+
+    <!-- 2. PETA -->
+    <figure class="post-map">
+      <img src="assets/maps/ikn-lahan.jpg" alt="Peta perubahan lahan vegetasi di dua kecamatan calon lokasi IKN">
+      <figcaption><strong>Gambar 1.</strong> Perubahan lahan vegetasi di dua kecamatan calon lokasi IKN, 2022–2024</figcaption>
+    </figure>
+
+    <!-- 3. NARASI -->
+    <article class="post-content">
+      <p>
+        Pemindahan Ibu Kota Negara (IKN) hingga saat ini masih santer menjadi pembahasan di kalangan masyarakat.
+        Bagaimana tidak? Pemindahan ini menuai banyak kontra dari berbagai pihak. Proyek pembangunan dari IKN telah
+        dilaksanakan dari tahun 2022. Dinyatakan dalam Undang-undang No 3 Tahun 2022 bahwa IKN akan menjadi sebuah
+        kota dalam hutan (<em>forest city</em>) dengan rencana minimal 75% dari wilayahnya akan tetap menjadi
+        kawasan hijau. Hal tersebut bertujuan untuk menciptakan lingkungan perkotaan yang berkelanjutan dan ramah
+        lingkungan.
+      </p>
+
+      <p>
+        Pembangunan IKN dirancang untuk menjaga keseimbangan antara kebutuhan pembangunan modern dan kelestarian
+        ekosistem hutan Kalimantan. Meski demikian, perkembangan proyek ini juga memunculkan kekhawatiran mengenai
+        dampak terhadap lingkungan dan konversi lahan secara besar-besaran. Sebagai pusat pemerintahan baru, IKN
+        diprediksi akan memicu urbanisasi di wilayah sekitarnya. Alih fungsi lahan menjadi area terbangun semakin
+        tak terelakkan, mengingat infrastruktur perkotaan yang berkembang pesat. Peta di atas menunjukkan perubahan
+        lahan vegetasi yang terjadi di dua kecamatan yang digadang-gadang akan menjadi lokasi dari IKN. Selama dua
+        tahun terakhir terjadi perubahan seluas 6700 Hektare (Ha).
+      </p>
+
+      <div class="table-wrap2">
+        <table class="data-table table-left">
+          <thead>
+            <tr>
+              <th>Indikator</th>
+              <th>2022</th>
+              <th>2024</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Luas Vegetasi (Ha)</td><td>181.800</td><td>175.100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Walaupun sejauh ini perubahan yang terjadi belum sangat besar tetapi perubahan ini tetap membawa
+        konsekuensi terhadap hutan Kalimantan, yang menjadi salah satu paru-paru dunia. Banyak pihak mengingatkan
+        pentingnya mitigasi dini untuk mencegah perubahan lahan yang meluas tanpa kontrol. Dengan target 75% dari
+        wilayah IKN sebagai kawasan hijau, pemerintah menegaskan komitmen menjaga ekosistem sekaligus mewujudkan
+        konsep kota hutan. Harapannya, dengan pengelolaan dan perencanaan yang matang, IKN dapat menjadi contoh
+        pusat perkotaan yang tidak hanya modern tetapi juga selaras dengan alam, yang membawa manfaat jangka
+        panjang bagi lingkungan dan masyarakat sekitar.
+      </p>
+    </article>
+
+    <!-- 4. SUMBER -->
+    <section class="post-sources">
+      <h2>Sumber</h2>
+      <ul>
+        <li>
+          <a href="https://peraturan.bpk.go.id/Details/269494/uu-no-21-tahun-2023" target="_blank" rel="noopener">
+            Undang-Undang Nomor 21 Tahun 2023 (Perubahan atas UU Nomor 3 Tahun 2022 tentang Ibu Kota Negara), Peraturan BPK
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <a class="post-back" href="index.html#proyek">← View other projects</a>
+
+  </main>
+
+</body>
+</html>
+
+<footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

@@ -59,18 +59,14 @@ body {
   overflow: hidden;
 }
 
-.contour-bg {
+.hero::before {
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  background: url("assets/logos/kontur.jpg") center / cover no-repeat;
+  opacity: 0.20;              /* atur 0.08 – 0.3 */
   z-index: 0;
-}
-
-.contour-bg path {
-  fill: none;
-  stroke: var(--line);
-  stroke-width: 1.5;
+  pointer-events: none;
 }
 
 .hero-inner {
@@ -1951,4 +1947,127 @@ footer.footer .footer-copy {
   font-style: italic;
   font-size: .9rem;
   color: #555;
+}
+
+/* Highlight ringkasan: miring dan kecil */
+.post-highlight {
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--slate);
+  max-width: 640px;
+  margin: 12px auto 0;
+}
+
+/* Peta di bawah highlight */
+.post-map {
+  margin: 32px 0 40px;
+}
+
+.post-map img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.post-map figcaption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+
+/* Sumber */
+.post-sources {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.post-sources h2 {
+  font-size: 1.1rem;
+  margin: 0 0 10px;
+}
+
+.post-sources ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.post-sources li,
+.post-sources a {
+  font-size: 0.9rem;
+  color: var(--slate);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.table-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: start;
+  margin: 16px 0 24px;
+}
+
+.table-trio .table-wrap2 {
+  margin: 0;
+}
+
+.table-trio .data-table {
+  font-size: 0.8rem;
+}
+
+.table-trio .data-table th,
+.table-trio .data-table td {
+  padding: 8px 10px;
+  line-height: 1.4;
+}
+
+/* judul kolom boleh turun baris, tidak terpotong */
+.table-trio .data-table thead th {
+  white-space: normal;
+  text-align: center !important;
+}
+
+/* tanggal tetap satu baris */
+.table-trio .data-table td:first-child {
+  white-space: nowrap;
+  text-align: left !important;
+}
+
+/* angka di tengah */
+.table-trio .data-table td:last-child {
+  text-align: center !important;
+}
+
+@media (max-width: 800px) {
+  .table-trio {
+    grid-template-columns: 1fr;
+  }
+}
+
+.post-content figure.post-amazon-map {
+  max-width: 420px;      /* kecilkan/besarkan sesuai selera */
+  width: 100%;
+  margin: 24px auto;     /* kiri-kanan auto = tengah */
+}
+
+.post-content figure.post-amazon-map img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.post-content figure.post-amazon-map figcaption {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--slate);
 }
