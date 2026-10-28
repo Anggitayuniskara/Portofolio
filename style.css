@@ -2071,3 +2071,27 @@ footer.footer .footer-copy {
   font-size: 0.85rem;
   color: var(--slate);
 }
+
+.edu-card.no-cert { cursor: default; }
+.edu-card.no-cert:hover { transform: none; box-shadow: inherit; }
+.edu-logo.placeholder {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted, #6b7280);
+}
+
+.edu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px 24px;
+}
+.edu-card {
+  flex: 0 0 calc((100% - 5 * 24px) / 6); /* 6 kartu per baris di desktop */
+  max-width: 220px;
+}
+@media (max-width: 1024px) {
+  .edu-card { flex-basis: calc((100% - 2 * 24px) / 3); } /* 3 per baris */
+}
+@media (max-width: 600px) {
+  .edu-card { flex-basis: calc((100% - 24px) / 2); }     /* 2 per baris */
+}
