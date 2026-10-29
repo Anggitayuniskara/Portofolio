@@ -2095,3 +2095,11 @@ footer.footer .footer-copy {
 @media (max-width: 600px) {
   .edu-card { flex-basis: calc((100% - 24px) / 2); }     /* 2 per baris */
 }
+
+.map-sar-figure img {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.map-sar-figure figcaption { text-align: center; }

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Kemiringan Lereng dan Hillshade di Kabupaten Sleman dengan ArcGIS Pro</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .map-terrain-figure img { display: block; width: 100%; max-width: 520px; margin: 0 auto; }
+    .map-terrain-figure figcaption { text-align: center; }
+    .table-note { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
+    .terrain3d-wrap { position: relative; }
+    #terrain3d { width: 100%; height: 480px; border-radius: 6px; background: #eef1f3; touch-action: none; cursor: grab; }
+    #terrain3d canvas { display: block; width: 100%; height: 100%; border-radius: 6px; }
+    .terrain3d-tools { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; margin-top: 10px; font-size: .85rem; color: #444; }
+    .terrain3d-tools button { font: inherit; padding: 4px 12px; border: 1px solid #bbb; background: #fff; border-radius: 4px; cursor: pointer; }
+    .terrain3d-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 10px; font-size: .8rem; color: #444; }
+    .terrain3d-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+  <!--
+    KERANGKA. Isi semua teks dalam [KURUNG SIKU] dari hasil ArcGIS Pro-mu, lalu hapus tanda kurungnya.
+    Cari "[" dengan Ctrl+F sampai tidak ada yang tersisa sebelum di-publish.
+  -->
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Terrain Analysis</span>
+      <h1>Analisis Kemiringan Lereng dan Hillshade di Kabupaten Sleman dengan ArcGIS Pro</h1>
+      <p class="post-meta">Oktober 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Kemiringan lereng memengaruhi aliran permukaan, erosi, kerawanan longsor, dan kesesuaian lahan untuk berbagai penggunaan. Kabupaten Sleman di Daerah Istimewa Yogyakarta memiliki relief yang beragam, dari lereng atas Gunung Merapi di utara hingga dataran di selatan, sehingga cocok untuk menggambarkan sebaran kemiringan lereng dari model elevasi digital.</p>
+      <p>Proyek ini mengolah DEMNAS menjadi peta kemiringan lereng yang diklasifikasikan dan peta hillshade, dengan alur kerja yang disusun di ModelBuilder ArcGIS Pro agar dapat diulang.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>DEMNAS (lembar 1408-21, 1408-22, 1408-23, 1408-24, dan 1408-31; resolusi 8 m)</td><td>Raster</td><td>Sekunder</td><td>BIG, Tanah Air Indonesia</td></tr>
+            <tr><td>Batas administrasi Kabupaten Sleman</td><td>Vektor</td><td>Sekunder</td><td>Ina-Geoportal</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Seluruh pengolahan dilakukan di ArcGIS Pro dengan alat Spatial Analyst dan dirangkai dalam ModelBuilder. Kemiringan lereng yang dihasilkan kemudian diklasifikasikan menurut Van Zuidam (1983) menjadi tujuh kelas.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Reproyeksi</td><td>Project Raster pada tiap lembar DEMNAS ke UTM zona 49S (EPSG:32749)</td></tr>
+            <tr><td>Penggabungan DEM</td><td>Mosaic To New Raster</td></tr>
+            <tr><td>Pemotongan DEM</td><td>Extract by Mask dengan batas Kabupaten Sleman</td></tr>
+            <tr><td>Kemiringan lereng</td><td>Slope, satuan derajat</td></tr>
+            <tr><td>Klasifikasi lereng</td><td>Reclassify ke 7 kelas menurut Van Zuidam (1983)</td></tr>
+            <tr><td>Hillshade</td><td>Hillshade dari DEM hasil pemotongan, azimuth (315°), ketinggian matahari (45°)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Hasil</h2>
+
+      <p>Ketinggian di Kabupaten Sleman berkisar dari sekitar 38 m hingga 2.874 m di atas permukaan laut. Kelas lereng yang paling luas adalah bergelombang landai (kelas 1) dengan luas 20.405,9 ha (35,5%), disusul datar atau hampir datar (kelas 0) seluas 19.166,5 ha (33,3%). Kelas berbukit terjal hingga pegunungan sangat terjal (kelas 4 dan 5) hanya menempati sekitar 4% wilayah dan terkonsentrasi di bagian utara, di lereng atas Gunung Merapi, sedangkan bagian selatan didominasi kelas datar sampai bergelombang. Tidak ada piksel yang masuk kelas pegunungan sangat curam (kemiringan lebih dari 55°).</p>
+
+      <figure class="map-terrain-figure">
+        <a href="assets/maps/terrain-hillshade.png" target="_blank" rel="noopener">
+          <img src="assets/maps/terrain-hillshade.png" alt="Hillshade Kabupaten Sleman">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Hillshade Kabupaten Sleman</figcaption>
+      </figure>
+
+      <figure class="map-terrain-figure">
+        <a href="assets/maps/terrain-lereng.png" target="_blank" rel="noopener">
+          <img src="assets/maps/terrain-lereng.png" alt="Peta kelas kemiringan lereng Kabupaten Sleman menurut Van Zuidam">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Peta kelas kemiringan lereng Kabupaten Sleman (Van Zuidam, 1983)</figcaption>
+      </figure>
+
+      <figure class="map-terrain-figure">
+        <a href="assets/maps/terrain-model.png" target="_blank" rel="noopener">
+          <img src="assets/maps/terrain-model.png" alt="Alur kerja ModelBuilder untuk analisis kemiringan lereng">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Alur kerja analisis di ModelBuilder</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kelas</th>
+              <th>Kemiringan (%)</th>
+              <th>Beda tinggi (m)</th>
+              <th>Luas (ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0 · Datar/hampir datar</td><td>0–2</td><td>&lt; 5</td><td>19.166,5</td><td>33,3</td></tr>
+            <tr><td>1 · Bergelombang landai</td><td>3–7</td><td>5–50</td><td>20.405,9</td><td>35,5</td></tr>
+            <tr><td>2 · Bergelombang miring</td><td>8–13</td><td>50–75</td><td>12.012,7</td><td>20,9</td></tr>
+            <tr><td>3 · Berbukit bergelombang</td><td>14–20</td><td>75–200</td><td>3.764,7</td><td>6,5</td></tr>
+            <tr><td>4 · Berbukit terjal</td><td>21–55</td><td>200–500</td><td>2.002,4</td><td>3,5</td></tr>
+            <tr><td>5 · Pegunungan sangat terjal</td><td>56–140</td><td>500–1000</td><td>128,1</td><td>0,2</td></tr>
+            <tr><td>6 · Pegunungan sangat curam</td><td>&gt; 140</td><td>&gt; 1000</td><td>0</td><td>0</td></tr>
+            <tr class="total-row"><td>Total</td><td></td><td></td><td>57.480,3</td><td>100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note" style="font-size:0.85rem; color:#6b7280; margin-top:8px;">Klasifikasi relief mengikuti Van Zuidam (1983).</p>
+
+      <figure class="map-terrain-figure terrain3d-fig">
+        <div class="terrain3d-wrap">
+          <div id="terrain3d" role="img" aria-label="Model 3D kelas kemiringan lereng Kabupaten Sleman. Seret untuk memutar, gulir untuk memperbesar."></div>
+        </div>
+        <div class="terrain3d-tools">
+          <label>Pembesaran vertikal <input type="range" id="exag" min="1" max="5" step="0.5" value="2"> <span id="exagVal">2×</span></label>
+          <button type="button" id="resetView">Atur ulang tampilan</button>
+        </div>
+        <div class="terrain3d-legend">
+          <span><i style="background:#1a9850"></i>Datar/hampir datar</span>
+          <span><i style="background:#91cf60"></i>Bergelombang landai</span>
+          <span><i style="background:#d9ef8b"></i>Bergelombang miring</span>
+          <span><i style="background:#fee08b"></i>Berbukit bergelombang</span>
+          <span><i style="background:#fc8d59"></i>Berbukit terjal</span>
+          <span><i style="background:#d73027"></i>Pegunungan sangat terjal</span>
+        </div>
+        <figcaption><strong>Gambar 4.</strong> Model 3D kelas kemiringan lereng Kabupaten Sleman. Seret untuk memutar dan gulir untuk memperbesar</figcaption>
+      </figure>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Pengolahan DEMNAS di ArcGIS Pro menghasilkan peta kemiringan lereng Kabupaten Sleman yang menunjukkan perbedaan jelas antara lereng curam di sekitar Gunung Merapi dan lahan datar sampai landai di bagian selatan. Alur kerja yang disusun di ModelBuilder dapat dijalankan ulang untuk wilayah lain. Hasil bergantung pada resolusi DEM dan belum divalidasi dengan pengukuran lapangan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    (function () {
+      var box = document.getElementById('terrain3d');
+      function fallback() {
+        box.innerHTML = '<a href="assets/maps/terrain-lereng.jpg" target="_blank" rel="noopener"><img src="assets/maps/terrain-lereng.jpg" alt="Peta kelas kemiringan lereng Kabupaten Sleman" style="width:100%;height:100%;object-fit:contain"></a>';
+      }
+      try {
+        var test = document.createElement('canvas');
+        if (!(window.WebGLRenderingContext && (test.getContext('webgl') || test.getContext('experimental-webgl')))) throw new Error('no webgl');
+        if (typeof THREE === 'undefined') throw new Error('no three');
+      } catch (e) { fallback(); return; }
+
+      Promise.all([
+        fetch('assets/data/sleman-dem.json').then(function (r) { if (!r.ok) throw new Error('json'); return r.json(); }),
+        fetch('assets/data/sleman-dem.bin').then(function (r) { if (!r.ok) throw new Error('bin'); return r.arrayBuffer(); })
+      ]).then(function (res) {
+        var m = res[0], u = new Uint16Array(res[1]), W = m.w, H = m.h;
+        var km = 1000, sx = m.cw / km, sy = m.ch / km;
+        var zr = (m.zmax - m.zmin) / km;
+
+        var renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setClearColor(0xeef1f3);
+        box.appendChild(renderer.domElement);
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+
+        var pos = new Float32Array(W * H * 3), uv = new Float32Array(W * H * 2);
+        var cx = (W - 1) * sx / 2, cy = (H - 1) * sy / 2;
+        for (var j = 0; j < H; j++) for (var i = 0; i < W; i++) {
+          var k = j * W + i, v = u[k];
+          pos[k * 3] = i * sx - cx;
+          pos[k * 3 + 2] = j * sy - cy;
+          pos[k * 3 + 1] = v === 65535 ? 0 : v / 65534 * zr;
+          uv[k * 2] = i / (W - 1);
+          uv[k * 2 + 1] = 1 - j / (H - 1);
+        }
+        var idx = [];
+        for (var j2 = 0; j2 < H - 1; j2++) for (var i2 = 0; i2 < W - 1; i2++) {
+          var a = j2 * W + i2, b = a + 1, c = a + W, d = c + 1;
+          if (u[a] === 65535 || u[b] === 65535 || u[c] === 65535 || u[d] === 65535) continue;
+          idx.push(a, c, b, b, c, d);
+        }
+        var geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+        geo.setIndex(idx);
+
+        var tex = new THREE.TextureLoader().load('assets/maps/sleman-3d-texture.png', function () { render(); });
+        tex.anisotropy = 4;
+        var mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide }));
+        var ex = 2;
+        mesh.scale.y = ex;
+        scene.add(mesh);
+
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.maxPolarAngle = Math.PI / 2.05;
+        controls.minDistance = 8; controls.maxDistance = 90;
+        function home() {
+          camera.position.set(0, 30, 38);
+          controls.target.set(0, 0.8 * ex, 0);
+          controls.update();
+        }
+        home();
+
+        function size() {
+          var w = box.clientWidth, h = box.clientHeight;
+          renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+        }
+        size(); window.addEventListener('resize', function () { size(); render(); });
+        function render() { renderer.render(scene, camera); }
+        controls.addEventListener('change', render);
+        (function loop() { requestAnimationFrame(loop); controls.update(); })();
+
+        var sl = document.getElementById('exag'), lab = document.getElementById('exagVal');
+        sl.addEventListener('input', function () {
+          ex = parseFloat(sl.value); mesh.scale.y = ex; lab.textContent = ex + '×';
+          controls.target.y = 0.8 * ex; render();
+        });
+        document.getElementById('resetView').addEventListener('click', function () {
+          sl.value = 2; ex = 2; mesh.scale.y = 2; lab.textContent = '2×'; home(); render();
+        });
+        render();
+      }).catch(function () { fallback(); });
+    })();
+  </script>
+</body>
+</html>

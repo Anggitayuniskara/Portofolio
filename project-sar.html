@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemetaan Perkiraan Genangan Banjir dengan Citra Sentinel-1 SAR di Google Earth Engine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Remote Sensing</span>
+      <h1>Pemetaan Perkiraan Genangan Banjir dengan Citra Sentinel-1 SAR di Google Earth Engine</h1>
+      <p class="post-meta">Oktober 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Saat banjir, langit biasanya tertutup awan tebal sehingga citra optik seperti Landsat atau Sentinel-2 sulit dipakai. Citra radar (SAR) tidak punya masalah itu, karena sensornya aktif dan dapat menembus awan serta merekam siang maupun malam. Permukaan air yang tenang memantulkan gelombang radar menjauh dari sensor, sehingga tampak gelap pada citra.</p>
+      <p>Proyek latihan ini mencoba memetakan perkiraan genangan banjir di sekitar Demak dan Semarang, Jawa Tengah, yang terdampak banjir pada Februari 2024, dengan membandingkan citra Sentinel-1 sebelum dan sesudah kejadian di Google Earth Engine.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sentinel-1 GRD (mode IW, polarisasi VV, lintasan descending)</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+            <tr><td>JRC Global Surface Water (seasonality)</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+            <tr><td>SRTM 30 m (untuk kelerengan)</td><td>Raster</td><td>Sekunder</td><td>Google Earth Engine</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Area kajian berupa persegi panjang seluas sekitar 916 km² (110,45°–110,75° BT dan 7,05°–6,80° LS). Citra sebelum banjir diambil pada 20 Januari–2 Februari 2024, dan citra sesudah banjir pada 8–14 Februari 2024. Masing-masing dirangkum dengan nilai median.</p>
+
+      <h2>Metode</h2>
+
+      <p>Citra Sentinel-1 yang sudah berupa nilai backscatter dalam desibel (dB) dikurangi derau bintik (<em>speckle</em>) dengan filter median 30 m, lalu dibandingkan antara sebelum dan sesudah banjir. Piksel dianggap tergenang jika memenuhi kedua syarat pada tabel berikut, kemudian dibersihkan dari air permanen, lereng curam, dan piksel terpencil.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Ketentuan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Reduksi speckle</td><td>Filter median, radius 30 m</td></tr>
+            <tr><td>Deteksi air</td><td>Backscatter VV sesudah banjir &lt; −15 dB</td></tr>
+            <tr><td>Deteksi perubahan</td><td>Selisih (sesudah − sebelum) &lt; −3 dB</td></tr>
+            <tr><td>Penghapusan air permanen</td><td>JRC seasonality &lt; 10 bulan per tahun</td></tr>
+            <tr><td>Penghapusan lereng curam</td><td>Lereng ≥ 5° dikeluarkan (SRTM)</td></tr>
+            <tr><td>Penghapusan noise</td><td>Kelompok kurang dari 8 piksel dihapus</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Luas genangan dihitung dengan menjumlahkan luas piksel yang lolos semua tahap pada resolusi 10 m.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Perkiraan luas genangan di area kajian adalah sekitar <strong>414,8 hektare</strong>, atau sekitar 0,45% dari luas area kajian. Genangan muncul sebagai bercak-bercak kecil yang tersebar, terutama di bagian tengah hingga selatan area kajian, sedangkan bagian barat laut yang sangat gelap adalah laut dan tidak dihitung sebagai genangan karena dikeluarkan sebagai air permanen.</p>
+
+      <figure class="map-sar-figure">
+        <a href="assets/maps/sebelum.jpeg" target="_blank" rel="noopener">
+          <img src="assets/maps/sebelum.jpeg" alt="Citra Sentinel-1 VV sebelum banjir di sekitar Demak">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Backscatter Sentinel-1 VV sebelum banjir (20 Januari–2 Februari 2024)</figcaption>
+      </figure>
+
+      <figure class="map-sar-figure">
+        <a href="assets/maps/sesudah.jpeg" target="_blank" rel="noopener">
+          <img src="assets/maps/sesudah.jpeg" alt="Citra Sentinel-1 VV sesudah banjir di sekitar Demak">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Backscatter Sentinel-1 VV sesudah banjir (8–14 Februari 2024)</figcaption>
+      </figure>
+
+      <figure class="map-sar-figure">
+        <a href="assets/maps/genangan.jpeg" target="_blank" rel="noopener">
+          <img src="assets/maps/genangan.jpeg" alt="Perkiraan sebaran genangan banjir hasil deteksi perubahan Sentinel-1">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Perkiraan sebaran genangan banjir (warna biru)</figcaption>
+      </figure>
+
+      <p>Skrip lengkap dapat dijalankan di <a href="https://code.earthengine.google.com/798ff1e6b8ccc4a56c724089e4b132b5" target="_blank" rel="noopener">Google Earth Engine Code Editor</a>.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Perbandingan citra Sentinel-1 sebelum dan sesudah kejadian dapat memetakan perkiraan genangan dengan cepat, tanpa terhambat awan. Pada latihan ini, genangan terdeteksi seluas sekitar 414,8 hektare. Hasilnya masih berupa perkiraan karena ambang batas ditentukan secara empiris, hanya satu arah lintasan yang dipakai, dan belum ada validasi dengan data lapangan atau citra optik. Sebelum dijadikan acuan, hasil ini perlu dibandingkan dengan data kejadian, misalnya dari BNPB.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisis Keterjangkauan Fasilitas Kesehatan dan Paparan Banjir dengan PostgreSQL/PostGIS</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    /* Hanya untuk peta. Gaya lain mengikuti style.css */
+    .map-postgis-figure #map { height: 460px; width: 100%; border-radius: 6px; }
+    .map-postgis-figure .leaflet-container img,
+    .map-postgis-figure .leaflet-container svg { max-width: none !important; max-height: none !important; }
+    .map-postgis-figure .leaflet-container a { text-decoration: none; }
+    .postgis-legend { background: #fff; color: #222; padding: 6px 10px; border: 1px solid #aaa; border-radius: 4px; font: 12px/1.7 sans-serif; }
+    .postgis-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+    /* Tabel: kolom pertama rata kiri, kolom lain di tengah */
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .sql-block { background: #f6f6f2; border: 1px solid #ddd; border-radius: 6px; padding: 12px 14px; overflow-x: auto; font-size: .85rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Spatial Database</span>
+      <h1>Analisis Keterjangkauan Fasilitas Kesehatan dan Paparan Banjir dengan PostgreSQL/PostGIS</h1>
+      <p class="post-meta">Oktober 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Bayangkan sebuah wilayah yang dilewati sungai dan sering tergenang saat hujan deras. Ada 25 desa di sana, dan hanya sebagian yang punya puskesmas atau klinik di dekatnya. Saat banjir datang, pertanyaan yang muncul sederhana. Desa mana yang paling terdampak dan sekaligus paling jauh dari fasilitas kesehatan?</p>
+      
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Lapisan</th>
+              <th>Geometri</th>
+              <th>Jumlah</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>desa</td><td>Poligon</td><td>25</td><td>Grid 5 × 5, masing-masing 1 km × 1 km, dengan jumlah penduduk acak</td></tr>
+            <tr><td>faskes</td><td>Titik</td><td>12</td><td>Posisi acak; jenis: rumah sakit, puskesmas, klinik</td></tr>
+            <tr><td>zona_banjir</td><td>Poligon</td><td>1</td><td>Penyangga 500 m di sekitar garis sungai sintetis</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Seluruh lapisan disimpan dalam sistem koordinat EPSG:32748 (WGS 84 / UTM zona 48S) sehingga jarak dan luas dihitung dalam meter. Data dibuat dengan <code>setseed</code> agar hasilnya dapat diulang.</p>
+
+      <h2>Metode</h2>
+
+      <p>Lapisan disimpan di PostgreSQL dengan ekstensi PostGIS dan diberi indeks spasial GiST. Analisis dijalankan dengan fungsi spasial berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Fungsi PostGIS</th>
+              <th>Tujuan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>ST_IsValid, Find_SRID</td><td>Memeriksa validitas geometri dan sistem koordinat</td></tr>
+            <tr><td>ST_Buffer</td><td>Membuat area layanan 1 km di sekitar fasilitas</td></tr>
+            <tr><td>ST_Contains</td><td>Menghitung jumlah fasilitas di dalam tiap desa (spatial join)</td></tr>
+            <tr><td>ST_Intersection, ST_Area</td><td>Menghitung persentase luas desa yang berada di zona banjir</td></tr>
+            <tr><td>Operator &lt;-&gt; (nearest neighbour)</td><td>Mencari fasilitas terdekat dari titik pusat tiap desa</td></tr>
+            <tr><td>ST_DWithin</td><td>Menyaring desa tanpa fasilitas dalam jarak 1 km</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Desa ditetapkan sebagai desa prioritas apabila lebih dari 20% luasnya berada di zona banjir dan tidak ada fasilitas dalam radius 1 km dari titik pusatnya. Hasil akhir diekspor ke GeoJSON (EPSG:4326) untuk ditampilkan pada peta interaktif di bawah.</p>
+
+
+      <h2>Hasil</h2>
+
+      <p>Dari 25 desa, dua desa memenuhi kedua kriteria. Keduanya berdampingan dan dilewati zona banjir: satu desa dengan 74,9% luas terdampak dan satu lagi dengan 43,4%. Kedua desa dihuni 5.832 jiwa.</p>
+
+      <figure class="map-postgis-figure">
+        <div id="map" role="img" aria-label="Peta desa, zona banjir, fasilitas kesehatan, dan desa prioritas"></div>
+        <figcaption><strong>Gambar 1.</strong> Desa, zona banjir, fasilitas kesehatan, dan desa prioritas.</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Desa prioritas</th>
+              <th>Penduduk (jiwa)</th>
+              <th>Luas desa yang terdampak banjir (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Desa prioritas 1</td><td>4.504</td><td>74,9</td></tr>
+            <tr><td>Desa prioritas 2</td><td>1.328</td><td>43,4</td></tr>
+            <tr class="total-row"><td>Total</td><td>5.832</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.85rem; color:#6b7280; margin-top:8px;">Persentase dihitung terhadap luas masing-masing desa, sehingga tidak dijumlahkan.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Dalam skenario ini, dua dari 25 desa terdampak banjir cukup luas dan tidak punya fasilitas kesehatan dalam jarak 1 km, sehingga paling perlu diperhatikan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    (function () {
+      var map = L.map('map');
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      var names = ['desa', 'zona_banjir', 'desa_prioritas', 'faskes'];
+
+      function load(name) {
+        var url = new URL('assets/data/' + name + '.geojson', window.location.href).href;
+        return fetch(url).then(function (r) {
+          if (!r.ok) throw new Error(r.status + ' untuk ' + url);
+          return r.json();
+        });
+      }
+
+      function popup(f, l) {
+        var p = f.properties || {}, rows = [];
+        Object.keys(p).forEach(function (k) {
+          if (p[k] !== null) rows.push('<b>' + k + '</b>: ' + p[k]);
+        });
+        if (rows.length) l.bindPopup(rows.join('<br>'));
+      }
+
+      Promise.all(names.map(load)).then(function (d) {
+        var desa = L.geoJSON(d[0], { style: { color: '#777', weight: 1, fillColor: '#ccc', fillOpacity: .3 }, onEachFeature: popup }).addTo(map);
+        L.geoJSON(d[1], { style: { color: '#1565c0', weight: 1, fillColor: '#42a5f5', fillOpacity: .45 }, onEachFeature: popup }).addTo(map);
+        L.geoJSON(d[2], { style: { color: '#b71c1c', weight: 2, fillColor: '#e53935', fillOpacity: .5 }, onEachFeature: popup }).addTo(map);
+        L.geoJSON(d[3], {
+          pointToLayer: function (f, ll) {
+            return L.circleMarker(ll, { radius: 6, color: '#1b5e20', weight: 1, fillColor: '#43a047', fillOpacity: 1 });
+          },
+          onEachFeature: popup
+        }).addTo(map);
+        map.fitBounds(desa.getBounds());
+
+        var legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = function () {
+          var div = L.DomUtil.create('div', 'postgis-legend');
+          div.innerHTML =
+            '<i style="background:#e53935"></i>Desa prioritas<br>' +
+            '<i style="background:#42a5f5"></i>Zona banjir<br>' +
+            '<i style="background:#43a047;border-radius:50%"></i>Fasilitas kesehatan<br>' +
+            '<i style="background:#ccc"></i>Desa';
+          return div;
+        };
+        legend.addTo(map);
+      }).catch(function (e) {
+        document.getElementById('map').innerHTML =
+          '<p style="padding:16px">Data peta tidak dapat dimuat: ' + e.message + '</p>';
+      });
+    })();
+  </script>
+</body>
+</html>
