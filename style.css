@@ -2099,7 +2099,10 @@ footer.footer .footer-copy {
 .map-sar-figure img {
   display: block;
   width: 100%;
-  max-width: 520px;
+  max-width: 360px;
   margin: 0 auto;
 }
 .map-sar-figure figcaption { text-align: center; }
+
+.map-postgis-figure #map { position: relative; z-index: 0; isolation: isolate; }
+.nav { position: sticky; top: 0; z-index: 2000; }
