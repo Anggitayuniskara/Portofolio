@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediksi Risiko Pemutihan Karang di Bali–Lombok dengan Machine Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .data-table .best-row td { font-weight: 700; }
+    .table-note { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+
+    #coralMap { width: 100%; height: 560px; border-radius: 12px; border: 1px solid var(--line); background: #e8ecef; }
+    .post-content #coralMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    #coralMap .px-overlay { image-rendering: pixelated; image-rendering: crisp-edges; }
+    .map-hint { font-size: 0.8rem; color: #6b7280; text-align: center; margin-top: 6px; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 220px; }
+    .wm-panel header { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 8px 10px; max-height: 320px; overflow-y: auto; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 4px; }
+    .wm-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .wm-row input[type=range] { width: 100%; margin: 2px 0 6px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 12px/1.5 system-ui, sans-serif; color: #222; max-width: 230px; }
+    .wm-legend h4 { margin: 6px 0 2px; font-size: 12px; }
+    .wm-legend h4:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-legend i.dot { border-radius: 50%; border: 1px solid #333; }
+    .wm-legend span { color: #666; }
+    .wm-home a { font-size: 15px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    .wm-popup .ttl { font-weight: 700; padding-bottom: 4px; }
+    @media (max-width: 600px) {
+      #coralMap { height: 440px; }
+      .wm-legend { font-size: 10px; padding: 6px 8px; max-width: 150px; }
+      .wm-legend h4 { font-size: 10px; }
+      .wm-legend span { display: none; }
+      .wm-legend i { width: 9px; height: 9px; margin-right: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Machine Learning</span>
+      <h1>Prediksi Risiko Pemutihan Karang di Bali–Lombok dengan Machine Learning</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Pada pertengahan 2016, laut di sekitar Bali dan Lombok memanas berbulan-bulan lebih lama dari biasanya. Di Gili Layar, Gili Rengit, dan Teluk Medane, penyelam mendapati lebih dari tiga perempat karang berubah pucat seperti tulang. Karang memutih ketika panas yang menumpuk membuatnya melepaskan alga simbion yang memberinya warna dan sebagian besar makanannya. Jika panas tidak segera reda, karang itu akan segera mati.</p>
+      <p>Gelombang panas laut kini datang makin sering, sementara tenaga dan dana untuk memantau terumbu terbatas. Pertanyaannya, terumbu mana yang paling perlu diawasi lebih dulu ketika laut mulai memanas, dan seberapa besar risikonya pada 2024 dan 2026?</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Global Coral Bleaching Database 1980–2020 (34.498 survei dengan persentase pemutihan, 11.055 lokasi)</td><td>Tabel (CSV)</td><td>Sekunder</td><td><a href="https://www.bco-dmo.org/dataset/773466" target="_blank" rel="noopener">BCO-DMO</a> (van Woesik &amp; Kratochwill, 2022)</td></tr>
+            <tr><td>Degree Heating Week (DHW), anomali suhu, dan suhu permukaan laut harian, resolusi 5 km, 2016, 2024, dan 2026</td><td>Raster (grid)</td><td>Sekunder</td><td>NOAA Coral Reef Watch v3.1, melalui ERDDAP</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Model dilatih dengan seluruh survei global, sedangkan peta risiko difokuskan pada 154 lokasi terumbu yang pernah disurvei di Bali, Lombok, dan Banyuwangi (114,3°–116,8° BT dan 7,9°–9,2° LS). Data NOAA untuk 2026 tersedia hingga 25 Oktober 2026.</p>
+
+      <h2>Metode</h2>
+
+      <p>Tidak semua karang yang pucat berarti sedang memutih karena panas. Hampir di setiap survei selalu ada beberapa karang yang terlihat pucat, bisa karena sakit, terluka, atau karena penilaian penyelam yang satu sedikit berbeda dengan yang lain. Karena itu, sebuah lokasi baru dihitung mengalami pemutihan kalau lebih dari 10% karangnya memutih. Pemutihan akibat panas biasanya jauh lebih parah dari angka itu, jadi batas 10% cukup untuk membedakan keduanya.</p>
+      <p>Data kemudian dipisah berdasarkan tahun. Survei tahun 1985–2012 dipakai untuk melatih model, survei 2013–2015 untuk menentukan batas peringatan, dan survei 2016–2020 untuk menguji hasilnya. Kenapa tidak diacak saja? Saat gelombang panas datang, karang di banyak tempat biasanya memutih bersamaan. Kalau data diacak, survei dari kejadian yang sama bisa masuk ke data latih sekaligus data uji. Model jadi seperti mengerjakan ujian dengan soal yang sudah pernah dilihat, sehingga nilainya terlihat bagus padahal belum tentu.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Label</td><td>Pemutihan bila persentase karang memutih &gt; 10%; diuji juga dengan ambang 0% dan 20%</td></tr>
+            <tr><td>Variabel penjelas</td><td>DHW saat survei, anomali suhu permukaan laut, kedalaman, jarak ke pantai, kekeruhan, keterbukaan, frekuensi siklon, dan lintang</td></tr>
+            <tr><td>Pembagian data</td><td>Latih 1985–2012 (24.092 survei), validasi 2013–2015 (4.491), uji 2016–2020 (5.915)</td></tr>
+            <tr><td>Data tidak seimbang</td><td>Bobot kelas seimbang; evaluasi memakai PR-AUC, presisi, dan recall, bukan akurasi</td></tr>
+            <tr><td>Model</td><td>Aturan peringatan NOAA (DHW ≥ 4 °C-minggu) sebagai pembanding, regresi logistik, Random Forest, dan Gradient Boosting</td></tr>
+            <tr><td>Ambang keputusan</td><td>Dipilih pada data validasi dengan skor F2, yang memberi bobot lebih pada recall (Random Forest: 0,28)</td></tr>
+            <tr><td>Kalibrasi DHW</td><td>DHW NOAA disetarakan dengan DHW pada data latih melalui regresi linear di 224 pasangan survei Bali–Lombok (r = 0,72)</td></tr>
+            <tr><td>Peta risiko</td><td>Model akhir dilatih ulang dengan seluruh data 1985–2020, lalu dijalankan dengan DHW tertinggi tiap lokasi pada 2024 dan 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+            <h2>Hasil</h2>
+
+      <p>Tahun 2024 adalah tahun yang berat bagi terumbu karang di Bali dan Lombok. Dari 154 lokasi terumbu yang diamati, 139 di antaranya berisiko tinggi atau sangat tinggi mengalami pemutihan, dan tidak ada satu pun yang masuk kategori rendah. Pada 2026 keadaannya jauh lebih baik. Jumlah terumbu yang berisiko tinggi turun menjadi 47 lokasi, dan 32 lokasi kembali ke kategori rendah.</p>
+
+      <div class="stat-row">
+        <div><strong>139 dari 154</strong><span>Terumbu berisiko tinggi atau sangat tinggi pada 2024</span></div>
+        <div><strong>47 dari 154</strong><span>Terumbu berisiko tinggi atau sangat tinggi pada 2026</span></div>
+        <div><strong>47</strong><span>Terumbu yang tetap berisiko tinggi di kedua tahun</span></div>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/coral-dhw-series.png" target="_blank" rel="noopener">
+          <img src="assets/maps/coral-dhw-series.png" alt="Grafik DHW mingguan rata-rata di terumbu Bali-Lombok pada 2016, 2024, dan 2026">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> DHW mingguan rata-rata di 154 lokasi terumbu Bali–Lombok pada 2016, 2024, dan 2026</figcaption>
+      </figure>
+
+      <p>Perbedaan kedua tahun itu terlihat dari panas yang menumpuk di laut. Panas pada 2024 memang tidak setinggi 2016, tetapi bertahan lama. DHW rata-rata sudah di atas 4 °C-minggu sejak Januari, akibat panas yang terbawa dari akhir 2023, lalu naik lagi pada April–Mei. Pada 2026, panas hanya memuncak sebentar pada Mei dengan DHW rata-rata sekitar 3,3 °C-minggu, sehingga risikonya jauh lebih rendah.</p>
+
+      <figure class="chart-figure">
+        <div id="coralMap" role="region" aria-label="Peta interaktif risiko pemutihan karang di Bali-Lombok tahun 2024 dan 2026"></div>
+        <p class="map-hint">Klik titik terumbu untuk melihat DHW dan peluang pemutihannya. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 2.</strong> Peta interaktif risiko pemutihan karang dan DHW tertinggi di Bali–Lombok pada 2024 dan 2026</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kategori risiko</th>
+              <th>Peluang pemutihan</th>
+              <th>Lokasi 2024</th>
+              <th>Lokasi 2026</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Rendah</td><td>&lt; 0,28</td><td>0</td><td>32</td></tr>
+            <tr><td>Sedang</td><td>0,28–0,50</td><td>15</td><td>75</td></tr>
+            <tr><td>Tinggi</td><td>0,50–0,70</td><td>84</td><td>38</td></tr>
+            <tr><td>Sangat tinggi</td><td>≥ 0,70</td><td>55</td><td>9</td></tr>
+            <tr class="total-row"><td>Total</td><td></td><td>154</td><td>154</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Terumbu mana yang perlu diawasi lebih dulu?</h3>
+
+      <p>Ada satu temuan yang menarik. Semua terumbu yang masih berisiko tinggi pada 2026 ternyata juga berisiko tinggi pada 2024. Artinya, ke-47 terumbu ini tetap rawan memutih bahkan di tahun ketika laut tidak terlalu panas. Terumbu seperti inilah yang paling perlu diawasi lebih dulu setiap kali laut mulai memanas.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Wilayah</th>
+              <th>Lokasi terumbu</th>
+              <th>Berisiko tinggi 2024</th>
+              <th>Berisiko tinggi 2026</th>
+              <th>Contoh terumbu yang perlu didahulukan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Gugusan Nusa Penida (Klungkung)</td><td>33</td><td>32</td><td>17</td><td>Mangrove, Sauna, Bunyuk, Karang Sari</td></tr>
+            <tr><td>Lombok Utara</td><td>48</td><td>47</td><td>10</td><td>Gili Trawangan, Sunset Reef</td></tr>
+            <tr><td>Lombok Timur</td><td>7</td><td>7</td><td>7</td><td>Gili Sulat, Gili Lawang</td></tr>
+            <tr><td>Buleleng</td><td>21</td><td>13</td><td>5</td><td>Pemuteran</td></tr>
+            <tr><td>Karangasem</td><td>23</td><td>20</td><td>4</td><td>–</td></tr>
+            <tr><td>Lombok Barat</td><td>10</td><td>10</td><td>2</td><td>Coral Beach</td></tr>
+            <tr><td>Banyuwangi dan Sumbawa</td><td>7</td><td>6</td><td>2</td><td>–</td></tr>
+            <tr><td>Badung, Denpasar, dan Sumbawa Barat</td><td>5</td><td>4</td><td>0</td><td>–</td></tr>
+            <tr class="total-row"><td>Total</td><td>154</td><td>139</td><td>47</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Berisiko tinggi berarti peluang pemutihan 0,50 atau lebih (kategori tinggi dan sangat tinggi). Sebagian lokasi survei tidak memiliki nama di database, sehingga contoh terumbu hanya diambil dari lokasi yang bernama.</p>
+
+      <p>Lombok Timur paling perlu diwaspadai. Ketujuh terumbunya, termasuk Gili Sulat dan Gili Lawang, berisiko tinggi di kedua tahun, dan pada 2016 rata-rata separuh karangnya memutih. Gugusan Nusa Penida menyusul dengan 17 terumbu yang tetap berisiko tinggi, kemudian Lombok Utara dengan 10 terumbu, termasuk Gili Trawangan. Di Bali utara, Pemuteran juga termasuk terumbu yang risikonya tetap tinggi pada 2026.</p>
+
+      <h3>Seberapa bisa dipercaya perkiraan ini?</h3>
+
+      <p>Perkiraan di atas dibuat dengan model Random Forest. Dari keempat cara yang dibandingkan, model ini paling jeli menemukan karang yang memutih. Pada survei tahun 2016–2020, model ini berhasil menandai 57% kejadian pemutihan, sementara aturan peringatan NOAA hanya menandai 27%. Konsekuensinya, Random Forest lebih sering memberi peringatan yang ternyata meleset, sehingga presisinya lebih rendah. Untuk pemantauan terumbu, hal ini masih bisa diterima. Mendatangi terumbu yang ternyata baik-baik saja jauh lebih baik daripada tidak sempat memeriksa terumbu yang sudah terlanjur memutih.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>PR-AUC</th>
+              <th>ROC-AUC</th>
+              <th>Presisi</th>
+              <th>Recall</th>
+              <th>F1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Aturan NOAA (DHW ≥ 4)</td><td>0,361</td><td>0,727</td><td>0,541</td><td>0,272</td><td>0,362</td></tr>
+            <tr><td>Regresi logistik</td><td>0,309</td><td>0,707</td><td>0,334</td><td>0,424</td><td>0,374</td></tr>
+            <tr class="best-row"><td>Random Forest</td><td>0,408</td><td>0,727</td><td>0,336</td><td>0,566</td><td>0,421</td></tr>
+            <tr><td>Gradient Boosting</td><td>0,408</td><td>0,717</td><td>0,376</td><td>0,505</td><td>0,431</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Model dilatih dan diuji dengan survei dari seluruh dunia, bukan hanya Indonesia. Tabel di atas berisi hasil pengujian dengan 5.915 survei dari berbagai negara pada 2016–2020, dan 13,9% di antaranya mengalami pemutihan lebih dari 10%. Kalau pengujiannya dipersempit hanya untuk 453 survei di Bali dan Lombok, PR-AUC Random Forest naik menjadi 0,558 dan presisinya menjadi 0,619, sedangkan recall-nya turun sedikit menjadi 0,448.</p>
+
+      <p>Batas 10% tadi juga dicoba diganti. Model diuji lagi dengan batas 0%, yang berarti setiap survei dengan karang memutih sedikit pun ikut dihitung, lalu dengan batas 20%. Di ketiga batas itu, Random Forest tetap memberi hasil terbaik. Jadi hasilnya tidak hanya bagus karena kebetulan memakai angka 10%.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Ambang label</th>
+              <th>Survei memutih pada data uji (%)</th>
+              <th>PR-AUC aturan NOAA</th>
+              <th>PR-AUC Random Forest</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>&gt; 0%</td><td>40,0</td><td>0,516</td><td>0,602</td></tr>
+            <tr class="best-row"><td>&gt; 10%</td><td>13,9</td><td>0,361</td><td>0,408</td></tr>
+            <tr><td>&gt; 20%</td><td>9,4</td><td>0,353</td><td>0,401</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/coral-importance.png" target="_blank" rel="noopener">
+          <img src="assets/maps/coral-importance.png" alt="Grafik kepentingan variabel model Random Forest, dengan DHW sebagai variabel terpenting">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Kepentingan variabel pada model Random Forest (permutation importance pada data uji)</figcaption>
+      </figure>
+
+      <p>Grafik di atas memperlihatkan faktor apa saja yang paling berpengaruh pada tebakan model. Cara membacanya, nilai satu faktor sengaja diacak, lalu dilihat seberapa banyak tebakan model jadi meleset. Makin panjang batangnya, makin penting faktor tersebut.</p>
+      <p>DHW jelas paling berpengaruh. DHW adalah ukuran seberapa banyak panas yang menumpuk di laut selama 12 minggu terakhir, dan pengaruhnya dua kali lipat faktor lain. Di urutan berikutnya ada lintang dan seberapa sering suatu wilayah dilewati siklon. Dua faktor ini memberi gambaran tentang kondisi wilayah yang tidak terbaca dari angka panas, misalnya apakah lautnya sering mendapat pendinginan dari badai. Sementara itu, kedalaman, kekeruhan, dan keterbukaan lokasi ternyata hampir tidak berpengaruh.</p>
+
+      <p>Sebelum dipakai untuk memperkirakan risiko tahun 2024 dan 2026, model perlu dicoba dulu pada kejadian yang sudah pernah terjadi. Untuk itu, model dilatih ulang hanya dengan data sampai 2012, lalu dipakai untuk menebak apa yang terjadi di Bali dan Lombok pada 2016. Tahun itu ada 31 lokasi yang disurvei, dan 25 di antaranya memang memutih lebih dari 10%. Semua lokasi yang memutih itu berhasil ditandai berisiko oleh model. Hanya saja, ada 6 lokasi lain yang ikut ditandai berisiko padahal karangnya baik-baik saja. Artinya, model ini lebih sering memberi peringatan yang tidak perlu daripada melewatkan terumbu yang benar-benar memutih.</p>
+
+      <div class="stat-row">
+        <div><strong>25 dari 25</strong><span>Lokasi yang memutih pada 2016 dan terdeteksi model</span></div>
+        <div><strong>6</strong><span>Peringatan pada lokasi yang ternyata tidak memutih</span></div>
+        <div><strong>13,5</strong><span>Rata-rata DHW tertinggi pada 2016 (°C-minggu)</span></div>
+      </div>
+
+      <p>Model tidak langsung menjawab apakah karang memutih atau tidak memutih. Yang diberikan adalah angka peluang antara 0 sampai 1. Makin mendekati 1, makin besar kemungkinan karang di lokasi itu memutih. Supaya angka itu bisa dipakai untuk mengambil keputusan, perlu ada batas yang menentukan kapan sebuah terumbu dianggap berisiko. Batas ini dicari dengan memakai 4.491 survei tahun 2013–2015 yang tidak ikut dipakai untuk melatih model. Pada survei-survei itu, model dicoba dengan 91 batas yang berbeda, mulai dari 0,05 sampai 0,95, lalu hasil tebakannya dicocokkan dengan kondisi karang yang sebenarnya.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Batas peluang</th>
+              <th>Survei yang diberi peringatan</th>
+              <th>Survei memutih yang tertangkap (dari 693)</th>
+              <th>Recall</th>
+              <th>Presisi</th>
+              <th>Skor F2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>0,10</td><td>2.854</td><td>643</td><td>0,93</td><td>0,23</td><td>0,571</td></tr>
+            <tr><td>0,20</td><td>1.713</td><td>574</td><td>0,83</td><td>0,34</td><td>0,640</td></tr>
+            <tr class="best-row"><td>0,28</td><td>1.192</td><td>525</td><td>0,76</td><td>0,44</td><td>0,662</td></tr>
+            <tr><td>0,40</td><td>778</td><td>462</td><td>0,67</td><td>0,59</td><td>0,651</td></tr>
+            <tr><td>0,50</td><td>583</td><td>403</td><td>0,58</td><td>0,69</td><td>0,601</td></tr>
+            <tr><td>0,60</td><td>385</td><td>316</td><td>0,46</td><td>0,82</td><td>0,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Dihitung pada 4.491 survei validasi tahun 2013–2015.</p>
+
+      <p>Tabel di atas memperlihatkan beberapa batas yang dicoba. Kalau batasnya terlalu rendah, misalnya 0,10, model memang berhasil menangkap hampir semua karang yang memutih, yaitu 643 dari 693 survei. Masalahnya, model jadi memberi peringatan ke 2.854 survei, padahal sebagian besar karangnya baik-baik saja. Sebaliknya, kalau batasnya dinaikkan menjadi 0,60, peringatan yang diberikan hampir selalu tepat, tetapi lebih dari separuh karang yang memutih malah lolos tanpa terdeteksi.</p>
+      <p>Untuk memilih batas yang paling pas, dipakai skor F2. Skor ini menilai dua hal sekaligus, yaitu berapa banyak karang memutih yang berhasil ditemukan (recall) dan berapa banyak peringatan yang benar (presisi). Bedanya dengan skor biasa, F2 memberi bobot lebih besar pada recall, karena dalam pemantauan terumbu, melewatkan karang yang sedang memutih jauh lebih merugikan daripada mendatangi lokasi yang ternyata aman. Skor F2 tertinggi didapat pada batas 0,28. Pada batas ini, 525 dari 693 karang yang memutih berhasil tertangkap, atau sekitar tiga dari empat, dan hampir separuh peringatannya tepat.</p>
+      <p>Angka 0,28 memang terdengar rendah, tetapi itu disengaja. Terumbu dengan peluang di bawah 0,28 masuk kategori rendah dan belum perlu dikhawatirkan. Terumbu dengan peluang di atasnya sebaiknya mulai dipantau, dan semakin tinggi kategorinya, semakin perlu didahulukan.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Risiko pemutihan karang di Bali dan Lombok sangat bergantung pada seberapa lama laut memanas. Pada 2024, panas yang bertahan berbulan-bulan membuat hampir semua terumbu, yaitu 139 dari 154 lokasi, berisiko tinggi atau sangat tinggi mengalami pemutihan. Pada 2026 panas lebih cepat reda, sehingga jumlah terumbu yang berisiko tinggi turun menjadi 47 lokasi.</p>
+      <p>Ke-47 terumbu itu adalah terumbu yang paling perlu diawasi lebih dulu, karena risikonya tetap tinggi bahkan di tahun yang tidak terlalu panas. Sebagian besar berada di Lombok Timur, gugusan Nusa Penida, dan Lombok Utara, termasuk Gili Sulat, Gili Lawang, Gili Trawangan, dan beberapa titik penyelaman di sekitar Nusa Penida. Ketika laut kembali memanas, terumbu-terumbu inilah yang sebaiknya diperiksa pertama kali.</p>
+      <p>Perkiraan ini cukup bisa dipercaya untuk menentukan prioritas pemantauan. Saat diuji pada kejadian tahun 2016, model berhasil mengenali semua terumbu di Bali–Lombok yang memutih, dan secara umum menemukan kejadian pemutihan dua kali lebih banyak dibanding aturan peringatan NOAA. Meski begitu, hasil ini tetap perlu dibaca sebagai perkiraan. Data suhu laut dari satelit memiliki resolusi 5 km, sehingga terumbu yang letaknya berdekatan mendapat nilai panas yang sama. Data panas yang dipakai untuk melatih model dan untuk membuat prediksi juga berasal dari dua sumber berbeda yang harus disetarakan lebih dulu. Selain itu, prediksi tahun 2024 dan 2026 belum dicocokkan dengan hasil survei lapangan terbaru, sehingga langkah berikutnya adalah membandingkannya dengan pengamatan langsung di lapangan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      // Batas grid NOAA Coral Reef Watch 0,05 derajat untuk kotak Bali-Lombok
+      var BOUNDS = [[-9.2, 114.3], [-7.85, 116.85]];
+      var VIEW = [[-9.0, 114.35], [-8.0, 116.75]];
+      var THR = 0.28;
+      var RISK = [
+        { name: 'Rendah', min: 0, color: '#1a9850', range: '< 0,28' },
+        { name: 'Sedang', min: 0.28, color: '#fee08b', range: '0,28–0,50' },
+        { name: 'Tinggi', min: 0.5, color: '#fc8d59', range: '0,50–0,70' },
+        { name: 'Sangat tinggi', min: 0.7, color: '#d73027', range: '≥ 0,70' }
+      ];
+      var DHW = [
+        { name: '0–4 °C-minggu', rgb: [255, 224, 130], note: 'waspada' },
+        { name: '4–8 °C-minggu', rgb: [255, 160, 0], note: 'Alert 1' },
+        { name: '8–12 °C-minggu', rgb: [229, 57, 53], note: 'Alert 2' },
+        { name: '≥ 12 °C-minggu', rgb: [123, 31, 162], note: 'risiko kematian' }
+      ];
+      var riskOf = function (p) { var r = RISK[0]; RISK.forEach(function (c) { if (p >= c.min) r = c; }); return r; };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { minimumFractionDigits: d, maximumFractionDigits: d }); };
+      var TOWN = { 'North Lombok Regency': 'Kabupaten Lombok Utara', 'East Lombok Regency': 'Kabupaten Lombok Timur', 'West Lombok Regency': 'Kabupaten Lombok Barat',
+        'West Sumbawa Regency': 'Kabupaten Sumbawa Barat', 'Denpasar': 'Kota Denpasar' };
+      var town = function (t) { return TOWN[t] || t.replace(/^(.*) Regency$/, 'Kabupaten $1').replace(/^(.*) City$/, 'Kota $1'); };
+
+      var box = document.getElementById('coralMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.5 });
+      map.fitBounds(VIEW);
+      var fitted = box.clientWidth > 0;
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () {
+          map.invalidateSize();
+          if (!fitted && box.clientWidth > 0) { map.fitBounds(VIEW); fitted = true; }
+        }).observe(box);
+      }
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var basemaps = {
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' }),
+        'Laut (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 13, attribution: 'Tiles &copy; Esri &mdash; GEBCO, NOAA, National Geographic' }),
+        'OpenStreetMap': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' })
+      };
+      var activeBase = basemaps['Citra satelit (Esri)'].addTo(map);
+
+      var dhwLegend = function (y) {
+        return '<h4>DHW tertinggi ' + y + '</h4>' + DHW.map(function (c) {
+          return '<div><i style="background:rgb(' + c.rgb.join(',') + ')"></i>' + c.name + ' <span>(' + c.note + ')</span></div>';
+        }).join('');
+      };
+      var riskLegend = function (y) {
+        return '<h4>Risiko pemutihan ' + y + '</h4>' + RISK.map(function (c) {
+          return '<div><i class="dot" style="background:' + c.color + '"></i>' + c.name + ' <span>(' + c.range + ')</span></div>';
+        }).join('');
+      };
+
+      var overlays = [
+        { id: 'risk24', name: 'Risiko pemutihan 2024', on: true, opacity: 1, layer: L.layerGroup(), legend: riskLegend(2024), year: 2024 },
+        { id: 'risk26', name: 'Risiko pemutihan 2026', on: false, opacity: 1, layer: L.layerGroup(), legend: riskLegend(2026), year: 2026 },
+        { id: 'dhw24', name: 'DHW tertinggi 2024', on: true, opacity: 0.55,
+          layer: L.imageOverlay('assets/maps/coral-dhw-2024.png', BOUNDS, { className: 'px-overlay', opacity: 0.55 }), legend: dhwLegend(2024) },
+        { id: 'dhw26', name: 'DHW tertinggi 2026', on: false, opacity: 0.55,
+          layer: L.imageOverlay('assets/maps/coral-dhw-2026.png', BOUNDS, { className: 'px-overlay', opacity: 0.55 }), legend: dhwLegend(2026) }
+      ];
+      var byId = function (id) { return overlays.filter(function (o) { return o.id === id; })[0]; };
+
+      function popup(s, y) {
+        var p = y === 2024 ? s.p24 : s.p26, d = y === 2024 ? s.d24 : s.d26, r = riskOf(p);
+        var rows = '<tr><td colspan="2" class="ttl">' + s.n + '</td></tr>' +
+          '<tr><td>Wilayah</td><td>' + town(s.t) + '</td></tr>' +
+          '<tr><td>DHW tertinggi ' + y + '</td><td>' + fmt(d, 1) + ' °C-minggu</td></tr>' +
+          '<tr><td>Peluang pemutihan</td><td><strong>' + fmt(p, 2) + '</strong> (' + r.name.toLowerCase() + ')</td></tr>';
+        if (s.o !== null) rows += '<tr><td>Teramati 2016</td><td>' + fmt(s.o, 1) + '% karang memutih</td></tr>';
+        rows += '<tr><td>Jumlah survei</td><td>' + s.s + ' (1998–2020)</td></tr>';
+        return '<table class="wm-popup">' + rows + '</table>';
+      }
+
+      fetch('assets/data/coral-bali-sites.json').then(function (r) { return r.json(); }).then(function (sites) {
+        [2024, 2026].forEach(function (y) {
+          var o = byId(y === 2024 ? 'risk24' : 'risk26');
+          sites.slice().sort(function (a, b) { return (y === 2024 ? a.p24 - b.p24 : a.p26 - b.p26); }).forEach(function (s) {
+            var p = y === 2024 ? s.p24 : s.p26;
+            L.circleMarker([s.la, s.lo], { radius: 6, color: '#222', weight: 1, fillColor: riskOf(p).color, fillOpacity: 0.95, bubblingMouseEvents: false })
+              .bindPopup(popup(s, y), { maxWidth: 270 }).addTo(o.layer);
+          });
+        });
+      });
+
+      overlays.slice().reverse().forEach(function (o) { if (o.on) o.layer.addTo(map); });
+      function restack() {
+        overlays.forEach(function (o) { if (o.on && o.layer.bringToBack && o.id.indexOf('dhw') === 0) o.layer.bringToBack(); });
+      }
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var html = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Basemap</div>';
+          Object.keys(basemaps).forEach(function (k, i) {
+            html += '<div class="wm-row"><label><input type="radio" name="wm-base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label></div>';
+          });
+          html += '<div class="wm-group">Layer</div>';
+          overlays.forEach(function (o) {
+            html += '<div class="wm-row"><label><input type="checkbox" data-id="' + o.id + '"' + (o.on ? ' checked' : '') + '>' + o.name + '</label>' +
+              (o.id.indexOf('dhw') === 0 ? '<input type="range" min="0" max="1" step="0.05" value="' + o.opacity + '" data-op="' + o.id + '" aria-label="Opacity ' + o.name + '">' : '') + '</div>';
+          });
+          div.innerHTML = html + '</div>';
+          L.DomEvent.disableClickPropagation(div);
+          L.DomEvent.disableScrollPropagation(div);
+          div.querySelector('header').addEventListener('click', function () { div.classList.toggle('collapsed'); });
+          div.querySelectorAll('input[name=wm-base]').forEach(function (r) {
+            r.addEventListener('change', function () {
+              map.removeLayer(activeBase); activeBase = basemaps[r.value].addTo(map); activeBase.bringToBack();
+            });
+          });
+          div.querySelectorAll('input[data-id]').forEach(function (cb) {
+            cb.addEventListener('change', function () {
+              var o = byId(cb.dataset.id);
+              o.on = cb.checked;
+              if (o.on) o.layer.addTo(map); else map.removeLayer(o.layer);
+              restack(); updateLegend();
+            });
+          });
+          div.querySelectorAll('input[data-op]').forEach(function (sl) {
+            sl.addEventListener('input', function () { byId(sl.dataset.op).layer.setOpacity(parseFloat(sl.value)); });
+          });
+          return div;
+        }
+      });
+      new Panel().addTo(map);
+
+      var legendDiv;
+      var Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () { legendDiv = L.DomUtil.create('div', 'wm-legend'); L.DomEvent.disableClickPropagation(legendDiv); return legendDiv; }
+      });
+      new Legend().addTo(map);
+      function updateLegend() {
+        var on = overlays.filter(function (o) { return o.on; });
+        legendDiv.style.display = on.length ? '' : 'none';
+        legendDiv.innerHTML = on.map(function (o) { return o.legend; }).join('');
+      }
+      updateLegend();
+
+      var Home = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'leaflet-bar wm-home');
+          div.innerHTML = '<a href="#" title="Kembali ke area kajian" role="button" aria-label="Kembali ke area kajian"><i class="fa-solid fa-house"></i></a>';
+          L.DomEvent.on(div.firstChild, 'click', function (e) { L.DomEvent.preventDefault(e); L.DomEvent.stopPropagation(e); map.fitBounds(VIEW); });
+          return div;
+        }
+      });
+      new Home().addTo(map);
+
+      // Inspector: klik di luar titik terumbu menampilkan kelas DHW dari raster yang aktif
+      function pixelReader(src) {
+        var ctx = null, w = 0, h = 0, img = new Image();
+        img.onload = function () {
+          var cv = document.createElement('canvas'); w = cv.width = img.naturalWidth; h = cv.height = img.naturalHeight;
+          ctx = cv.getContext('2d', { willReadFrequently: true }); ctx.drawImage(img, 0, 0);
+        };
+        img.src = src;
+        return function (ll) {
+          if (!ctx) return null;
+          var x = Math.floor((ll.lng - BOUNDS[0][1]) / (BOUNDS[1][1] - BOUNDS[0][1]) * w);
+          var y = Math.floor((BOUNDS[1][0] - ll.lat) / (BOUNDS[1][0] - BOUNDS[0][0]) * h);
+          if (x < 0 || y < 0 || x >= w || y >= h) return null;
+          try { return ctx.getImageData(x, y, 1, 1).data; } catch (e) { return null; }
+        };
+      }
+      var readers = { dhw24: pixelReader('assets/maps/coral-dhw-2024.png'), dhw26: pixelReader('assets/maps/coral-dhw-2026.png') };
+      map.on('click', function (e) {
+        var rows = '<tr><td>Koordinat</td><td>' + e.latlng.lat.toFixed(4) + ', ' + e.latlng.lng.toFixed(4) + '</td></tr>';
+        var any = false;
+        ['dhw24', 'dhw26'].forEach(function (id) {
+          if (!byId(id).on) return;
+          any = true;
+          var px = readers[id](e.latlng), label = 'Tidak ada stres panas';
+          if (px && px[3] > 0) {
+            var c = DHW.filter(function (d) { return d.rgb[0] === px[0] && d.rgb[1] === px[1] && d.rgb[2] === px[2]; })[0];
+            if (c) label = c.name + ' (' + c.note + ')';
+          } else if (!px) label = 'Di luar area kajian';
+          rows += '<tr><td>' + byId(id).name + '</td><td>' + label + '</td></tr>';
+        });
+        if (!any) rows += '<tr><td colspan="2">Nyalakan layer DHW untuk melihat nilai panas.</td></tr>';
+        L.popup({ maxWidth: 270 }).setLatLng(e.latlng).setContent('<table class="wm-popup">' + rows + '</table>').openOn(map);
+      });
+    })();
+  </script>
+</body>
+</html>

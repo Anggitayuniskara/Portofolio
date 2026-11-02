@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimasi Stok Karbon Biomassa Mangrove di Segara Anakan, Cilacap dengan QGIS</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    #mangroveMap { width: 100%; height: 560px; border-radius: 12px; border: 1px solid var(--line); background: #e8ecef; }
+    .post-content #mangroveMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    #mangroveMap .px-overlay { image-rendering: pixelated; image-rendering: crisp-edges; }
+    .map-hint { font-size: 0.8rem; color: #6b7280; text-align: center; margin-top: 6px; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 210px; }
+    .wm-panel header { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 8px 10px; max-height: 300px; overflow-y: auto; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 4px; }
+    .wm-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .wm-row input[type=range] { width: 100%; margin: 2px 0 6px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 12px/1.5 system-ui, sans-serif; color: #222; max-width: 220px; }
+    .wm-legend h4 { margin: 6px 0 2px; font-size: 12px; }
+    .wm-legend h4:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-legend i.line { height: 0; border-top: 2px dashed #111; border-radius: 0; vertical-align: 3px; }
+    .wm-legend span { color: #666; }
+    .wm-home a { font-size: 15px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    @media (max-width: 600px) {
+      #mangroveMap { height: 440px; }
+      .wm-legend { font-size: 10px; padding: 6px 8px; max-width: 150px; }
+      .wm-legend h4 { font-size: 10px; }
+      .wm-legend span { display: none; }
+      .wm-legend i { width: 9px; height: 9px; margin-right: 4px; }
+    }
+
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .map-mangrove-figure img { display: block; width: 100%; margin: 0 auto; }
+    .map-mangrove-figure figcaption { text-align: center; }
+    .table-note { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Blue Carbon</span>
+      <h1>Estimasi Stok Karbon Biomassa Mangrove di Segara Anakan, Cilacap dengan QGIS</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Dari ketinggian, Segara Anakan terlihat seperti hamparan hijau yang mengapit alur-alur sungai sebelum bermuara ke laut. Laguna di Kabupaten Cilacap, Jawa Tengah, ini merupakan salah satu kawasan mangrove terluas di pesisir selatan Pulau Jawa. Di batang dan akar pohon-pohonnya tersimpan karbon dalam jumlah besar yang terkumpul selama puluhan tahun. Karena itulah mangrove disebut sebagai ekosistem <em>blue carbon</em>, yang berperan penting dalam menahan laju perubahan iklim.</p>
+      <p>Namun, hamparan hijau itu tidak lepas dari tekanan. Lumpur yang terbawa sungai perlahan mendangkalkan laguna, sementara sebagian mangrove dibuka menjadi tambak dan lahan pertanian. Setiap petak yang hilang ikut melepaskan karbon yang tersimpan di dalamnya kembali ke atmosfer. Lalu, seberapa luas mangrove yang masih bertahan di Segara Anakan pada 2024, dan berapa banyak karbon yang masih dijaganya?</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Klasifikasi penutup lahan 2024 (Sentinel-2, Random Forest, resolusi 10 m, 5 kelas)</td><td>Raster</td><td>Sekunder</td><td>Citra Sentinel-2 (Copernicus/ESA), diklasifikasi dengan Random Forest di Google Earth Engine</td></tr>
+            <tr><td>Peta mangrove biner 2024 (1 = mangrove, 0 = bukan mangrove, resolusi 10 m)</td><td>Raster</td><td>Sekunder</td><td>Turunan kelas mangrove dari hasil klasifikasi Random Forest Sentinel-2</td></tr>
+            <tr><td>Batas area kajian (AOI)</td><td>Vektor</td><td>Primer</td><td>Digitasi mandiri</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Area kajian seluas sekitar 8.592 ha (108,80°–108,89° BT dan 7,64°–7,72° LS) mencakup laguna Segara Anakan beserta alur sungai dan daratan di sekitarnya. Kedua raster menggunakan sistem koordinat WGS 84 / UTM zona 49S (EPSG:32749).</p>
+
+      <h2>Metode</h2>
+
+      <p>Piksel mangrove diubah menjadi poligon agar luas dan stok karbon dapat dihitung dengan mengalikan luas dengan faktor karbon per hektare dari IPCC Tier 1.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Konversi raster ke poligon</td><td>Polygonize (GDAL), hanya piksel bernilai 1 (mangrove) yang diambil</td></tr>
+            <tr><td>Perhitungan luas</td><td>Luas tiap poligon dalam UTM zona 49S, dari m² dikonversi ke hektare (<code>luas_ha</code>)</td></tr>
+            <tr><td>Biomassa atas permukaan (AGB)</td><td>192 t/ha (IPCC Tier 1)</td></tr>
+            <tr><td>Biomassa bawah permukaan (BGB)</td><td>AGB × rasio akar terhadap tajuk (R = 0,49) = 94,08 t/ha</td></tr>
+            <tr><td>Stok karbon</td><td>(AGB + BGB) × fraksi karbon (CF = 0,451) = 129,02 t C/ha (<code>c_ton</code>)</td></tr>
+            <tr><td>Konversi ke CO₂ ekuivalen</td><td>Stok karbon × 44/12 = 473,08 t CO₂e/ha (<code>co2e_ton</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Hasil</h2>
+
+      <p>Mangrove di Segara Anakan pada tahun 2024 seluas 3.365,00 ha diperkirakan menyimpan 434.159,26 ton karbon biomassa, setara 1.591.917,40 ton CO₂e. Mangrove menjadi penutup lahan paling luas di area kajian, mencakup sekitar 39% wilayah, dan terkonsentrasi di pulau-pulau dan dataran lumpur yang diapit alur sungai di bagian tengah hingga timur.</p>
+
+      <div class="stat-row">
+        <div><strong>3.365 ha</strong><span>Luas mangrove</span></div>
+        <div><strong>434.159 t C</strong><span>Stok karbon biomassa</span></div>
+        <div><strong>1,59 juta t CO₂e</strong><span>Setara CO₂</span></div>
+      </div>
+
+      <figure class="map-mangrove-figure">
+        <div id="mangroveMap" role="region" aria-label="Peta interaktif penutup lahan dan mangrove Segara Anakan, Cilacap tahun 2024"></div>
+        <p class="map-hint">Klik peta untuk melihat kelas penutup lahan dan stok karbon di titik tersebut. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 1.</strong> Peta interaktif penutup lahan dan sebaran mangrove di Segara Anakan, Cilacap tahun 2024</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kelas penutup lahan</th>
+              <th>Luas (ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Mangrove</td><td>3.365,0</td><td>39,3</td></tr>
+            <tr><td>Vegetasi darat</td><td>1.878,9</td><td>21,9</td></tr>
+            <tr><td>Sawah</td><td>1.634,0</td><td>19,1</td></tr>
+            <tr><td>Tambak/terbangun</td><td>922,3</td><td>10,8</td></tr>
+            <tr><td>Air</td><td>764,6</td><td>8,9</td></tr>
+            <tr class="total-row"><td>Total</td><td>8.564,7</td><td>100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Piksel mangrove membentuk 2.789 petak terpisah dengan ukuran mulai dari 0,01 ha hingga 553,43 ha. Sebarannya sangat timpang. Delapan petak berukuran lebih dari 100 ha mencakup 67,3% luas mangrove, sedangkan 2.317 petak berukuran 0,1 ha atau kurang hanya menyumbang 1,7%. Karena stok karbon dihitung dengan faktor yang sama per hektare, sebaran karbon mengikuti sebaran luas tersebut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Ukuran petak</th>
+              <th>Jumlah petak</th>
+              <th>Luas (ha)</th>
+              <th>Stok karbon (t C)</th>
+              <th>Persentase luas (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1 piksel (0,01 ha)</td><td>1.184</td><td>11,8</td><td>1.528</td><td>0,4</td></tr>
+            <tr><td>0,01–0,1 ha</td><td>1.133</td><td>43,8</td><td>5.650</td><td>1,3</td></tr>
+            <tr><td>0,1–1 ha</td><td>352</td><td>117,1</td><td>15.112</td><td>3,5</td></tr>
+            <tr><td>1–10 ha</td><td>92</td><td>267,9</td><td>34.565</td><td>8,0</td></tr>
+            <tr><td>10–100 ha</td><td>20</td><td>660,2</td><td>85.175</td><td>19,6</td></tr>
+            <tr><td>&gt; 100 ha</td><td>8</td><td>2.264,2</td><td>292.129</td><td>67,3</td></tr>
+            <tr class="total-row"><td>Total</td><td>2.789</td><td>3.365,0</td><td>434.159</td><td>100</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Mangrove masih menjadi penutup lahan utama di Segara Anakan, dengan luas sekitar 3.365 ha yang diperkirakan menyimpan sekitar 434 ribu ton karbon biomassa atau 1,6 juta ton CO₂e. Sebagian besar karbon tersimpan di sedikit petak mangrove yang luas, sehingga perlindungan petak-petak tersebut paling berpengaruh untuk menjaga stok karbon kawasan. Hasil ini masih berupa estimasi Tier 1 karena memakai satu faktor biomassa untuk semua tegakan, belum memasukkan karbon tanah yang umumnya jauh lebih besar, dan belum diuji akurasinya dengan data lapangan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      // Batas raster (EPSG:3857) hasil reproyeksi di QGIS, 10 m per piksel
+      var BOUNDS = [[-7.7185693, 108.7950134], [-7.6384459, 108.8892467]];
+      var MERC = [12111005.4937, -861837.9329, 12121495.4937, -852837.9329];
+      var AOI = { type: 'Polygon', coordinates: [[[108.795452, -7.639645], [108.886571, -7.638967], [108.888777, -7.718548], [108.7963, -7.713457], [108.795452, -7.639645]]] };
+      var C_HA = 129.02, CO2_HA = 473.08;
+      var CLASSES = [
+        { name: 'Mangrove', rgb: [27, 94, 32], ha: '3.365,0' },
+        { name: 'Vegetasi darat', rgb: [139, 195, 74], ha: '1.878,9' },
+        { name: 'Air', rgb: [30, 136, 229], ha: '764,6' },
+        { name: 'Tambak/terbangun', rgb: [141, 110, 99], ha: '922,3' },
+        { name: 'Sawah', rgb: [253, 216, 53], ha: '1.634,0' }
+      ];
+      var rgb = function (c) { return 'rgb(' + c.join(',') + ')'; };
+
+      var box = document.getElementById('mangroveMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.5 });
+      map.fitBounds(BOUNDS);
+      // Kontainer bisa belum punya ukuran saat halaman dimuat, jadi zoom diatur ulang begitu ukurannya tersedia
+      var fitted = box.clientWidth > 0;
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () {
+          map.invalidateSize();
+          if (!fitted && box.clientWidth > 0) { map.fitBounds(BOUNDS); fitted = true; }
+        }).observe(box);
+      }
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var basemaps = {
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' }),
+        'Topografi (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, attribution: 'Tiles &copy; Esri' }),
+        'OpenStreetMap': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' })
+      };
+      var activeBase = basemaps['Citra satelit (Esri)'].addTo(map);
+
+      var overlays = [
+        { id: 'tutupan', name: 'Penutup lahan 2024', on: true, opacity: 0.85,
+          layer: L.imageOverlay('assets/maps/mangrove-web-tutupan.png', BOUNDS, { className: 'px-overlay', opacity: 0.85 }),
+          legend: '<h4>Penutup lahan 2024</h4>' + CLASSES.map(function (c) {
+            return '<div><i style="background:' + rgb(c.rgb) + '"></i>' + c.name + ' <span>(' + c.ha + ' ha)</span></div>';
+          }).join('') },
+        { id: 'mangrove', name: 'Mangrove 2024', on: false, opacity: 1,
+          layer: L.imageOverlay('assets/maps/mangrove-web-mangrove.png', BOUNDS, { className: 'px-overlay', opacity: 1 }),
+          legend: '<h4>Mangrove 2024</h4><div><i style="background:rgb(0,100,0)"></i>Mangrove <span>(3.365 ha)</span></div>' +
+            '<div><span>' + C_HA.toLocaleString('id-ID') + ' t C/ha &middot; ' + CO2_HA.toLocaleString('id-ID') + ' t CO&#8322;e/ha</span></div>' },
+        { id: 'aoi', name: 'Batas AOI', on: true, opacity: 1,
+          layer: L.layerGroup([
+            L.geoJSON(AOI, { style: { color: '#fff', weight: 4, opacity: 0.9, fill: false }, interactive: false }),
+            L.geoJSON(AOI, { style: { color: '#111', weight: 2, dashArray: '6 4', fill: false }, interactive: false })
+          ]),
+          legend: '<h4>Batas AOI</h4><div><i class="line"></i>Area kajian <span>(8.592 ha)</span></div>' }
+      ];
+      overlays.forEach(function (o) { if (o.on) o.layer.addTo(map); });
+
+      // Panel layer seperti di Google Earth Engine: basemap, layer, dan opacity
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var html = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Basemap</div>';
+          Object.keys(basemaps).forEach(function (k, i) {
+            html += '<div class="wm-row"><label><input type="radio" name="wm-base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label></div>';
+          });
+          html += '<div class="wm-group">Layer</div>';
+          overlays.forEach(function (o) {
+            html += '<div class="wm-row"><label><input type="checkbox" data-id="' + o.id + '"' + (o.on ? ' checked' : '') + '>' + o.name + '</label>' +
+              (o.id === 'aoi' ? '' : '<input type="range" min="0" max="1" step="0.05" value="' + o.opacity + '" data-op="' + o.id + '" aria-label="Opacity ' + o.name + '">') + '</div>';
+          });
+          div.innerHTML = html + '</div>';
+          L.DomEvent.disableClickPropagation(div);
+          L.DomEvent.disableScrollPropagation(div);
+          div.querySelector('header').addEventListener('click', function () { div.classList.toggle('collapsed'); });
+          div.querySelectorAll('input[name=wm-base]').forEach(function (r) {
+            r.addEventListener('change', function () {
+              map.removeLayer(activeBase); activeBase = basemaps[r.value].addTo(map); activeBase.bringToBack();
+            });
+          });
+          div.querySelectorAll('input[data-id]').forEach(function (cb) {
+            cb.addEventListener('change', function () {
+              var o = overlays.filter(function (x) { return x.id === cb.dataset.id; })[0];
+              o.on = cb.checked;
+              if (o.on) o.layer.addTo(map); else map.removeLayer(o.layer);
+              overlays.forEach(function (x) { if (x.on && x.layer.bringToFront) x.layer.bringToFront(); });
+              updateLegend();
+            });
+          });
+          div.querySelectorAll('input[data-op]').forEach(function (sl) {
+            sl.addEventListener('input', function () {
+              overlays.filter(function (x) { return x.id === sl.dataset.op; })[0].layer.setOpacity(parseFloat(sl.value));
+            });
+          });
+          return div;
+        }
+      });
+      new Panel().addTo(map);
+
+      var legendDiv;
+      var Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () { legendDiv = L.DomUtil.create('div', 'wm-legend'); L.DomEvent.disableClickPropagation(legendDiv); return legendDiv; }
+      });
+      new Legend().addTo(map);
+      function updateLegend() {
+        var on = overlays.filter(function (o) { return o.on; });
+        legendDiv.style.display = on.length ? '' : 'none';
+        legendDiv.innerHTML = on.map(function (o) { return o.legend; }).join('');
+      }
+      updateLegend();
+
+      var Home = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'leaflet-bar wm-home');
+          div.innerHTML = '<a href="#" title="Kembali ke area kajian" role="button" aria-label="Kembali ke area kajian"><i class="fa-solid fa-house"></i></a>';
+          L.DomEvent.on(div.firstChild, 'click', function (e) { L.DomEvent.preventDefault(e); L.DomEvent.stopPropagation(e); map.fitBounds(BOUNDS); });
+          return div;
+        }
+      });
+      new Home().addTo(map);
+
+      // Inspector: baca warna piksel raster di titik yang diklik
+      function pixelReader(src) {
+        var ctx = null, w = 0, h = 0, img = new Image();
+        img.onload = function () {
+          var cv = document.createElement('canvas'); w = cv.width = img.naturalWidth; h = cv.height = img.naturalHeight;
+          ctx = cv.getContext('2d', { willReadFrequently: true }); ctx.drawImage(img, 0, 0);
+        };
+        img.src = src;
+        return function (latlng) {
+          if (!ctx) return null;
+          var p = L.CRS.EPSG3857.project(latlng);
+          var x = Math.floor((p.x - MERC[0]) / (MERC[2] - MERC[0]) * w), y = Math.floor((MERC[3] - p.y) / (MERC[3] - MERC[1]) * h);
+          if (x < 0 || y < 0 || x >= w || y >= h) return null;
+          try { return ctx.getImageData(x, y, 1, 1).data; } catch (e) { return null; }
+        };
+      }
+      var readTutupan = pixelReader('assets/maps/mangrove-web-tutupan.png');
+      var readMangrove = pixelReader('assets/maps/mangrove-web-mangrove.png');
+
+      map.on('click', function (e) {
+        var rows = '<tr><td>Koordinat</td><td>' + e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5) + '</td></tr>';
+        var t = readTutupan(e.latlng), m = readMangrove(e.latlng);
+        if (t && t[3] > 0) {
+          var cls = CLASSES.filter(function (c) { return c.rgb[0] === t[0] && c.rgb[1] === t[1] && c.rgb[2] === t[2]; })[0];
+          rows += '<tr><td>Penutup lahan</td><td><strong>' + (cls ? cls.name : '-') + '</strong></td></tr>';
+          var isMangrove = m && m[3] > 0;
+          rows += '<tr><td>Mangrove</td><td>' + (isMangrove ? 'Ya' : 'Tidak') + '</td></tr>';
+          if (isMangrove) {
+            rows += '<tr><td>Stok karbon</td><td>' + C_HA.toLocaleString('id-ID') + ' t C/ha</td></tr>' +
+              '<tr><td>Setara CO&#8322;</td><td>' + CO2_HA.toLocaleString('id-ID') + ' t CO&#8322;e/ha</td></tr>';
+          }
+        } else {
+          rows += '<tr><td>Penutup lahan</td><td>Di luar area kajian</td></tr>';
+        }
+        L.popup({ maxWidth: 260 }).setLatLng(e.latlng).setContent('<table class="wm-popup">' + rows + '</table>').openOn(map);
+      });
+    })();
+  </script>
+</body>
+</html>

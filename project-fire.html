@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemetaan Kebakaran Hutan dan Lahan di Indonesia 2024–2026 dengan Titik Api dan NBR</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note { font-size: 0.85rem; color: #6b7280; margin-top: 8px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+
+    #fireMap { width: 100%; height: 560px; border-radius: 12px; border: 1px solid var(--line); background: #e8ecef; }
+    .post-content #fireMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .map-hint { font-size: 0.8rem; color: #6b7280; text-align: center; margin-top: 6px; }
+    .time-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .time-bar button { font: inherit; font-size: 0.85rem; padding: 6px 14px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; min-width: 92px; }
+    .time-bar input[type=range] { flex: 1; min-width: 180px; }
+    .time-label { font-weight: 700; min-width: 220px; }
+    .time-label span { font-weight: 400; color: #6b7280; font-size: 0.85rem; margin-left: 6px; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 220px; }
+    .wm-panel header { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 8px 10px; max-height: 320px; overflow-y: auto; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 4px; }
+    .wm-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .wm-row input[type=range] { width: 100%; margin: 2px 0 6px; }
+    .wm-row button { font: inherit; font-size: 11px; padding: 2px 8px; margin: 2px 4px 4px 0; border: 1px solid #ccc; background: #f7f7f7; border-radius: 4px; cursor: pointer; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 12px/1.5 system-ui, sans-serif; color: #222; max-width: 230px; }
+    .wm-legend h4 { margin: 6px 0 2px; font-size: 12px; }
+    .wm-legend h4:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-legend i.box { background: transparent; border: 2px solid #00e5ff; }
+    .wm-legend span { color: #666; }
+    .wm-home a { font-size: 15px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    .wm-popup .ttl { font-weight: 700; padding-bottom: 4px; }
+    @media (max-width: 600px) {
+      #fireMap { height: 440px; }
+      .wm-legend { font-size: 10px; padding: 6px 8px; max-width: 150px; }
+      .wm-legend h4 { font-size: 10px; }
+      .wm-legend span { display: none; }
+      .wm-legend i { width: 9px; height: 9px; margin-right: 4px; }
+      .time-label { min-width: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Forest Fire</span>
+      <h1>Pemetaan Kebakaran Hutan dan Lahan di Indonesia 2024–2026 dengan Titik Api dan NBR</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Setiap musim kemarau, api kembali muncul di hutan dan lahan gambut Indonesia. Asapnya bisa terbawa ratusan kilometer, mengganggu kesehatan warga, dan melepaskan karbon yang sudah tersimpan puluhan tahun di dalam gambut. Tahun 2015 dan 2019 tercatat sebagai tahun dengan kebakaran terbesar selama 1 dekade terakhir. Pada 2026, satelit kembali mencatat lonjakan titik api, kali ini jauh melampaui dua tahun sebelumnya.</p>
+      <p>Pertanyaannya, seberapa besar kebakaran tahun ini jika dibandingkan dengan dua tahun sebelumnya? Bulan apa api mulai menyebar, di mana saja ia muncul, dan seberapa parah lahan yang ditinggalkannya?</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Titik api FIRMS (MODIS, resolusi 1 km), Januari 2024–Oktober 2026</td><td>Raster harian</td><td>Sekunder</td><td>NASA FIRMS, melalui Google Earth Engine</td></tr>
+            <tr><td>Citra Sentinel-2 Level-2A (kanal B04, B8A, B12, dan SCL, resolusi 20 m), Mei–November 2026</td><td>Raster</td><td>Sekunder</td><td>ESA Copernicus, melalui Microsoft Planetary Computer</td></tr>
+            <tr><td>Area terbakar MODIS MCD64A1 (resolusi 500 m), sebagai pembanding</td><td>Raster bulanan</td><td>Sekunder</td><td>NASA, melalui Google Earth Engine</td></tr>
+            <tr><td>Batas provinsi Indonesia</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM1)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Batas provinsi dari geoBoundaries masih memakai pembagian 34 provinsi, jadi Papua Selatan, Papua Tengah, dan Papua Pegunungan masih tergabung dalam Provinsi Papua. Data Sentinel-2 untuk 2026 diambil sampai 2 November 2026.</p>
+
+      <h2>Metode</h2>
+
+            <p>Pekerjaan ini dibagi menjadi dua bagian. Bagian pertama melihat gambaran besarnya, yaitu kapan dan di mana api muncul di seluruh Indonesia setiap bulan. Untuk itu dipakai data titik api dari sensor MODIS di satelit Terra dan Aqua. Kedua satelit ini melintas di atas Indonesia sekitar empat kali sehari dan mendeteksi panas dari api, yang tetap terbaca meskipun langit dipenuhi asap. Citra biasa seperti Sentinel-2 hanya merekam tempat yang sama sekitar lima hari sekali dan mudah tertutup asap, sehingga kurang cocok untuk memantau seluruh Indonesia setiap bulan. Satelit membagi permukaan bumi menjadi kotak-kotak kecil berukuran sekitar 1 × 1 km. Kalau dalam satu hari satelit menangkap panas api di sebuah kotak, kotak itu dihitung sebagai satu deteksi. Api yang menyala lima hari di tempat yang sama akan tercatat lima deteksi, sedangkan kebakaran yang meluas ke sepuluh kotak dalam sehari tercatat sepuluh deteksi. Jadi jumlah deteksi menggambarkan seberapa luas dan seberapa lama api menyala, bukan berapa kali kebakaran terjadi. Deteksi ini lalu dijumlahkan ke dalam kotak-kotak berukuran sekitar 5,5 km × 5,5 km di seluruh daratan Indonesia.</p>
+      <p>Bagian kedua melihat lebih dekat. Di Kalimantan Tengah, Sumatera Selatan, dan Papua, dipilih satu kawasan seluas sekitar 28 km × 28 km yang paling padat titik apinya selama Agustus–Oktober 2026. Di kawasan itu, citra Sentinel-2 sebelum dan sesudah musim kebakaran dibandingkan memakai Normalized Burn Ratio (NBR). Vegetasi yang sehat punya NBR tinggi, sedangkan lahan yang tinggal abu dan arang punya NBR sangat rendah. Selisih keduanya, yang disebut dNBR, menunjukkan seberapa parah lahan itu terbakar.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Titik api bulanan</td><td>Deteksi FIRMS dengan tingkat keyakinan ≥ 50%, dijumlah per sel 0,05° (sekitar 5,5 km) dan per bulan di daratan Indonesia</td></tr>
+            <tr><td>Pemilihan studi kasus</td><td>Jendela 0,25° × 0,25° dengan titik api terbanyak selama Agustus–Oktober 2026 di setiap provinsi terpilih</td></tr>
+            <tr><td>Pemilihan citra</td><td>Sentinel-2 L2A dengan tutupan awan &lt; 40%; piksel awan, bayangan, kabut, dan asap dibuang dengan kelas SCL</td></tr>
+            <tr><td>NBR</td><td>(B8A − B12) / (B8A + B12), dihitung per citra</td></tr>
+            <tr><td>Komposit sebelum</td><td>Median NBR 1 Mei–15 Juli 2026</td></tr>
+            <tr><td>Komposit sesudah</td><td>Persentil 75 NBR 1 Oktober–2 November 2026, agar pengamatan yang lebih jernih dari asap lebih diutamakan</td></tr>
+            <tr><td>Lahan terbakar</td><td>dNBR ≥ 0,27, NBR sebelum ≥ 0,2 (bervegetasi), dan NBR sesudah &lt; 0,1 (tinggal abu atau tanah terbuka)</td></tr>
+            <tr><td>Tingkat keparahan</td><td>Sedang-rendah (0,27–0,44), sedang-tinggi (0,44–0,66), dan tinggi (≥ 0,66) menurut Key &amp; Benson (2006)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Ambang dNBR dari Key &amp; Benson awalnya dibuat untuk hutan di Amerika Serikat dengan mencocokkan citra satelit dan pengukuran kerusakan di lapangan. Belum ada ambang baku untuk hutan tropis dan gambut di Indonesia, sehingga angka ini dipakai sebagai acuan, lalu hasilnya dicek secara visual dengan citra sebelum dan sesudah.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Dua tahun pertama tidak terjadi lonjakan yang terlalu besar. Pada 2024 tercatat 106.273 deteksi titik api, dan pada 2025 turun menjadi 84.707. Sementara tahun 2026 menunjukkan perubahan yang sangat signifikan. Sampai Oktober saja, jumlahnya sudah mencapai 547.976 deteksi, lebih dari lima kali lipat tahun 2024. Hampir 90% di antaranya muncul hanya dalam tiga bulan, yaitu Agustus, September, dan Oktober.</p>
+
+      <div class="stat-row">
+        <div><strong>547.976</strong><span>Deteksi titik api pada 2026 (sampai Oktober)</span></div>
+        <div><strong>5,2 kali</strong><span>Puncak September 2026 dibanding September 2024</span></div>
+        <div><strong>51%</strong><span>Titik api 2026 yang berada di Kalimantan</span></div>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/fire-tren-bulanan.png" target="_blank" rel="noopener">
+          <img src="assets/maps/fire-tren-bulanan.png" alt="Grafik jumlah titik api bulanan per pulau di Indonesia dari Januari 2024 sampai Oktober 2026">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Jumlah deteksi titik api per bulan dan per pulau, Januari 2024–Oktober 2026</figcaption>
+      </figure>
+
+      <p>Polanya hampir sama setiap tahun. Api mulai bermunculan pada Juli, memuncak antara Juli dan September, lalu mereda saat hujan datang pada November. Bedanya, pada 2026 puncak itu jauh lebih tinggi dan bertahan lebih lama. September 2026 mencatat 188.903 deteksi, sedangkan September 2024 hanya 36.073. Data area terbakar MODIS, yang dihitung dengan cara berbeda dan tidak bergantung pada titik api, juga menunjukkan hal yang sama. Agustus 2026 menjadi bulan dengan area terbakar terluas sejak 2020, yaitu sekitar 476 ribu hektare.</p>
+
+      <p>Peta di bawah memperlihatkan bagaimana api bergerak dari bulan ke bulan. Tekan tombol putar untuk melihat perubahannya, atau geser penanda waktu ke bulan tertentu.</p>
+
+      <figure class="chart-figure">
+        <div id="fireMap" role="region" aria-label="Peta interaktif sebaran titik api bulanan di Indonesia 2024 sampai 2026"></div>
+        <div class="time-bar">
+          <button type="button" id="playBtn"><i class="fa-solid fa-play"></i> Putar</button>
+          <input type="range" id="monthSlider" min="0" max="33" value="32" aria-label="Pilih bulan">
+          <div class="time-label" id="monthLabel">September 2026</div>
+        </div>
+        <p class="map-hint">Klik sebuah kotak untuk melihat jumlah titik api dan provinsinya. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 2.</strong> Peta interaktif titik api bulanan di Indonesia, Januari 2024–Oktober 2026, beserta tiga kawasan studi kasus</figcaption>
+      </figure>
+
+      <p>Kalimantan menjadi pusat kebakaran 2026, dengan lebih dari separuh titik api nasional. Kalimantan Tengah sendiri mencatat 126.754 deteksi, hampir 19 kali lipat dari tahun 2024. Papua juga melonjak tajam, dari 4.308 deteksi pada 2024 menjadi 75.327 pada 2026.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Provinsi</th>
+              <th>2024</th>
+              <th>2025</th>
+              <th>2026 (sampai Oktober)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kalimantan Tengah</td><td>6.751</td><td>4.291</td><td>126.754</td></tr>
+            <tr><td>Kalimantan Barat</td><td>23.913</td><td>21.396</td><td>82.894</td></tr>
+            <tr><td>Papua</td><td>4.308</td><td>1.592</td><td>75.327</td></tr>
+            <tr><td>Sumatera Selatan</td><td>6.539</td><td>4.616</td><td>52.070</td></tr>
+            <tr><td>Kalimantan Timur</td><td>10.936</td><td>5.383</td><td>42.639</td></tr>
+            <tr><td>Kalimantan Selatan</td><td>2.090</td><td>1.390</td><td>27.091</td></tr>
+            <tr><td>Maluku</td><td>1.126</td><td>583</td><td>12.698</td></tr>
+            <tr><td>Papua Barat</td><td>260</td><td>246</td><td>12.249</td></tr>
+            <tr class="total-row"><td>Indonesia</td><td>106.273</td><td>84.707</td><td>547.976</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Angka berupa jumlah deteksi titik api, bukan jumlah kejadian kebakaran. Satu kebakaran yang menyala beberapa hari akan terhitung beberapa kali.</p>
+
+      <h3>Melihat lebih dekat dengan NBR</h3>
+
+      <p>Titik api hanya menunjukkan di mana ada panas, tetapi tidak menunjukkan seberapa luas dan seberapa parah lahan yang terbakar. Karena itu, tiga kawasan dengan titik api terpadat diperiksa lebih dekat dengan citra Sentinel-2.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/fire-kalimantan-tengah-panel.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/fire-kalimantan-tengah-panel.jpg" alt="Citra Sentinel-2 sebelum dan sesudah kebakaran serta peta tingkat keparahan dNBR di Kalimantan Tengah">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Kalimantan Tengah, sekitar Kabupaten Pulang Pisau (113,85°–114,10° BT, 3,00°–3,25° LS)</figcaption>
+      </figure>
+
+      <p>Di Kalimantan Tengah, hamparan hijau yang sebelumnya menutupi lahan gambut berubah menjadi coklat gelap hingga hitam pada Oktober. Sekitar 28.664 hektare atau 37,6% dari kawasan ini terbakar, dan hampir semuanya masuk kategori sedang-tinggi sampai tinggi. Artinya, api tidak sekadar melalap permukaan, tetapi menghanguskan hampir seluruh vegetasi di atasnya.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/fire-sumatera-selatan-panel.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/fire-sumatera-selatan-panel.jpg" alt="Citra Sentinel-2 sebelum dan sesudah kebakaran serta peta tingkat keparahan dNBR di Sumatera Selatan">
+        </a>
+        <figcaption><strong>Gambar 4.</strong> Sumatera Selatan, sekitar Kabupaten Ogan Komering Ilir (105,10°–105,35° BT, 3,25°–3,50° LS)</figcaption>
+      </figure>
+
+      <p>Sumatera Selatan adalah kawasan dengan titik api terbanyak di antara ketiganya, tetapi juga yang paling sulit diamati. Hampir separuh kawasan tertutup awan atau asap tebal di semua citra Oktober, sehingga tampak hitam pada gambar. Dari bagian yang bisa dinilai, sekitar 12.421 hektare atau 30,3% terbakar. Angka sebenarnya kemungkinan lebih besar, karena bagian yang tertutup asap justru berada di tengah-tengah area kebakaran.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/fire-papua-panel.jpg" target="_blank" rel="noopener">
+          <img src="assets/maps/fire-papua-panel.jpg" alt="Citra Sentinel-2 sebelum dan sesudah serta peta tingkat keparahan dNBR di Papua bagian selatan">
+        </a>
+        <figcaption><strong>Gambar 5.</strong> Papua bagian selatan, sekitar Kabupaten Merauke (140,55°–140,80° BT, 7,75°–8,00° LS)</figcaption>
+      </figure>
+
+      <p>Papua menyimpan cerita yang berbeda. Citra sebelum dan sesudah memperlihatkan hamparan lahan terbuka yang sangat luas dengan batas-batas lurus, pola yang khas dari pembukaan lahan skala besar. Area yang terdeteksi terbakar seluas 5.798 hektare sebagian besar berupa blok-blok baru yang dibuka antara Juli dan Oktober 2026, ditambah jalur baru yang menyerupai jalan di bagian selatan. Jadi titik api di kawasan ini kemungkinan besar berasal dari pembakaran sisa vegetasi saat lahan dibuka, bukan dari kebakaran hutan yang menjalar seperti di gambut Kalimantan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kawasan</th>
+              <th>Titik api Agt–Okt 2026</th>
+              <th>Luas yang bisa dinilai (ha)</th>
+              <th>Sedang-rendah (ha)</th>
+              <th>Sedang-tinggi (ha)</th>
+              <th>Tinggi (ha)</th>
+              <th>Total terbakar (ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kalimantan Tengah</td><td>4.323</td><td>76.177</td><td>1.534</td><td>15.215</td><td>11.915</td><td>28.664</td><td>37,6</td></tr>
+            <tr><td>Sumatera Selatan</td><td>5.335</td><td>40.945</td><td>1.175</td><td>6.283</td><td>4.964</td><td>12.421</td><td>30,3</td></tr>
+            <tr><td>Papua</td><td>4.677</td><td>64.554</td><td>1.073</td><td>1.633</td><td>3.092</td><td>5.798</td><td>9,0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+        <p class="table-note">Ketiga kawasan yang dikaji dengan NBR sebenarnya memiliki ukuran yang sama, sekitar 77.000 hektare. Namun, tidak semua bagiannya bisa diamati, karena sebagian tertutup awan atau asap tebal di citra satelit. Bagian yang tertutup ini tidak bisa dipastikan terbakar atau tidak, sehingga tidak ikut dihitung. Di Kalimantan Tengah hampir seluruh kawasan bisa diamati, sedangkan di Sumatera Selatan hanya sekitar separuhnya. Persentase pada tabel dihitung dari bagian yang bisa diamati saja, bukan dari seluruh kawasan.</p>
+
+      <p>Selain lahan yang jelas terbakar, ada juga lahan yang nilai NBR-nya hanya turun sedikit antara sebelum dan sesudah kemarau. Perubahan sekecil ini bisa disebabkan oleh api yang hanya membakar semak di permukaan, kabut tipis yang masih tersisa di citra, atau rumput yang menguning karena kering. Karena penyebabnya tidak bisa dipastikan, lahan seperti ini tidak dimasukkan ke dalam luas terbakar. Luasnya cukup besar, sekitar 39.330 hektare di Kalimantan Tengah, 19.984 hektare di Sumatera Selatan, dan 38.943 hektare di Papua. Artinya, luas lahan yang benar-benar terbakar bisa saja lebih besar dari angka pada tabel.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Kebakaran hutan dan lahan pada 2026 adalah yang terbesar dalam tiga tahun terakhir. Jumlah titik api lebih dari lima kali lipat tahun 2024, dan hampir semuanya muncul dalam tiga bulan di puncak kemarau. Kalimantan menjadi pusatnya, tetapi lonjakan juga terjadi di Sumatera Selatan dan Papua.</p>
+      <p>Pengamatan lebih dekat dengan NBR memperlihatkan bahwa kebakaran di tiap wilayah tidak selalu sama. Di Kalimantan Tengah dan Sumatera Selatan, api menghanguskan lahan gambut yang luas dengan tingkat keparahan tinggi. Di Papua bagian selatan, sebagian besar lahan yang terbakar berada di area yang sedang dibuka secara besar-besaran.</p>
+      <p>Hasil ini tetap punya keterbatasan. Titik api MODIS beresolusi 1 km dan menghitung deteksi, bukan luas kebakaran. Asap tebal pada Oktober 2026 menutupi sebagian kawasan studi, terutama di Sumatera Selatan, sehingga luas terbakar di sana kemungkinan masih lebih kecil dari kenyataan. Ambang dNBR juga belum disesuaikan khusus untuk gambut tropis, dan analisis NBR baru dilakukan di tiga kawasan. Langkah berikutnya adalah memperluas analisis NBR ke lebih banyak wilayah setelah musim hujan, ketika langit sudah bersih dari asap.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var VIEW = [[-11.2, 95.0], [6.2, 141.2]];
+      var FIT = { paddingBottomRight: [window.innerWidth < 600 ? 0 : 150, 0] };   // sisakan ruang untuk legenda di kanan
+      var BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var CLS = [
+        { min: 1, color: '#fee391', label: '1–2' },
+        { min: 3, color: '#fec44f', label: '3–5' },
+        { min: 6, color: '#fe9929', label: '6–15' },
+        { min: 16, color: '#d95f0e', label: '16–40' },
+        { min: 41, color: '#8c2d04', label: '> 40' }
+      ];
+      var SEV = [['#feb24c', 'Sedang-rendah'], ['#f03b20', 'Sedang-tinggi'], ['#800026', 'Tinggi']];
+      var colorOf = function (n) { var c = CLS[0].color; CLS.forEach(function (k) { if (n >= k.min) c = k.color; }); return c; };
+      var fmt = function (v) { return v.toLocaleString('id-ID'); };
+      var monthName = function (m) { return BULAN[parseInt(m.slice(5), 10) - 1] + ' ' + m.slice(0, 4); };
+
+      var box = document.getElementById('fireMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.5, preferCanvas: true });
+      map.fitBounds(VIEW, FIT);
+      var fitted = box.clientWidth > 0;
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () {
+          map.invalidateSize();
+          if (!fitted && box.clientWidth > 0) { map.fitBounds(VIEW, FIT); fitted = true; }
+        }).observe(box);
+      }
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var basemaps = {
+        'Gelap (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 16, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors' }),
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' }),
+        'OpenStreetMap': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' })
+      };
+      var activeBase = basemaps['Gelap (Esri)'].addTo(map);
+      var hotLayer = L.layerGroup().addTo(map);
+      var caseLayer = L.layerGroup().addTo(map);
+      var caseImgLayer = L.layerGroup();
+      var DATA = null, idx = 32, timer = null;
+
+      var slider = document.getElementById('monthSlider'), label = document.getElementById('monthLabel'), playBtn = document.getElementById('playBtn');
+
+      function cellCenter(id) {
+        return [-11.5 + (id % 1000) * 0.05 + 0.025, 95 + Math.floor(id / 1000) * 0.05 + 0.025];
+      }
+      // Kotak 5,5 km lebih kecil dari 1 piksel di zoom nasional, jadi sel digambar sebagai titik yang membesar mengikuti zoom
+      function cellRadius() {
+        var cellPx = 0.05 * 256 * Math.pow(2, map.getZoom()) / 360;
+        return Math.max(1.8, cellPx * 0.6);
+      }
+      map.on('zoomend', function () { var r = cellRadius(); hotLayer.eachLayer(function (l) { l.setRadius(r); }); });
+
+      function draw(i) {
+        idx = i; slider.value = i;
+        var m = DATA.bulan[i], rows = (DATA.data[m] || []).slice().sort(function (a, b) { return a[2] - b[2]; }), total = 0, rad = cellRadius();
+        hotLayer.clearLayers();
+        rows.forEach(function (r) {
+          total += r[2];
+          L.circleMarker(cellCenter(r[0]), { radius: rad, stroke: false, fillColor: colorOf(r[2]), fillOpacity: 0.9 })
+            .bindPopup('<table class="wm-popup"><tr><td colspan="2" class="ttl">' + (DATA.provinsi[r[1]] || '-') + '</td></tr>' +
+              '<tr><td>Bulan</td><td>' + monthName(m) + '</td></tr><tr><td>Titik api</td><td><strong>' + fmt(r[2]) + '</strong> deteksi</td></tr></table>')
+            .addTo(hotLayer);
+        });
+        label.innerHTML = monthName(m) + '<span>' + fmt(total) + ' deteksi</span>';
+      }
+
+      function stop() { if (timer) { clearInterval(timer); timer = null; } playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Putar'; }
+      playBtn.addEventListener('click', function () {
+        if (timer) { stop(); return; }
+        if (idx >= DATA.bulan.length - 1) draw(0);
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Jeda';
+        timer = setInterval(function () { if (idx >= DATA.bulan.length - 1) { stop(); return; } draw(idx + 1); }, 900);
+      });
+      slider.addEventListener('input', function () { stop(); draw(parseInt(slider.value, 10)); });
+
+      fetch('assets/data/fire-hotspot-sel.json').then(function (r) { return r.json(); }).then(function (d) {
+        DATA = d; slider.max = d.bulan.length - 1; draw(d.bulan.indexOf('2026-09'));
+      });
+
+      // Kawasan studi kasus NBR
+      var caseZoom = {};
+      fetch('assets/data/fire-studi-kasus.json').then(function (r) { return r.json(); }).then(function (cases) {
+        cases.forEach(function (c) {
+          var slug = c.nama.toLowerCase().replace(/ /g, '-');
+          var b = [[c.bbox[1], c.bbox[0]], [c.bbox[3], c.bbox[2]]];
+          caseZoom[c.nama] = b;
+          L.imageOverlay('assets/maps/fire-' + slug + '-sesudah.jpg', b, { opacity: 1 }).addTo(caseImgLayer);
+          L.imageOverlay('assets/maps/fire-' + slug + '-dnbr.png', b, { opacity: 0.9 }).addTo(caseImgLayer);
+          L.rectangle(b, { color: '#00e5ff', weight: 2, fill: false })
+            .bindPopup('<table class="wm-popup"><tr><td colspan="2" class="ttl">Studi kasus ' + c.nama + '</td></tr>' +
+              '<tr><td>Titik api Agt–Okt 2026</td><td>' + fmt(c.titik_api_ags_okt_2026) + '</td></tr>' +
+              '<tr><td>Luas terbakar</td><td><strong>' + fmt(c.terbakar_ha) + ' ha</strong> (' + c.terbakar_persen.toLocaleString('id-ID') + '%)</td></tr>' +
+              '<tr><td>Keparahan tinggi</td><td>' + fmt(c.kelas['Tinggi']) + ' ha</td></tr></table>')
+            .addTo(caseLayer);
+        });
+        var row = document.getElementById('caseButtons');
+        Object.keys(caseZoom).forEach(function (n) {
+          var bt = document.createElement('button'); bt.type = 'button'; bt.textContent = n;
+          bt.addEventListener('click', function () {
+            if (!map.hasLayer(caseImgLayer)) { caseImgLayer.addTo(map); document.querySelector('input[data-id="caseimg"]').checked = true; updateLegend(); }
+            map.fitBounds(caseZoom[n], { padding: [20, 20] });
+          });
+          row.appendChild(bt);
+        });
+      });
+
+      var overlays = [
+        { id: 'hot', name: 'Titik api bulanan', layer: hotLayer },
+        { id: 'case', name: 'Batas kawasan studi kasus', layer: caseLayer },
+        { id: 'caseimg', name: 'Citra sesudah dan dNBR studi kasus', layer: caseImgLayer }
+      ];
+      var byId = function (id) { return overlays.filter(function (o) { return o.id === id; })[0]; };
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'wm-panel collapsed');
+          var html = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Basemap</div>';
+          Object.keys(basemaps).forEach(function (k, i) {
+            html += '<div class="wm-row"><label><input type="radio" name="wm-base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label></div>';
+          });
+          html += '<div class="wm-group">Layer</div>';
+          overlays.forEach(function (o) {
+            html += '<div class="wm-row"><label><input type="checkbox" data-id="' + o.id + '"' + (map.hasLayer(o.layer) ? ' checked' : '') + '>' + o.name + '</label></div>';
+          });
+          html += '<div class="wm-group">Lihat studi kasus</div><div class="wm-row" id="caseButtons"></div>';
+          div.innerHTML = html + '</div>';
+          L.DomEvent.disableClickPropagation(div);
+          L.DomEvent.disableScrollPropagation(div);
+          div.querySelector('header').addEventListener('click', function () { div.classList.toggle('collapsed'); });
+          div.querySelectorAll('input[name=wm-base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = basemaps[r.value].addTo(map); activeBase.bringToBack(); });
+          });
+          div.querySelectorAll('input[data-id]').forEach(function (cb) {
+            cb.addEventListener('change', function () {
+              var o = byId(cb.dataset.id);
+              if (cb.checked) o.layer.addTo(map); else map.removeLayer(o.layer);
+              updateLegend();
+            });
+          });
+          return div;
+        }
+      });
+      new Panel().addTo(map);
+
+      var legendDiv;
+      var Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () { legendDiv = L.DomUtil.create('div', 'wm-legend'); L.DomEvent.disableClickPropagation(legendDiv); return legendDiv; }
+      });
+      new Legend().addTo(map);
+      function updateLegend() {
+        var h = '';
+        if (map.hasLayer(hotLayer)) h += '<h4>Titik api per kotak 5,5 km</h4>' + CLS.map(function (c) { return '<div><i style="background:' + c.color + '"></i>' + c.label + ' <span>deteksi</span></div>'; }).join('');
+        if (map.hasLayer(caseLayer)) h += '<h4>Studi kasus NBR</h4><div><i class="box"></i>Batas kawasan</div>';
+        if (map.hasLayer(caseImgLayer)) h += '<h4>Keparahan (dNBR)</h4>' + SEV.map(function (s) { return '<div><i style="background:' + s[0] + '"></i>' + s[1] + '</div>'; }).join('');
+        legendDiv.style.display = h ? '' : 'none';
+        legendDiv.innerHTML = h;
+      }
+      updateLegend();
+
+      var Home = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'leaflet-bar wm-home');
+          div.innerHTML = '<a href="#" title="Kembali ke seluruh Indonesia" role="button" aria-label="Kembali ke seluruh Indonesia"><i class="fa-solid fa-house"></i></a>';
+          L.DomEvent.on(div.firstChild, 'click', function (e) { L.DomEvent.preventDefault(e); L.DomEvent.stopPropagation(e); map.fitBounds(VIEW, FIT); });
+          return div;
+        }
+      });
+      new Home().addTo(map);
+    })();
+  </script>
+</body>
+</html>
