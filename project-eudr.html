@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengecekan Kepatuhan EUDR Kebun Sawit di Kabupaten Bengkalis, Riau</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .app-frame { width: 100%; height: 760px; border: 1px solid var(--line); border-radius: 12px; display: block; background: #f5f6f4; }
+    .open-app { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 4px; padding: 10px 18px; background: #163a2e; color: #fff !important; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .open-app:hover { background: #1f4d3d; }
+    .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+    @media (max-width: 600px) { .app-frame { height: 680px; } }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Supply Chain</span>
+      <h1>Pengecekan Kepatuhan EUDR Kebun Sawit di Kabupaten Bengkalis, Riau</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Uni Eropa menerbitkan Regulasi Bebas Deforestasi (EU Deforestation Regulation atau EUDR) yang mewajibkan tujuh komoditas, termasuk minyak sawit, terbukti tidak berasal dari lahan yang mengalami deforestasi setelah 31 Desember 2020. Produk tersebut juga harus diproduksi secara legal menurut hukum negara asalnya. Untuk membuktikannya, setiap kebun harus disertai lokasi yang jelas, berupa poligon batas kebun untuk kebun lebih dari 4 hektare atau titik koordinat untuk kebun yang lebih kecil.</p>
+      <p>Bagi Indonesia, aturan ini sangat penting karena Uni Eropa adalah salah satu pasar utama minyak sawit. Eksportir, perusahaan perkebunan, dan koperasi petani kini perlu mengecek ribuan kebun satu per satu terhadap peta hutan dan peta kawasan hutan. Riau adalah provinsi dengan kebun sawit terluas di Indonesia, sehingga menjadi tempat yang tepat untuk melihat seberapa besar tantangan ini sebenarnya.</p>
+      <p>Project ini menjawab dua pertanyaan. Berapa banyak kebun sawit di Kabupaten Bengkalis yang berisiko tidak lolos syarat bebas deforestasi EUDR? Dan apakah deforestasi memang menjadi hambatan utama, atau justru ada masalah lain yang lebih besar? Hasilnya juga dikemas menjadi aplikasi yang bisa dipakai untuk mengecek kebun mana pun di Bengkalis.</p>
+
+      <p><a class="open-app" href="app-eudr.html" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Buka aplikasi Pengecek EUDR Sawit</a></p>
+
+      <iframe class="app-frame" src="app-eudr.html" title="Aplikasi Pengecek EUDR Sawit" loading="lazy"></iframe>
+      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Tekan "Contoh kebun" untuk memuat 13 kebun fiktif, atau unggah file GeoJSON, shapefile (.zip), atau CSV berisi koordinat kebun. Hasilnya bisa diunduh sebagai tabel CSV.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Peta tutupan hutan 2020 (GFC2020 V4, 10 m)</td><td>Raster</td><td>Sekunder</td><td>Joint Research Centre (JRC), Komisi Eropa</td></tr>
+            <tr><td>Peta sebaran sawit 2020 dan 2024</td><td>Raster</td><td>Sekunder</td><td>Forest Data Partnership (model 2026a)</td></tr>
+            <tr><td>Kehilangan tutupan pohon per tahun, 2021–2025 (30 m)</td><td>Raster</td><td>Sekunder</td><td>Hansen / University of Maryland (GFC 2025 v1.13)</td></tr>
+            <tr><td>Peringatan gangguan hutan berbasis radar Sentinel-1, sampai Oktober 2026</td><td>Raster</td><td>Sekunder</td><td>RADD, Wageningen University</td></tr>
+            <tr><td>Deforestasi nasional per periode, 2020–2021 sampai 2024–2025</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+            <tr><td>Kawasan hutan (revisi I, Juni 2026)</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+            <tr><td>Batas Kabupaten Bengkalis</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Peta hutan 2020 dari JRC dipilih karena disiapkan oleh Komisi Eropa sebagai salah satu acuan untuk EUDR. Data satelit diolah di Google Earth Engine, lalu semua lapisan disatukan ke dalam grid yang sama berukuran sekitar 22 m. Ukuran ini cukup tajam untuk kebun petani yang luasnya hanya 1–2 hektare.</p>
+
+      <h2>Metode</h2>
+
+      <p>Setiap kebun dicek dengan satu pertanyaan sederhana. Apakah ada bagian kebun yang masih berupa hutan pada akhir 2020, lalu hutannya hilang setelah itu? Untuk menjawabnya, dipakai tiga sumber bukti kehilangan hutan yang saling melengkapi. Data Hansen menghitung kehilangan tutupan pohon setiap tahun dari citra Landsat. Data RADD memakai citra radar yang bisa menembus awan, sehingga bisa mendeteksi pembukaan lahan dalam hitungan minggu. Data Kementerian Kehutanan menjadi pembanding resmi dari Indonesia.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Aturan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dot" style="background:#c62828"></span>Berisiko</td><td>Hutan pada 2020 dan ada bukti kehilangan setelah 31 Desember 2020 dari Hansen, RADD keyakinan tinggi, atau Kementerian Kehutanan. Sebuah kebun dinyatakan berisiko jika luasnya ≥ 0,5 ha atau ≥ 5% kebun</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Perlu verifikasi</td><td>Tercatat hutan pada 2020 tetapi tidak ada bukti kehilangan, atau bukan hutan pada 2020 tetapi ada sinyal perubahan setelahnya. Kedua kondisi ini menandakan sumber data tidak sepakat</td></tr>
+            <tr><td><span class="dot" style="background:#2e7d32"></span>Bebas deforestasi</td><td>Tidak ada hutan 2020 yang hilang dan tidak ada sinyal yang bertentangan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Ambang 0,5 hektare mengikuti definisi hutan FAO yang juga dipakai EUDR, yaitu lahan minimal 0,5 hektare dengan tutupan tajuk lebih dari 10%. Selain deforestasi, setiap kebun juga dicek fungsi kawasan hutannya untuk melihat aspek legalitas. Kebun di kawasan konservasi atau hutan lindung ditandai merah, kebun di hutan produksi ditandai kuning, dan kebun di Areal Penggunaan Lain (APL) ditandai hijau.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Kabupaten Bengkalis memiliki sekitar 284.918 hektare kebun sawit pada 2024, atau sepertiga dari luas kabupaten. Hampir seluruhnya, yaitu 276.358 hektare atau 97%, bebas dari deforestasi setelah 2020. Hanya 354 hektare atau 0,12% yang berisiko, sedangkan 8.206 hektare (2,9%) perlu diverifikasi lebih lanjut.</p>
+
+      <div class="stat-row">
+        <div><strong>97%</strong><span>Kebun sawit yang bebas deforestasi setelah 2020</span></div>
+        <div><strong>354 ha</strong><span>Kebun sawit di atas hutan yang hilang setelah 2020</span></div>
+        <div><strong>50%</strong><span>Kebun sawit yang berada di dalam kawasan hutan</span></div>
+      </div>
+
+      <p>Angka berisiko yang kecil ini masuk akal jika melihat sejarah sawit di Riau. Sebagian besar kebun di Bengkalis sudah ditanam jauh sebelum 2020, ketika pembukaan hutan untuk sawit memuncak pada dekade 2000-an dan 2010-an. Kebun yang tumbuh setelah 2020 pun, seluas sekitar 52.855 hektare, sebagian besar berada di lahan yang memang sudah bukan hutan, misalnya semak atau bekas kebun lama. Deforestasi yang terjadi setelah 2020 di lahan sawit tersebar kecil-kecil, sekitar 40–70 hektare setiap tahun dari 2021 sampai 2025.</p>
+      <p>Ketiga sumber data juga tidak selalu sepakat. Dari 354 hektare yang berisiko, hanya sekitar 106 hektare yang dikonfirmasi oleh dua sumber atau lebih. Begitu pula status perlu verifikasi, yang sebagian besar (6.534 hektare) berasal dari lahan yang bukan hutan pada 2020 tetapi menunjukkan sinyal perubahan setelahnya, misalnya peremajaan kebun sawit tua. Inilah alasan mengapa hasil satelit perlu dicek ulang dengan citra resolusi tinggi atau kunjungan lapangan sebelum sebuah kebun dinyatakan tidak lolos.</p>
+
+      <h3>Masalah yang lebih besar ada di legalitas</h3>
+
+      <p>Cerita berubah ketika melihat di mana kebun-kebun itu berada. Sekitar 142.686 hektare, atau separuh dari seluruh kebun sawit di Bengkalis, berada di dalam kawasan hutan. Sebanyak 19.123 hektare bahkan berada di kawasan konservasi, yang seharusnya sama sekali bebas dari perkebunan.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/eudr-kawasan.png" target="_blank" rel="noopener">
+          <img src="assets/maps/eudr-kawasan.png" alt="Grafik luas kebun sawit 2024 di Kabupaten Bengkalis per fungsi kawasan hutan dan status deforestasi EUDR">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Luas kebun sawit 2024 di Kabupaten Bengkalis per fungsi kawasan hutan dan status deforestasi</figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Fungsi kawasan</th>
+              <th>Luas sawit 2024 (ha)</th>
+              <th>Persentase (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Areal Penggunaan Lain</td><td>140.574</td><td>49,3</td></tr>
+            <tr><td>Hutan Produksi Tetap</td><td>67.305</td><td>23,6</td></tr>
+            <tr><td>Hutan Produksi Konversi</td><td>30.309</td><td>10,6</td></tr>
+            <tr><td>Hutan Produksi Terbatas</td><td>25.908</td><td>9,1</td></tr>
+            <tr><td>Kawasan Konservasi</td><td>19.123</td><td>6,7</td></tr>
+            <tr><td>Hutan Lindung</td><td>41</td><td>0,01</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Persentase dihitung terhadap seluruh kebun sawit 2024 di Kabupaten Bengkalis. Sebagian kecil kebun berada di tubuh air atau di luar peta kawasan hutan, sehingga jumlahnya tidak tepat 100%.</p>
+
+      <p>Kebun-kebun ini memang bebas dari deforestasi setelah 2020, karena hutannya sudah dibuka jauh sebelumnya. Namun, EUDR juga mensyaratkan legalitas. Kebun di dalam kawasan hutan yang belum memiliki pelepasan kawasan atau penyelesaian status lahan akan sulit membuktikan bahwa sawitnya diproduksi secara legal. Pemerintah memang sedang menertibkan dan menyelesaikan status kebun sawit di kawasan hutan, tetapi selama prosesnya belum tuntas, kebun-kebun ini tetap menjadi titik lemah dalam rantai pasok ke Uni Eropa.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Di Kabupaten Bengkalis, syarat bebas deforestasi EUDR ternyata bukan hambatan terbesar. Hampir semua kebun sawit sudah ada sebelum 2020, dan hanya sekitar 0,12% yang berdiri di atas hutan yang hilang setelah tanggal batas. Tantangan sebenarnya ada pada legalitas, karena separuh kebun sawit berada di dalam kawasan hutan, termasuk lebih dari 19 ribu hektare di kawasan konservasi.</p>
+      <p>Bagi eksportir dan koperasi petani, artinya pemetaan kebun untuk EUDR tidak cukup berhenti pada pengecekan deforestasi. Status kawasan hutan perlu dicek sejak awal, dan kebun yang berada di kawasan hutan perlu didampingi untuk menyelesaikan status lahannya. Aplikasi pada project ini dibuat untuk membantu langkah pertama tersebut, yaitu memilah kebun mana yang aman, mana yang perlu dicek ulang, dan mana yang berisiko.</p>
+      <p>Hasil ini tetap punya keterbatasan. Peta sawit dan peta hutan 2020 adalah hasil klasifikasi satelit yang bisa keliru, terutama di batas antara kebun sawit tua dan hutan sekunder. Peta kawasan hutan berskala 1:250.000, sehingga posisi batasnya bisa bergeser puluhan meter di lapangan. Aplikasi ini juga belum mencakup aspek legalitas lain yang diminta EUDR, seperti izin usaha perkebunan, hak atas tanah, dan ketenagakerjaan. Hasilnya adalah alat bantu uji tuntas, bukan sertifikasi kepatuhan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

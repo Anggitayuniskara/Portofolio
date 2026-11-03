@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Kualitas Udara Jabodetabek dengan Indeks Standar Pencemar Udara (ISPU)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0 6px; counter-reset: step; }
+    .flow div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; position: relative; background: #fff; }
+    .flow div::before { counter-increment: step; content: counter(step); position: absolute; top: -10px; left: 12px; background: #111827; color: #fff; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; }
+    .flow strong { display: block; font-size: 0.95rem; margin: 4px 0; }
+    .flow span { font-size: 0.82rem; color: #6b7280; line-height: 1.45; display: block; }
+    .app-frame { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 12px; display: block; background: #f5f6f4; }
+    .open-app { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 4px; padding: 10px 18px; background: #163a2e; color: #fff !important; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .open-app:hover { background: #1f4d3d; }
+    .cat-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+    .formula { font-family: ui-monospace, Consolas, monospace; background: #f3f4f6; border-radius: 8px; padding: 10px 14px; overflow-x: auto; font-size: 0.9rem; }
+    @media (max-width: 600px) { .app-frame { height: 640px; } }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Web App</span>
+      <h1>Aplikasi Kualitas Udara Jabodetabek dengan Indeks Standar Pencemar Udara (ISPU)</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Setiap musim kemarau, langit Jakarta dan kota-kota di sekitarnya kerap tampak keruh, dan kualitas udaranya ramai dibicarakan. Banyak orang lalu membuka aplikasi kualitas udara di ponsel. Masalahnya, sebagian besar aplikasi tersebut memakai Air Quality Index (AQI) versi Amerika Serikat, yang ambang batas dan kategorinya berbeda dengan standar yang berlaku di Indonesia. Akibatnya, angka dan warna yang dilihat masyarakat belum tentu sama dengan yang dipakai pemerintah.</p>
+      <p>Indonesia punya ukurannya sendiri, yaitu Indeks Standar Pencemar Udara (ISPU), yang diatur dalam Peraturan Menteri Lingkungan Hidup dan Kehutanan No. P.14/2020. Project ini membangun aplikasi web sederhana yang menampilkan kualitas udara di 13 kabupaten/kota Jabodetabek dalam satuan ISPU, lengkap dengan prakiraan sampai lima hari ke depan dan anjuran kesehatan sesuai peraturan tersebut. Berbeda dengan project lain di portofolio ini yang berupa analisis, project ini adalah aplikasi yang bisa langsung dipakai.</p>
+
+      <p><a class="open-app" href="app-udara.html" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Buka aplikasi Udara Jabodetabek</a></p>
+
+      <iframe class="app-frame" src="app-udara.html" title="Aplikasi Udara Jabodetabek" loading="lazy"></iframe>
+      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Klik sebuah wilayah, geser waktu untuk melihat prakiraan, atau tekan "Lokasi saya" untuk melihat kondisi di tempatmu.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Konsentrasi PM2.5, PM10, NO₂, O₃, SO₂, dan CO per jam, 24 jam terakhir dan prakiraan 5 hari</td><td>API JSON</td><td>Sekunder</td><td>Copernicus Atmosphere Monitoring Service (CAMS), melalui Open-Meteo Air Quality API</td></tr>
+            <tr><td>Tabel konversi ISPU, kategori, dan anjuran kesehatan</td><td>Dokumen peraturan</td><td>Sekunder</td><td>PermenLHK No. P.14/MENLHK/SETJEN/KUM.1/7/2020</td></tr>
+            <tr><td>Batas kabupaten/kota</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Data udara diambil langsung oleh browser setiap kali aplikasi dibuka, tanpa server perantara, tanpa akun, dan tanpa kunci API. Karena itu angkanya selalu yang terbaru dan aplikasi ini cukup dihosting di GitHub Pages.</p>
+
+      <h2>Cara kerja</h2>
+
+      <div class="flow">
+        <div><strong>Ambil data</strong><span>Satu permintaan ke Open-Meteo untuk 13 titik tengah kabupaten/kota sekaligus, berisi data per jam</span></div>
+        <div><strong>Rata-rata 24 jam</strong><span>Setiap parameter dirata-ratakan untuk 24 jam terakhir pada setiap jam, sesuai ketentuan ISPU</span></div>
+        <div><strong>Hitung ISPU</strong><span>Konsentrasi diubah menjadi nilai ISPU dengan tabel konversi dan rumus dari peraturan</span></div>
+        <div><strong>Ambil yang tertinggi</strong><span>Nilai ISPU terbesar menjadi ISPU wilayah, dan parameternya disebut parameter kritis</span></div>
+        <div><strong>Tampilkan</strong><span>Peta, peringkat wilayah, grafik prakiraan, dan anjuran kesehatan sesuai kategori</span></div>
+      </div>
+
+      <p>ISPU dihitung dengan interpolasi linear di antara dua batas konsentrasi pada tabel konversi. Rumusnya adalah sebagai berikut.</p>
+      <p class="formula">ISPU = (Ia − Ib) / (Xa − Xb) × (Xx − Xb) + Ib</p>
+      <p>Ia dan Ib adalah batas atas dan batas bawah ISPU, Xa dan Xb adalah batas atas dan batas bawah konsentrasi, sedangkan Xx adalah konsentrasi rata-rata 24 jam yang sebenarnya. Contohnya, jika rata-rata PM2.5 selama 24 jam adalah 31,4 µg/m³, nilai itu berada di antara batas 15,5 dan 55,4 µg/m³ yang setara ISPU 50 dan 100. Hasilnya adalah ISPU 70, yang termasuk kategori Sedang.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>ISPU</th>
+              <th>PM10</th>
+              <th>PM2.5</th>
+              <th>SO₂</th>
+              <th>CO</th>
+              <th>O₃</th>
+              <th>NO₂</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="cat-dot" style="background:#2e9e48"></span>0–50 Baik</td><td>50</td><td>15,5</td><td>52</td><td>4.000</td><td>120</td><td>80</td></tr>
+            <tr><td><span class="cat-dot" style="background:#1f6fd1"></span>51–100 Sedang</td><td>150</td><td>55,4</td><td>180</td><td>8.000</td><td>235</td><td>200</td></tr>
+            <tr><td><span class="cat-dot" style="background:#f2c200"></span>101–200 Tidak Sehat</td><td>350</td><td>150,4</td><td>400</td><td>15.000</td><td>400</td><td>1.130</td></tr>
+            <tr><td><span class="cat-dot" style="background:#d62828"></span>201–300 Sangat Tidak Sehat</td><td>420</td><td>250,4</td><td>800</td><td>30.000</td><td>800</td><td>2.260</td></tr>
+            <tr><td><span class="cat-dot" style="background:#1b1b1b"></span>&gt; 300 Berbahaya</td><td>500</td><td>500</td><td>1.200</td><td>45.000</td><td>1.000</td><td>3.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Batas atas konsentrasi rata-rata 24 jam (µg/m³) untuk setiap kategori ISPU, dari Lampiran I PermenLHK No. P.14/2020. Parameter hidrokarbon (HC) tidak dipakai karena tidak tersedia dalam data CAMS.</p>
+
+      <h2>Fitur aplikasi</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Fitur</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Peta ISPU</td><td>13 kabupaten/kota diwarnai sesuai kategori ISPU, lengkap dengan angkanya</td></tr>
+            <tr><td>Pilihan parameter</td><td>Tampilkan ISPU gabungan atau ISPU dari satu parameter saja, misalnya PM2.5 atau NO₂</td></tr>
+            <tr><td>Penggeser waktu</td><td>Lihat kondisi dari jam sekarang sampai sekitar lima hari ke depan, per jam</td></tr>
+            <tr><td>Detail lokasi</td><td>Nilai ISPU, parameter kritis, konsentrasi keenam parameter, anjuran kesehatan, dan grafik prakiraan</td></tr>
+            <tr><td>Titik bebas dan lokasi saya</td><td>Klik titik mana saja di peta, atau gunakan lokasi perangkat, untuk mengambil data di titik tersebut</td></tr>
+            <tr><td>Peringkat wilayah</td><td>Urutan kabupaten/kota dari udara paling buruk sampai paling baik pada jam yang dipilih</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Keterbatasan</h2>
+      <p>Angka di aplikasi ini adalah hasil model atmosfer, bukan pengukuran langsung dari alat di lapangan. Model CAMS global memiliki resolusi sekitar 40 km, sehingga seluruh Jabodetabek hanya tercakup oleh beberapa sel model. Karena itu, beberapa kabupaten/kota yang bersebelahan bisa menunjukkan nilai yang persis sama, dan perbedaan kecil antar kecamatan tidak akan terlihat. Model seperti ini cocok untuk melihat pola umum dan kecenderungan beberapa hari ke depan, tetapi bisa meleset di jam-jam tertentu, misalnya saat lalu lintas sangat padat atau ada kebakaran di dekat lokasi.</p>
+      <p>Data dari stasiun pemantau resmi sebenarnya lebih akurat untuk lokasi stasiun itu sendiri, tetapi jumlah stasiunnya terbatas dan datanya belum tersedia dalam bentuk yang bisa diambil langsung secara terbuka. Pengembangan berikutnya adalah menggabungkan data model ini dengan data stasiun, sehingga aplikasi bisa menampilkan angka terukur di dekat stasiun dan angka model di tempat lain.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Aplikasi ini menunjukkan bahwa informasi kualitas udara dalam standar Indonesia bisa disajikan secara langsung, gratis, dan mudah dipahami, cukup dengan data terbuka dan halaman web statis. Dengan memakai ISPU, kategori dan anjuran kesehatan yang ditampilkan sama dengan yang dipakai pemerintah, sehingga masyarakat tidak perlu menerjemahkan angka dari standar negara lain.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

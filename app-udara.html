@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Udara Jabodetabek</title>
+  <meta name="description" content="Kualitas udara per jam dan prakiraan 5 hari untuk 13 kabupaten/kota di Jabodetabek, dalam Indeks Standar Pencemar Udara (ISPU).">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    :root {
+      --bg: #f5f6f4; --panel: #ffffff; --ink: #14201c; --muted: #6b7280; --line: #e3e6e1; --accent: #163a2e;
+      --baik: #2e9e48; --sedang: #1f6fd1; --tidak: #f2c200; --sangat: #d62828; --bahaya: #1b1b1b;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; }
+    header.top { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--accent); color: #fff; flex-wrap: wrap; }
+    header.top h1 { font-size: 1.1rem; margin: 0; letter-spacing: .01em; }
+    header.top p { margin: 0; font-size: .8rem; opacity: .8; }
+    header.top .grow { flex: 1; min-width: 180px; }
+    header.top a, header.top button { color: #fff; font: inherit; font-size: .85rem; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 6px 12px; cursor: pointer; text-decoration: none; white-space: nowrap; }
+    header.top a:hover, header.top button:hover { background: rgba(255,255,255,.22); }
+
+    .bar { display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chips button { font: inherit; font-size: .8rem; padding: 4px 10px; border: 1px solid var(--line); background: #fff; border-radius: 999px; cursor: pointer; color: var(--ink); }
+    .chips button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .timebox { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 260px; }
+    .timebox input { flex: 1; min-width: 120px; accent-color: var(--accent); }
+    .timebox .tlabel { font-weight: 600; min-width: 170px; font-size: .85rem; }
+    .timebox button { font: inherit; font-size: .8rem; padding: 4px 10px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; }
+
+    main { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: 0; }
+    #map { width: 100%; height: 100%; min-height: 300px; background: #e8ecef; }
+    aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 14px 16px 24px; }
+    aside h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 8px; }
+    aside h2:first-child { margin-top: 0; }
+
+    .card { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .card .place { font-weight: 700; font-size: 1.05rem; }
+    .card .sub { color: var(--muted); font-size: .8rem; }
+    .big { display: flex; align-items: center; gap: 14px; margin: 12px 0 8px; }
+    .big .num { font-size: 2.4rem; font-weight: 800; line-height: 1; padding: 10px 14px; border-radius: 10px; min-width: 88px; text-align: center; }
+    .big .cat { font-weight: 700; font-size: 1.05rem; }
+    .big .crit { color: var(--muted); font-size: .8rem; }
+    table.pol { width: 100%; border-collapse: collapse; font-size: .8rem; margin-top: 8px; }
+    table.pol td { padding: 4px 2px; border-top: 1px solid var(--line); }
+    table.pol tr.on td { background: #f1f5f0; font-weight: 700; }
+    .parnote { width: 100%; font-size: .78rem; color: var(--muted); }
+    .parnote:empty { display: none; }
+    table.pol td:nth-child(2), table.pol td:nth-child(3) { text-align: right; }
+    table.pol i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+    .advice { margin-top: 12px; font-size: .82rem; }
+    .advice b { display: block; margin-top: 6px; }
+    canvas#trend { width: 100%; height: 150px; display: block; margin-top: 8px; }
+
+    ol.rank { list-style: none; margin: 0; padding: 0; }
+    ol.rank li { display: flex; align-items: center; gap: 10px; padding: 6px 4px; border-bottom: 1px solid var(--line); cursor: pointer; font-size: .85rem; }
+    ol.rank li:hover, ol.rank li.sel { background: #f3f5f2; }
+    ol.rank .badge { min-width: 42px; text-align: center; font-weight: 700; border-radius: 6px; padding: 2px 6px; font-size: .8rem; }
+    ol.rank .n { color: var(--muted); width: 18px; text-align: right; }
+    ol.rank .nm { flex: 1; }
+
+    .legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font-size: 12px; line-height: 1.6; }
+    .legend b { display: block; margin-bottom: 2px; }
+    .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+    .lbl { font: 700 11px/1 system-ui, sans-serif; padding: 3px 5px; border-radius: 4px; border: 1px solid rgba(0,0,0,.25); white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+    .note { font-size: .75rem; color: var(--muted); margin-top: 18px; line-height: 1.5; }
+    .status { padding: 6px 16px; font-size: .8rem; background: #fff7e6; border-bottom: 1px solid #f6d58d; display: none; }
+
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
+      aside { border-left: 0; border-top: 1px solid var(--line); }
+      body { height: auto; }
+      .timebox .tlabel { min-width: 0; width: 100%; order: -1; }
+      .legend { font-size: 10px; padding: 6px 8px; }
+      .legend span { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="grow">
+      <h1><i class="fa-solid fa-wind"></i> Udara Jabodetabek</h1>
+      <p>Indeks Standar Pencemar Udara (ISPU) per jam dan prakiraan 5 hari</p>
+    </div>
+    <button type="button" id="locBtn"><i class="fa-solid fa-location-crosshairs"></i> Lokasi saya</button>
+    <a href="project-aqi-jabodetabek.html"><i class="fa-solid fa-circle-info"></i> Tentang</a>
+  </header>
+  <div class="status" id="status"></div>
+
+  <div class="bar">
+    <div class="chips" id="chips" role="group" aria-label="Pilih parameter"></div>
+    <div class="timebox">
+      <button type="button" id="nowBtn">Sekarang</button>
+      <input type="range" id="slider" min="0" max="0" value="0" aria-label="Pilih jam">
+      <div class="tlabel" id="tlabel">Memuat data…</div>
+    </div>
+    <div class="parnote" id="parnote"></div>
+  </div>
+
+  <main>
+    <div id="map" role="region" aria-label="Peta kualitas udara Jabodetabek"></div>
+    <aside>
+      <h2>Lokasi terpilih</h2>
+      <div class="card" id="detail"><span class="sub">Klik sebuah kota atau kabupaten di peta, atau titik mana saja di sekitarnya.</span></div>
+      <h2>Peringkat kabupaten/kota</h2>
+      <ol class="rank" id="rank"></ol>
+      <p class="note">ISPU dihitung dari rata-rata 24 jam terakhir setiap parameter, sesuai PermenLHK No. P.14/2020, lalu diambil nilai tertinggi. Data berasal dari model atmosfer CAMS (Copernicus) melalui Open-Meteo dengan resolusi sekitar 40 km, jadi ini adalah perkiraan model, bukan hasil pengukuran stasiun. Wilayah yang bersebelahan bisa memiliki nilai yang sama karena berada di sel model yang sama.</p>
+    </aside>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var API = 'https://air-quality-api.open-meteo.com/v1/air-quality';
+      var VARS = ['pm2_5', 'pm10', 'nitrogen_dioxide', 'ozone', 'sulphur_dioxide', 'carbon_monoxide'];
+      // Batas konsentrasi rata-rata 24 jam (µg/m³) untuk ISPU 50, 100, 200, 300, dan 500, PermenLHK P.14/2020 Lampiran I
+      var BP = {
+        pm2_5: [15.5, 55.4, 150.4, 250.4, 500], pm10: [50, 150, 350, 420, 500], sulphur_dioxide: [52, 180, 400, 800, 1200],
+        carbon_monoxide: [4000, 8000, 15000, 30000, 45000], ozone: [120, 235, 400, 800, 1000], nitrogen_dioxide: [80, 200, 1130, 2260, 3000]
+      };
+      var IDX = [0, 50, 100, 200, 300, 500];
+      var NAMA = { ispu: 'ISPU', pm2_5: 'PM2.5', pm10: 'PM10', nitrogen_dioxide: 'NO₂', ozone: 'O₃', sulphur_dioxide: 'SO₂', carbon_monoxide: 'CO' };
+      // Kategori dan anjuran dari Lampiran II PermenLHK P.14/2020
+      var CAT = [
+        { max: 50, nama: 'Baik', warna: '#2e9e48', teks: '#fff', sens: 'Sangat baik untuk melakukan kegiatan di luar.', semua: 'Sangat baik untuk melakukan kegiatan di luar.' },
+        { max: 100, nama: 'Sedang', warna: '#1f6fd1', teks: '#fff', sens: 'Kurangi aktivitas fisik yang terlalu lama atau berat.', semua: 'Masih dapat beraktivitas di luar.' },
+        { max: 200, nama: 'Tidak Sehat', warna: '#f2c200', teks: '#111', sens: 'Boleh beraktivitas di luar, tetapi lebih sering beristirahat dan pilih aktivitas ringan. Amati gejala batuk atau napas sesak. Penderita asma dan penyakit jantung perlu lebih waspada.', semua: 'Kurangi aktivitas fisik yang terlalu lama di luar ruangan.' },
+        { max: 300, nama: 'Sangat Tidak Sehat', warna: '#d62828', teks: '#fff', sens: 'Hindari semua aktivitas di luar. Perbanyak aktivitas di dalam ruangan atau jadwalkan ulang ke waktu dengan udara yang lebih baik.', semua: 'Hindari aktivitas fisik yang terlalu lama di luar ruangan dan pertimbangkan beraktivitas di dalam ruangan.' },
+        { max: 1e9, nama: 'Berbahaya', warna: '#1b1b1b', teks: '#fff', sens: 'Tetap di dalam ruangan dan hanya melakukan sedikit aktivitas.', semua: 'Hindari semua aktivitas di luar.' }
+      ];
+      var HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      var BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+      var catOf = function (v) { for (var i = 0; i < CAT.length; i++) if (v <= CAT[i].max) return CAT[i]; return CAT[CAT.length - 1]; };
+      function ispu(par, c) {
+        if (c === null || c === undefined || isNaN(c)) return null;
+        var b = [0].concat(BP[par]);
+        for (var i = 1; i < b.length; i++) {
+          if (c <= b[i]) return Math.round(IDX[i - 1] + (IDX[i] - IDX[i - 1]) * (c - b[i - 1]) / (b[i] - b[i - 1]));
+        }
+        return 500;
+      }
+      // Rata-rata 24 jam ke belakang; butuh minimal 18 jam data agar dianggap sah
+      function rolling24(arr) {
+        return arr.map(function (_, i) {
+          var s = 0, n = 0;
+          for (var j = Math.max(0, i - 23); j <= i; j++) if (arr[j] !== null && arr[j] !== undefined) { s += arr[j]; n++; }
+          return n >= 18 ? s / n : null;
+        });
+      }
+      // Ubah data per jam dari API menjadi rata-rata 24 jam, ISPU per parameter, ISPU gabungan, dan parameter kritis
+      function process(h) {
+        var o = { time: h.time, avg: {}, sub: {}, ispu: [], kritis: [] };
+        VARS.forEach(function (v) { o.avg[v] = rolling24(h[v]); o.sub[v] = o.avg[v].map(function (c) { return ispu(v, c); }); });
+        h.time.forEach(function (_, i) {
+          var best = null, who = null;
+          VARS.forEach(function (v) { var x = o.sub[v][i]; if (x !== null && (best === null || x > best)) { best = x; who = v; } });
+          o.ispu.push(best); o.kritis.push(who);
+        });
+        return o;
+      }
+      function fetchPoints(pts) {
+        var q = '?latitude=' + pts.map(function (p) { return p[0]; }).join(',') + '&longitude=' + pts.map(function (p) { return p[1]; }).join(',') +
+          '&hourly=' + VARS.join(',') + '&past_days=1&forecast_days=5&timezone=Asia%2FJakarta';
+        return fetch(API + q).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+          .then(function (d) { return (Array.isArray(d) ? d : [d]).map(function (x) { return process(x.hourly); }); });
+      }
+
+      var state = { par: 'ispu', t: 0, times: [], start: 0, kab: [], sel: null, point: null };
+      var valueAt = function (o, i) { return state.par === 'ispu' ? o.ispu[i] : o.sub[state.par][i]; };
+
+      // Peta
+      var map = L.map('map', { zoomSnap: 0.25 }).setView([-6.35, 106.82], 10);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors | Data udara: CAMS melalui Open-Meteo'
+      }).addTo(map);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16, pane: 'shadowPane' }).addTo(map);
+      L.control.scale({ imperial: false }).addTo(map);
+      var polyLayer = L.layerGroup().addTo(map), labelLayer = L.layerGroup().addTo(map), pointLayer = L.layerGroup().addTo(map);
+
+      var Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () {
+          var d = L.DomUtil.create('div', 'legend');
+          d.innerHTML = '<b>Kategori ISPU</b>' + CAT.map(function (c, i) {
+            return '<div><i style="background:' + c.warna + '"></i>' + c.nama + ' <span style="color:#888">(' + (i ? CAT[i - 1].max + 1 : 0) + (c.max < 1e9 ? '–' + c.max : '+') + ')</span></div>';
+          }).join('');
+          return d;
+        }
+      });
+      new Legend().addTo(map);
+
+      var chips = document.getElementById('chips');
+      Object.keys(NAMA).forEach(function (k) {
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = NAMA[k]; b.dataset.k = k;
+        if (k === 'ispu') b.className = 'on';
+        b.addEventListener('click', function () {
+          state.par = k; chips.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.dataset.k === k); }); render();
+        });
+        chips.appendChild(b);
+      });
+
+      var slider = document.getElementById('slider'), tlabel = document.getElementById('tlabel');
+      function timeText(s) {
+        var d = new Date(s + ':00'), now = state.times[state.start];
+        return HARI[d.getDay()] + ', ' + d.getDate() + ' ' + BLN[d.getMonth()] + ' · ' + String(d.getHours()).padStart(2, '0') + '.00 WIB' + (s === now ? ' (sekarang)' : '');
+      }
+      slider.addEventListener('input', function () { state.t = state.start + parseInt(slider.value, 10); render(); });
+      document.getElementById('nowBtn').addEventListener('click', function () { slider.value = 0; state.t = state.start; render(); });
+
+      // Saat satu parameter dipilih, angka di peta dan peringkat berupa konsentrasi rata-rata 24 jam, bukan ISPU
+      function fmtConc(a) { return a === null ? '–' : a.toLocaleString('id-ID', { maximumFractionDigits: a < 10 ? 1 : 0 }); }
+      function labelOf(o, i) {
+        if (state.par === 'ispu') { var v = o.ispu[i]; return v === null ? '–' : String(v); }
+        var a = o.avg[state.par][i]; return a === null ? '–' : fmtConc(a) + ' µg/m³';
+      }
+      function parNote(t) {
+        var el = document.getElementById('parnote');
+        if (state.par !== 'ispu') {
+          el.textContent = 'Angka di peta adalah konsentrasi rata-rata 24 jam ' + NAMA[state.par] + '. Warnanya mengikuti kategori ISPU untuk ' + NAMA[state.par] + ' saja.';
+          return;
+        }
+        var n = {};
+        state.kab.forEach(function (k) { var p = k.data.kritis[t]; if (p) n[p] = (n[p] || 0) + 1; });
+        var parts = Object.keys(n).sort(function (a, b) { return n[b] - n[a]; }).map(function (p) { return NAMA[p] + ' di ' + n[p] + ' wilayah'; });
+        el.textContent = 'ISPU gabungan memakai nilai tertinggi dari keenam parameter. Pada jam ini parameter kritisnya ' +
+          (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' dan ' + parts[parts.length - 1] : parts[0] || '–') + '.';
+      }
+
+      function render() {
+        var t = state.t;
+        tlabel.textContent = timeText(state.times[t]);
+        parNote(t);
+        polyLayer.eachLayer(function (l) {
+          var v = valueAt(l.data, t), c = v === null ? null : catOf(v);
+          l.setStyle({ fillColor: c ? c.warna : '#ccc', fillOpacity: 0.55, color: '#fff', weight: state.sel === l.kab ? 3 : 1.2 });
+        });
+        labelLayer.clearLayers();
+        state.kab.forEach(function (k) {
+          var v = valueAt(k.data, t), c = v === null ? null : catOf(v);
+          L.marker([k.lat, k.lon], { interactive: false, icon: L.divIcon({ className: '', iconSize: null,
+            html: '<span class="lbl" style="background:' + (c ? c.warna : '#ccc') + ';color:' + (c ? c.teks : '#111') + '">' + labelOf(k.data, t) + '</span>' }) }).addTo(labelLayer);
+        });
+        var rank = state.kab.slice().sort(function (a, b) { return (valueAt(b.data, t) || 0) - (valueAt(a.data, t) || 0); });
+        document.getElementById('rank').innerHTML = rank.map(function (k, i) {
+          var v = valueAt(k.data, t), c = v === null ? null : catOf(v);
+          return '<li data-i="' + state.kab.indexOf(k) + '"' + (state.sel === k ? ' class="sel"' : '') + '><span class="n">' + (i + 1) + '</span><span class="nm">' + k.nama +
+            '</span><span class="badge" style="background:' + (c ? c.warna : '#ccc') + ';color:' + (c ? c.teks : '#111') + '">' + labelOf(k.data, t) + '</span></li>';
+        }).join('');
+        document.querySelectorAll('#rank li').forEach(function (li) {
+          li.addEventListener('click', function () { select(state.kab[parseInt(li.dataset.i, 10)]); });
+        });
+        if (state.sel) showDetail(state.sel);
+      }
+
+      function showDetail(s) {
+        var t = state.t, o = s.data, v = o.ispu[t], c = v === null ? null : catOf(v);
+        var html = '<div class="place">' + s.nama + '</div><div class="sub">' + s.sub + '</div>';
+        if (v === null) { document.getElementById('detail').innerHTML = html + '<p class="sub">Data belum lengkap untuk jam ini.</p>'; return; }
+        // Angka besar mengikuti parameter yang dipilih; anjuran kesehatan tetap memakai ISPU gabungan
+        var pv = valueAt(o, t), pc = pv === null ? c : catOf(pv);
+        var info = state.par === 'ispu'
+          ? '<div class="crit">ISPU gabungan, parameter kritis ' + NAMA[o.kritis[t]] + '</div>'
+          : '<div class="crit">ISPU ' + NAMA[state.par] + ', rata-rata 24 jam ' + fmtConc(o.avg[state.par][t]) + ' µg/m³</div><div class="crit">ISPU gabungan ' + v + ' (' + c.nama + '), parameter kritis ' + NAMA[o.kritis[t]] + '</div>';
+        html += '<div class="big"><div class="num" style="background:' + pc.warna + ';color:' + pc.teks + '">' + (pv === null ? '–' : pv) + '</div><div><div class="cat">' + pc.nama +
+          '</div>' + info + '<div class="crit">' + timeText(state.times[t]) + '</div></div></div>';
+        html += '<table class="pol">' + VARS.map(function (p) {
+          var a = o.avg[p][t], x = o.sub[p][t], cc = x === null ? null : catOf(x);
+          return '<tr' + (p === state.par ? ' class="on"' : '') + '><td><i style="background:' + (cc ? cc.warna : '#ccc') + '"></i>' + NAMA[p] + '</td><td>' + (a === null ? '–' : a.toLocaleString('id-ID', { maximumFractionDigits: a < 100 ? 1 : 0 }) + ' µg/m³') +
+            '</td><td>ISPU ' + (x === null ? '–' : x) + '</td></tr>';
+        }).join('') + '</table>';
+        html += '<div class="advice"><b>Kelompok sensitif</b>' + c.sens + '<b>Setiap orang</b>' + c.semua + '</div>';
+        html += '<canvas id="trend" aria-label="Grafik ISPU per jam"></canvas><div class="sub">' + (state.par === 'ispu' ? 'ISPU gabungan' : 'ISPU ' + NAMA[state.par]) +
+          ' per jam dari sekarang sampai 5 hari ke depan. Garis tegak menandai jam yang dipilih. Anjuran kesehatan di atas mengikuti ISPU gabungan.</div>';
+        document.getElementById('detail').innerHTML = html;
+        drawTrend(o);
+      }
+
+      function drawTrend(o) {
+        var cv = document.getElementById('trend'); if (!cv) return;
+        var dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+        cv.width = W * dpr; cv.height = H * dpr;
+        var g = cv.getContext('2d'); g.scale(dpr, dpr);
+        var a = state.start, b = state.times.length - 1, vals = (state.par === 'ispu' ? o.ispu : o.sub[state.par]).slice(a, b + 1);
+        var max = Math.max(110, Math.ceil(Math.max.apply(null, vals.filter(function (x) { return x !== null; })) / 50) * 50 + 10);
+        var pad = { l: 28, r: 4, t: 6, b: 18 }, cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+        var xOf = function (i) { return pad.l + i / (vals.length - 1) * cw; }, yOf = function (v) { return pad.t + ch - Math.min(v, max) / max * ch; };
+        var lo = 0;
+        CAT.forEach(function (c) {                           // pita warna kategori di latar
+          var hi = Math.min(c.max, max); if (lo >= max) return;
+          g.fillStyle = c.warna; g.globalAlpha = 0.12; g.fillRect(pad.l, yOf(hi), cw, yOf(lo) - yOf(hi)); g.globalAlpha = 1; lo = hi;
+        });
+        g.font = '10px system-ui, sans-serif'; g.fillStyle = '#6b7280'; g.textAlign = 'right';
+        [0, 50, 100, 200, 300].forEach(function (v) { if (v <= max) g.fillText(v, pad.l - 4, yOf(v) + 3); });
+        g.textAlign = 'center';
+        state.times.slice(a, b + 1).forEach(function (s, i) {
+          if (s.slice(11, 13) === '00') { g.fillStyle = '#d1d5db'; g.fillRect(xOf(i), pad.t, 1, ch); g.fillStyle = '#6b7280'; g.fillText(HARI[new Date(s + ':00').getDay()].slice(0, 3), xOf(i) + 14, H - 4); }
+        });
+        g.strokeStyle = '#14201c'; g.lineWidth = 1.8; g.beginPath();
+        var started = false;
+        vals.forEach(function (v, i) { if (v === null) return; if (started) g.lineTo(xOf(i), yOf(v)); else { g.moveTo(xOf(i), yOf(v)); started = true; } });
+        g.stroke();
+        var si = state.t - a; g.strokeStyle = '#d62828'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(xOf(si), pad.t); g.lineTo(xOf(si), pad.t + ch); g.stroke();
+      }
+
+      function select(k) {
+        state.sel = k; pointLayer.clearLayers();
+        if (k.marker) k.marker.addTo(pointLayer);
+        render();
+        if (window.innerWidth <= 860) document.getElementById('detail').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Titik bebas: klik di luar wilayah atau tombol lokasi saya
+      function queryPoint(lat, lon, label) {
+        setStatus('Mengambil data untuk titik yang dipilih…');
+        fetchPoints([[lat.toFixed(3), lon.toFixed(3)]]).then(function (r) {
+          setStatus('');
+          var m = L.circleMarker([lat, lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#14201c', fillOpacity: 1 });
+          select({ nama: label, sub: Math.abs(lat).toFixed(3) + (lat < 0 ? '° LS, ' : '° LU, ') + lon.toFixed(3) + '° BT', data: r[0], marker: m });
+        }).catch(function () { setStatus('Gagal mengambil data untuk titik ini. Coba lagi beberapa saat lagi.'); });
+      }
+      map.on('click', function (e) { queryPoint(e.latlng.lat, e.latlng.lng, 'Titik pilihan'); });
+      document.getElementById('locBtn').addEventListener('click', function () {
+        if (!navigator.geolocation) { setStatus('Browser ini tidak mendukung fitur lokasi.'); return; }
+        setStatus('Mencari lokasimu…');
+        navigator.geolocation.getCurrentPosition(function (p) {
+          map.setView([p.coords.latitude, p.coords.longitude], 11);
+          queryPoint(p.coords.latitude, p.coords.longitude, 'Lokasi saya');
+        }, function () { setStatus('Izin lokasi ditolak atau lokasi tidak ditemukan.'); }, { timeout: 10000 });
+      });
+      function setStatus(s) { var el = document.getElementById('status'); el.textContent = s; el.style.display = s ? 'block' : 'none'; }
+
+      // Muat batas wilayah, lalu ambil data udara untuk 13 kabupaten/kota sekaligus
+      fetch('assets/data/udara-jabodetabek.geojson').then(function (r) { return r.json(); }).then(function (gj) {
+        var feats = gj.features;
+        return fetchPoints(feats.map(function (f) { return [f.properties.lat, f.properties.lon]; })).then(function (res) {
+          feats.forEach(function (f, i) {
+            var k = { nama: f.properties.nama, sub: f.properties.provinsi + ' · nilai di titik tengah wilayah', lat: f.properties.lat, lon: f.properties.lon, data: res[i] };
+            state.kab.push(k);
+            var poly = L.geoJSON(f, { style: { color: '#fff', weight: 1.2, fillOpacity: 0.55 } });
+            poly.eachLayer(function (l) {
+              l.data = k.data; l.kab = k;
+              l.on('click', function (e) { L.DomEvent.stopPropagation(e); select(k); });
+              l.bindTooltip(k.nama, { sticky: true });
+              l.addTo(polyLayer);
+            });
+          });
+          state.times = res[0].time;
+          var now = new Date(), pad2 = function (n) { return String(n).padStart(2, '0'); };
+          var key = now.toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 13).replace(' ', 'T') + ':00';
+          state.start = Math.max(0, state.times.indexOf(key));
+          var last = state.times.length - 1;
+          while (last > state.start && res[0].ispu[last] === null) last--;
+          state.times = state.times.slice(0, last + 1);
+          slider.max = last - state.start; slider.value = 0; state.t = state.start;
+          map.fitBounds(polyLayer.getLayers().length ? L.featureGroup(polyLayer.getLayers()).getBounds() : map.getBounds(), { padding: [10, 10] });
+          var worst = state.kab.slice().sort(function (a, b) { return (b.data.ispu[state.t] || 0) - (a.data.ispu[state.t] || 0); })[0];
+          select(worst);
+        });
+      }).catch(function () { setStatus('Data kualitas udara gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.'); tlabel.textContent = 'Data tidak tersedia'; });
+
+      window.addEventListener('resize', function () { if (state.sel) drawTrend(state.sel.data); });
+    })();
+  </script>
+</body>
+</html>

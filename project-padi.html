@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pipeline Data Cuaca dan Padi Jawa: Dampak Kemarau terhadap Panen 2018–2026</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .post-content p.chart-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; text-align: justify; margin-top: 6px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .chart-figure img.half { max-width: 620px; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+
+    .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0 6px; counter-reset: step; }
+    .flow div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; position: relative; background: #fff; }
+    .flow div::before { counter-increment: step; content: counter(step); position: absolute; top: -10px; left: 12px; background: #111827; color: #fff; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; }
+    .flow strong { display: block; font-size: 0.95rem; margin: 4px 0; }
+    .flow span { font-size: 0.82rem; color: #6b7280; line-height: 1.45; display: block; }
+    .flow div.auto { border-color: #16a34a; background: #f0fdf4; }
+
+    #padiMap { width: 100%; height: 520px; border-radius: 12px; border: 1px solid var(--line); background: #e8ecef; }
+    .post-content #padiMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: center; margin-top: 6px; }
+    .time-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .time-bar input[type=range] { flex: 1; min-width: 180px; }
+    .time-label { font-weight: 700; min-width: 230px; }
+    .time-label span { font-weight: 400; color: #6b7280; font-size: 0.85rem; margin-left: 6px; }
+    .update-note { font-size: 0.85rem; color: #166534; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 8px 12px; margin: 14px 0; }
+    #rainChart { width: 100%; height: 260px; display: block; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 220px; }
+    .wm-panel header { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 8px 10px; max-height: 320px; overflow-y: auto; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 4px; }
+    .wm-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 12px/1.5 system-ui, sans-serif; color: #222; max-width: 220px; }
+    .wm-legend h4 { margin: 0 0 4px; font-size: 12px; }
+    .wm-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-home a { font-size: 15px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    .wm-popup .ttl { font-weight: 700; padding-bottom: 4px; }
+    @media (max-width: 600px) {
+      #padiMap { height: 420px; }
+      .wm-legend { font-size: 10px; padding: 6px 8px; max-width: 140px; }
+      .time-label { min-width: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Data Pipeline</span>
+      <h1>Pipeline Data Cuaca dan Padi Jawa: Dampak Kemarau terhadap Panen 2018–2026</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Pulau Jawa menghasilkan sekitar separuh padi Indonesia. Sebagian sawahnya dialiri irigasi dari waduk, sedangkan sebagian lainnya, terutama di daerah perbukitan, hanya mengandalkan air hujan. Karena itu, musim kemarau yang lebih panjang dari biasanya selalu menjadi kekhawatiran, baik bagi petani maupun bagi ketersediaan beras nasional. Namun, seberapa besar sebenarnya pengaruh kemarau terhadap panen belum banyak diukur, terutama sampai ke tingkat kabupaten.</p>
+      <p>Tahun 2026 menjadi tahun dengan kemarau yang sangat kering. Di project <a href="project-fire.html">kebakaran hutan dan lahan</a>, kemarau yang sama memicu titik api lima kali lebih banyak dari tahun 2024. Kemarau memang sudah lama dianggap sebagai ancaman bagi panen, tetapi kapan sebenarnya dampaknya terasa? Apakah saat kemarau itu sendiri berlangsung, atau justru setelahnya, ketika musim tanam berikutnya dimulai? Selain itu, kabupaten mana yang paling rentan, dan seberapa kering kemarau tahun ini dibanding kemarau-kemarau sebelumnya?</p>
+      <p>Untuk menjawabnya, data hujan, suhu, dan produksi padi dari berbagai sumber perlu disatukan. Setiap sumber punya format, satuan, dan penulisan nama wilayah yang berbeda. Karena itu, project ini dibangun sebagai pipeline data, yaitu rangkaian script yang mengambil, membersihkan, dan menggabungkan data secara otomatis, sehingga bisa dijalankan ulang kapan saja ketika data baru tersedia.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Luas panen, produktivitas, dan produksi padi per kabupaten/kota, 2018–2025 (metode Kerangka Sampel Area)</td><td>Tabel tahunan</td><td>Sekunder</td><td>Badan Pusat Statistik, tabel statistik enam provinsi di Jawa</td></tr>
+            <tr><td>Curah hujan bulanan CHIRPS v2.0 (resolusi sekitar 5 km), Januari 1991–September 2026</td><td>Raster bulanan</td><td>Sekunder</td><td>UCSB Climate Hazards Center, melalui IRI Data Library</td></tr>
+            <tr><td>Suhu udara rata-rata dan maksimum bulanan, 1991–2026</td><td>Titik bulanan</td><td>Sekunder</td><td>NASA POWER (komunitas pertanian)</td></tr>
+            <tr><td>Batas kabupaten/kota</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Semua data diambil tanpa akun dan tanpa kunci API, sehingga pipeline ini bisa dijalankan oleh siapa saja. Data padi tingkat kabupaten baru tersedia sampai 2025, karena BPS merilis angka tetap setahun setelahnya.</p>
+
+      <h2>Metode</h2>
+
+      <p>Pipeline ini terdiri dari enam tahap. Lima tahap pertama dijalankan sekali untuk analisis 2018–2025, sedangkan tahap terakhir berjalan otomatis setiap bulan untuk memantau hujan terbaru.</p>
+
+      <div class="flow">
+        <div><strong>Ambil data padi</strong><span>Tabel BPS dibaca langsung dari halaman web enam provinsi, 8 tahun, 119 kabupaten/kota</span></div>
+        <div><strong>Ambil data iklim</strong><span>CHIRPS dipotong di server untuk wilayah Jawa saja, diunduh per tahun. Suhu diambil per titik kabupaten</span></div>
+        <div><strong>Bersihkan batas wilayah</strong><span>Menyamakan nama dengan kode BPS dan menggabungkan poligon waduk serta hutan ke kabupaten tetangga</span></div>
+        <div><strong>Gabungkan</strong><span>Hujan dirata-ratakan per kabupaten, dikelompokkan per musim tanam, lalu disimpan di DuckDB dan Parquet</span></div>
+        <div><strong>Analisis</strong><span>Anomali hujan per musim dibandingkan dengan anomali produksi padi</span></div>
+        <div class="auto"><strong>Pantau otomatis</strong><span>GitHub Actions mengunduh hujan terbaru setiap bulan dan memperbarui peta di halaman ini</span></div>
+      </div>
+
+      <p>Bagian yang paling banyak memakan waktu justru pembersihan data. Nama kabupaten di peta dan di tabel BPS tidak selalu sama, misalnya "Gunung Kidul" dan "Gunungkidul". Peta batas wilayah juga memuat tiga poligon yang bukan kabupaten, yaitu Waduk Cirata, Waduk Kedungombo, dan satu kawasan hutan. Ketiganya digabungkan ke kabupaten tetangga yang berbagi batas paling panjang, sehingga tidak ada bagian peta yang kosong. Setelah itu, seluruh 119 kabupaten/kota di Jawa berhasil dicocokkan dengan kode wilayah BPS.</p>
+      <p>Data hujan lalu dikelompokkan menjadi tiga musim tanam yang umum di Jawa, yaitu musim hujan (MH) pada November–Februari, musim kemarau pertama (MK1) pada Maret–Juni, dan musim kemarau kedua (MK2) pada Juli–Oktober. Hujan November dan Desember dihitung ke tahun berikutnya, karena padi yang ditanam pada bulan itu baru dipanen pada awal tahun berikutnya.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tahap</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kabupaten sentra padi</td><td>Kabupaten dengan rata-rata luas panen ≥ 5.000 ha per tahun, sebanyak 87 dari 119 kabupaten/kota</td></tr>
+            <tr><td>Anomali hujan</td><td>Z-skor hujan per musim terhadap rata-rata 1991–2020 di kabupaten yang sama. Nilai −1 berarti lebih kering dari biasanya sebesar satu simpangan baku</td></tr>
+            <tr><td>Anomali produksi</td><td>Selisih produksi (%) terhadap rata-rata 2018–2025 di kabupaten yang sama</td></tr>
+            <tr><td>Model</td><td>Regresi linear anomali produksi terhadap anomali hujan MH, MK1, MK2, dan anomali suhu, dengan galat dikelompokkan per kabupaten</td></tr>
+            <tr><td>Pemantauan</td><td>Hujan bulanan dibandingkan dengan rata-rata 1991–2020 di bulan yang sama, dalam persen</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Setiap kabupaten dibandingkan dengan dirinya sendiri, bukan dengan kabupaten lain. Dengan begitu, kabupaten yang memang selalu kering seperti Gunungkidul tidak otomatis dianggap bermasalah, dan yang dilihat hanyalah apakah suatu tahun lebih kering atau lebih basah dari kebiasaannya.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Selama 2018–2025, produksi padi di Jawa berkisar antara 28,8 dan 32,6 juta ton gabah kering giling (GKG) per tahun. Tahun terendah adalah 2024 dengan 28,8 juta ton, turun 4,5% dari 2023 dan sekitar 6% di bawah rata-rata delapan tahun.</p>
+
+      <div class="stat-row">
+        <div><strong>2,4%</strong><span>Produksi turun setiap kali hujan Nov–Feb lebih kering satu simpangan baku</span></div>
+        <div><strong>28,8 juta ton</strong><span>Produksi Jawa 2024, terendah dalam delapan tahun</span></div>
+        <div><strong>28%</strong><span>Hujan Juli–September 2026 dibanding normal (median kabupaten)</span></div>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/padi-tren.png" target="_blank" rel="noopener">
+          <img src="assets/maps/padi-tren.png" alt="Grafik produksi padi seluruh Jawa 2018 sampai 2025 dan z-skor hujan musim hujan November sampai Februari">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Produksi padi seluruh Jawa dan anomali hujan musim hujan (rata-rata kabupaten sentra), 2018–2025</figcaption>
+      </figure>
+
+      <p>Yang menarik, penurunan tajam pada 2024 tidak terjadi saat kemaraunya berlangsung. Kemarau panjang akibat El Niño terjadi pada pertengahan sampai akhir 2023. Hujan pada September dan Oktober 2023 hanya sekitar 22–23% dari normal, dan Desember 2023 hanya separuhnya. Namun produksi 2023 hanya turun sedikit. Dampak terbesarnya baru terasa pada 2024. Hujan yang terlambat datang membuat petani menunda tanam musim hujan, sehingga panen raya awal 2024 menyusut. Dengan kata lain, kemarau yang panjang paling merugikan bukan saat kemaraunya, tetapi ketika ia membuat musim hujan berikutnya terlambat dimulai.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/padi-sebaran.png" target="_blank" rel="noopener">
+          <img class="half" src="assets/maps/padi-sebaran.png" alt="Grafik sebaran anomali hujan November sampai Februari dan anomali produksi padi per kabupaten per tahun">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Hubungan hujan musim hujan dan anomali produksi padi, 87 kabupaten sentra × 8 tahun</figcaption>
+      </figure>
+
+      <p>Model regresi menguatkan pola ini. Dari tiga musim tanam, hanya hujan musim hujan (November–Februari) yang berpengaruh terhadap produksi. Setiap kali hujan pada musim ini lebih kering satu simpangan baku dari biasanya, produksi turun sekitar 2,4%. Hujan pada dua musim kemarau tidak terlalu berpengaruh, kemungkinan karena padi di musim kemarau memang lebih banyak bergantung pada irigasi.</p>
+      <p>Penurunan produksi ini sebagian besar datang dari berkurangnya luas panen, bukan dari turunnya hasil per hektare. Produktivitas padi di Jawa relatif stabil, sekitar 56–57 kuintal per hektare setiap tahun. Artinya, ketika hujan terlambat, masalahnya bukan padi yang tumbuh buruk, tetapi sawah yang tidak jadi ditanami.</p>
+      <p>Meski begitu, hujan bukan satu-satunya penentu. Model ini hanya menjelaskan sekitar 8% naik-turunnya produksi antar kabupaten dan antar tahun. Sisanya dipengaruhi hal lain yang tidak ada dalam data, seperti ketersediaan air waduk, serangan hama, harga pupuk, dan alih fungsi sawah.</p>
+
+      <h3>Kabupaten yang paling rentan</h3>
+
+      <p>Dari 87 kabupaten sentra, 71 kabupaten menunjukkan pola yang sama, yaitu produksi turun pada tahun-tahun dengan musim hujan yang lebih kering. Pada 2024, separuh kabupaten sentra mengalami penurunan produksi lebih dari 6,7%, dan 15 kabupaten turun lebih dari 15%. Tabel berikut memuat 10 kabupaten dengan penurunan terbesar dari 15 kabupaten tersebut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kabupaten</th>
+              <th>Provinsi</th>
+              <th>Produksi rata-rata (ribu ton)</th>
+              <th>Perubahan produksi 2024 (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Gunungkidul</td><td>DI Yogyakarta</td><td>189</td><td>−25,7</td></tr>
+            <tr><td>Pacitan</td><td>Jawa Timur</td><td>92</td><td>−24,6</td></tr>
+            <tr><td>Pangandaran</td><td>Jawa Barat</td><td>154</td><td>−23,2</td></tr>
+            <tr><td>Temanggung</td><td>Jawa Tengah</td><td>66</td><td>−23,1</td></tr>
+            <tr><td>Rembang</td><td>Jawa Tengah</td><td>178</td><td>−22,8</td></tr>
+            <tr><td>Wonogiri</td><td>Jawa Tengah</td><td>371</td><td>−21,9</td></tr>
+            <tr><td>Blitar</td><td>Jawa Timur</td><td>219</td><td>−21,8</td></tr>
+            <tr><td>Ciamis</td><td>Jawa Barat</td><td>296</td><td>−20,2</td></tr>
+            <tr><td>Tasikmalaya</td><td>Jawa Barat</td><td>443</td><td>−20,2</td></tr>
+            <tr><td>Bekasi</td><td>Jawa Barat</td><td>520</td><td>−19,8</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Perubahan produksi 2024 dihitung terhadap rata-rata produksi 2018–2025 di kabupaten yang sama.</p>
+
+      <p>Sebagian besar kabupaten paling rentan berada di jalur selatan Jawa, seperti Gunungkidul, Pacitan, Wonogiri, Pangandaran, Ciamis, dan Tasikmalaya. Wilayah ini banyak berupa perbukitan kapur dengan sawah tadah hujan yang hanya mengandalkan air hujan. Sebaliknya, sentra padi di pantai utara yang dialiri irigasi dari waduk besar jauh lebih tahan. Produksi Indramayu pada 2024 hanya turun 1,5% dan Subang 3%. Meski begitu, irigasi tidak selalu cukup. Karawang turun 9% dan Bekasi hampir 20%, yang kemungkinan berkaitan dengan pasokan air irigasi yang ikut menipis saat kemarau panjang.</p>
+
+      <h3>Pemantauan 2026</h3>
+
+      <p>Peta dan grafik di bawah ini tidak dibuat sekali saja. Setiap bulan, GitHub Actions menjalankan script pemantauan yang mengunduh data hujan CHIRPS terbaru, menghitung ulang hujan setiap kabupaten, lalu memperbarui data di halaman ini secara otomatis.</p>
+
+      <p class="update-note" id="updateNote"><i class="fa-solid fa-rotate"></i> Memuat data pemantauan…</p>
+
+      <canvas id="rainChart" aria-label="Grafik hujan bulanan rata-rata Jawa dibanding normal"></canvas>
+      <p class="chart-note">Batang menunjukkan hujan yang turun setiap bulan dalam 12 bulan terakhir, dirata-ratakan untuk seluruh kabupaten di Jawa. Garis hitam menunjukkan hujan normal di bulan yang sama, yaitu rata-rata 1991–2020. Warna batang menunjukkan seberapa jauh hujan bulan itu dari normal, mulai dari hijau kebiruan untuk lebih basah dari biasanya, abu-abu untuk sekitar normal, sampai cokelat tua untuk kurang dari separuh hujan normal.</p>
+
+      <p>Musim hujan 2025/2026 sebenarnya cukup basah. Hujan November 2025 sampai Januari 2026 berada di atas normal, sehingga panen awal 2026 kemungkinan besar baik. Namun sejak Juni 2026 hujan hampir berhenti. Hujan Juni sampai September 2026 hanya sekitar 25–33% dari normal setiap bulannya. Kondisi ini jauh lebih kering daripada kemarau 2023, ketika hujan Juli–September masih sekitar 58% dari normal, dan juga lebih kering daripada kemarau 2019 yang sekitar 34%.</p>
+
+      <figure class="chart-figure">
+        <div id="padiMap" role="region" aria-label="Peta interaktif hujan bulanan dibanding normal dan kerentanan padi per kabupaten di Jawa"></div>
+        <div class="time-bar">
+          <input type="range" id="monthSlider" min="0" max="10" value="10" aria-label="Pilih bulan">
+          <div class="time-label" id="monthLabel">Memuat…</div>
+        </div>
+        <p class="map-hint">Klik sebuah kabupaten untuk melihat detailnya. Pilih layer lain pada panel di kanan atas. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 3.</strong> Peta interaktif hujan bulanan dibanding normal dan kerentanan produksi padi per kabupaten/kota di Jawa</figcaption>
+      </figure>
+
+      <p>Kabupaten yang paling kering pada Juli–September 2026 justru berada di jalur pantai utara Jawa Barat, yaitu Indramayu, Majalengka, Cirebon, Bekasi, dan Karawang, dengan hujan kurang dari 20% dari normal. Indramayu dan Karawang adalah dua penghasil padi terbesar di Jawa, masing-masing menyumbang sekitar 4,6% dan 3,7% produksi padi seluruh Jawa. Untuk sementara sawahnya masih tertolong oleh irigasi, tetapi kekeringan sepanjang ini juga menguras cadangan air waduk.</p>
+      <p>Belajar dari 2023, hal yang paling perlu diperhatikan sekarang adalah kapan hujan kembali turun. Jika hujan pada Oktober sampai Desember 2026 kembali datang terlambat, panen raya awal 2027 berisiko menyusut seperti pada 2024. Pemantauan otomatis di halaman ini akan memperlihatkan perkembangannya setiap bulan.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Kemarau panjang memang menurunkan produksi padi di Jawa, tetapi dampaknya paling besar ketika ia membuat musim hujan berikutnya terlambat dimulai. Kemarau El Niño 2023 baru benar-benar terasa pada 2024, ketika produksi Jawa turun ke titik terendah dalam delapan tahun. Penurunan itu terutama berasal dari sawah yang tidak jadi ditanami, bukan dari padi yang tumbuh buruk.</p>
+      <p>Kabupaten dengan sawah tadah hujan di jalur selatan Jawa adalah yang paling rentan. Sementara itu, kemarau 2026 tercatat jauh lebih kering daripada 2023 dan paling parah di jalur pantai utara Jawa Barat. Waktu datangnya hujan pada akhir 2026 akan menentukan apakah panen awal 2027 ikut terdampak.</p>
+      <p>Hasil ini tetap punya keterbatasan. Data padi hanya tersedia per tahun dan baru delapan tahun, sehingga pengaruh tiap musim tanam tidak bisa dipisahkan secara langsung. CHIRPS beresolusi sekitar 5 km dan bisa kurang akurat di daerah pegunungan. Pipeline ini juga belum memasukkan data irigasi dan cadangan air waduk, padahal keduanya sangat menentukan apakah sawah tetap bisa ditanami saat hujan kurang. Langkah berikutnya adalah menambahkan data luas sawah irigasi dan tinggi muka air waduk, serta memperluas analisis ke data padi per subround (empat bulanan) agar dampak setiap musim terlihat lebih jelas.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var VIEW = [[-8.85, 105.1], [-5.8, 114.65]];
+      var FIT = { paddingBottomRight: [window.innerWidth < 600 ? 0 : 140, 0] };   // sisakan ruang untuk legenda di kanan
+      var BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var monthName = function (m) { return BULAN[parseInt(m.slice(5), 10) - 1] + ' ' + m.slice(0, 4); };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { maximumFractionDigits: d || 0 }); };
+
+      // Kelas warna setiap layer
+      var LAYERS = {
+        hujan: { name: 'Hujan bulanan dibanding normal', title: 'Hujan dibanding normal',
+          cls: [[25, '#8c510a', '< 25%'], [50, '#d8b365', '25–50%'], [80, '#f6e8c3', '50–80%'], [120, '#e5e7eb', '80–120% (normal)'], [150, '#5ab4ac', '120–150%'], [1e9, '#01665e', '> 150%']] },
+        tiga: { name: 'Hujan 3 bulan terakhir dibanding normal', title: 'Hujan 3 bulan terakhir',
+          cls: [[25, '#8c510a', '< 25%'], [50, '#d8b365', '25–50%'], [80, '#f6e8c3', '50–80%'], [120, '#e5e7eb', '80–120% (normal)'], [150, '#5ab4ac', '120–150%'], [1e9, '#01665e', '> 150%']] },
+        turun: { name: 'Perubahan produksi padi 2024', title: 'Perubahan produksi 2024',
+          cls: [[-15, '#b2182b', '< −15%'], [-8, '#ef8a62', '−15 sampai −8%'], [-3, '#fddbc7', '−8 sampai −3%'], [3, '#e5e7eb', '−3 sampai 3%'], [1e9, '#67a9cf', '> 3%']] },
+        porsi: { name: 'Porsi produksi padi Jawa', title: 'Porsi produksi Jawa',
+          cls: [[0.5, '#edf8e9', '< 0,5%'], [1, '#bae4b3', '0,5–1%'], [2, '#74c476', '1–2%'], [3, '#31a354', '2–3%'], [1e9, '#006d2c', '> 3%']] }
+      };
+      var colorOf = function (key, v) {
+        if (v === null || v === undefined || isNaN(v)) return '#ffffff';
+        var c = LAYERS[key].cls; for (var i = 0; i < c.length; i++) { if (v < c[i][0]) return c[i][1]; } return c[c.length - 1][1];
+      };
+
+      var box = document.getElementById('padiMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.25 });
+      map.fitBounds(VIEW, FIT);
+      var fitted = box.clientWidth > 0;
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () {
+          map.invalidateSize();
+          if (!fitted && box.clientWidth > 0) { map.fitBounds(VIEW, FIT); fitted = true; }
+        }).observe(box);
+      }
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var basemaps = {
+        'Abu-abu (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 16, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors' }),
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' }),
+        'OpenStreetMap': L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' })
+      };
+      var activeBase = basemaps['Abu-abu (Esri)'].addTo(map);
+      var active = 'tiga', idx = 0, KAB = null, PANTAU = null, geo = null;
+      var slider = document.getElementById('monthSlider'), label = document.getElementById('monthLabel');
+
+      function value(f, key) {
+        var p = PANTAU && PANTAU.kabupaten[f.properties.kode];
+        if (key === 'hujan') return p ? p.persen[idx] : null;
+        if (key === 'tiga') return p ? p.persen_3bln : null;
+        if (key === 'turun') return f.properties.anomali_2024;
+        return f.properties.porsi_jawa_persen;
+      }
+      function popup(f) {
+        var pr = f.properties, p = PANTAU && PANTAU.kabupaten[pr.kode], n = PANTAU ? PANTAU.bulan.length : 0;
+        var h = '<table class="wm-popup"><tr><td colspan="2" class="ttl">' + pr.wilayah + '</td></tr><tr><td>Provinsi</td><td>' + pr.provinsi + '</td></tr>';
+        if (p) {
+          h += '<tr><td>Hujan ' + monthName(PANTAU.bulan[idx]) + '</td><td><strong>' + fmt(p.hujan[idx]) + ' mm</strong> (' + p.persen[idx] + '% dari normal)</td></tr>';
+          h += '<tr><td>3 bulan terakhir</td><td>' + p.persen_3bln + '% dari normal</td></tr>';
+        }
+        if (pr.sentra) {
+          h += '<tr><td>Produksi rata-rata</td><td>' + fmt(pr.produksi_rata_ton / 1000) + ' ribu ton GKG</td></tr>' +
+               '<tr><td>Porsi produksi Jawa</td><td>' + fmt(pr.porsi_jawa_persen, 2) + '%</td></tr>' +
+               '<tr><td>Perubahan produksi 2024</td><td>' + fmt(pr.anomali_2024, 1) + '%</td></tr>';
+        } else {
+          h += '<tr><td>Padi</td><td>Bukan kabupaten sentra (luas panen &lt; 5.000 ha)</td></tr>';
+        }
+        return h + '</table>';
+      }
+      function style(f) {
+        return { color: '#9ca3af', weight: 0.5, fillOpacity: 0.85, fillColor: colorOf(active, value(f, active)) };
+      }
+      function redraw() {
+        if (!geo) return;
+        geo.setStyle(style);
+        geo.eachLayer(function (l) { l.setPopupContent(popup(l.feature)); });
+        var m = PANTAU.bulan[idx];
+        label.innerHTML = active === 'tiga' ? 'Tiga bulan terakhir<span>sampai ' + monthName(PANTAU.bulan[PANTAU.bulan.length - 1]) + '</span>' :
+          active === 'hujan' ? monthName(m) + '<span>rata-rata Jawa ' + PANTAU.jawa.hujan[idx] + ' mm, normal ' + PANTAU.jawa.normal[idx] + ' mm</span>' :
+          (active === 'turun' ? 'Perubahan produksi 2024' : 'Porsi produksi Jawa') + '<span>tidak bergantung bulan</span>';
+        slider.disabled = active !== 'hujan';
+        updateLegend();
+      }
+      slider.addEventListener('input', function () { idx = parseInt(slider.value, 10); if (active !== 'hujan') { active = 'hujan'; syncRadio(); } redraw(); });
+
+      Promise.all([
+        fetch('assets/data/padi-kabupaten.geojson').then(function (r) { return r.json(); }),
+        fetch('assets/data/padi-pantau.json').then(function (r) { return r.json(); })
+      ]).then(function (res) {
+        KAB = res[0]; PANTAU = res[1];
+        idx = PANTAU.bulan.length - 1; slider.max = idx; slider.value = idx;
+        geo = L.geoJSON(KAB, { style: style, onEachFeature: function (f, l) { l.bindPopup(popup(f)); } }).addTo(map);
+        redraw(); drawChart();
+        var d = new Date(PANTAU.diperbarui + 'T00:00:00');
+        document.getElementById('updateNote').innerHTML = '<i class="fa-solid fa-rotate"></i> Data pemantauan terakhir diperbarui otomatis pada ' +
+          d.getDate() + ' ' + BULAN[d.getMonth()] + ' ' + d.getFullYear() + ', dengan data hujan sampai ' + monthName(PANTAU.bulan[PANTAU.bulan.length - 1]) + '.';
+      });
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var html = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Layer</div>';
+          Object.keys(LAYERS).forEach(function (k) {
+            html += '<div class="wm-row"><label><input type="radio" name="wm-layer" value="' + k + '"' + (k === active ? ' checked' : '') + '>' + LAYERS[k].name + '</label></div>';
+          });
+          html += '<div class="wm-group">Basemap</div>';
+          Object.keys(basemaps).forEach(function (k, i) {
+            html += '<div class="wm-row"><label><input type="radio" name="wm-base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label></div>';
+          });
+          div.innerHTML = html + '</div>';
+          L.DomEvent.disableClickPropagation(div);
+          L.DomEvent.disableScrollPropagation(div);
+          div.querySelector('header').addEventListener('click', function () { div.classList.toggle('collapsed'); });
+          div.querySelectorAll('input[name=wm-layer]').forEach(function (r) { r.addEventListener('change', function () { active = r.value; redraw(); }); });
+          div.querySelectorAll('input[name=wm-base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = basemaps[r.value].addTo(map); activeBase.bringToBack(); });
+          });
+          return div;
+        }
+      });
+      new Panel().addTo(map);
+      function syncRadio() { document.querySelectorAll('input[name=wm-layer]').forEach(function (r) { r.checked = r.value === active; }); }
+
+      var legendDiv;
+      var Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () { legendDiv = L.DomUtil.create('div', 'wm-legend'); L.DomEvent.disableClickPropagation(legendDiv); return legendDiv; }
+      });
+      new Legend().addTo(map);
+      function updateLegend() {
+        var L0 = LAYERS[active];
+        legendDiv.innerHTML = '<h4>' + L0.title + '</h4>' + L0.cls.map(function (c) { return '<div><i style="background:' + c[1] + '"></i>' + c[2] + '</div>'; }).join('') +
+          (active === 'turun' || active === 'porsi' ? '<div><i style="background:#fff;border:1px solid #bbb"></i>Bukan sentra padi</div>' : '');
+      }
+
+      var Home = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'leaflet-bar wm-home');
+          div.innerHTML = '<a href="#" title="Kembali ke seluruh Jawa" role="button" aria-label="Kembali ke seluruh Jawa"><i class="fa-solid fa-house"></i></a>';
+          L.DomEvent.on(div.firstChild, 'click', function (e) { L.DomEvent.preventDefault(e); L.DomEvent.stopPropagation(e); map.fitBounds(VIEW, FIT); });
+          return div;
+        }
+      });
+      new Home().addTo(map);
+
+      // Grafik hujan bulanan Jawa dibanding normal, digambar ulang dari data pemantauan
+      function drawChart() {
+        var cv = document.getElementById('rainChart'), dpr = window.devicePixelRatio || 1;
+        var W = cv.clientWidth, H = cv.clientHeight;
+        cv.width = W * dpr; cv.height = H * dpr;
+        var g = cv.getContext('2d'); g.scale(dpr, dpr); g.clearRect(0, 0, W, H);
+        var b = PANTAU.bulan, h = PANTAU.jawa.hujan, n = PANTAU.jawa.normal;
+        var pad = { l: 42, r: 10, t: 12, b: 34 }, cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+        var max = Math.ceil(Math.max.apply(null, h.concat(n)) / 100) * 100, step = cw / b.length;
+        var yOf = function (v) { return pad.t + ch - v / max * ch; };
+        g.font = '11px system-ui, sans-serif'; g.fillStyle = '#6b7280'; g.strokeStyle = '#e5e7eb'; g.textAlign = 'right';
+        for (var v = 0; v <= max; v += 100) { g.beginPath(); g.moveTo(pad.l, yOf(v)); g.lineTo(W - pad.r, yOf(v)); g.stroke(); g.fillText(v, pad.l - 6, yOf(v) + 4); }
+        g.textAlign = 'center';
+        b.forEach(function (m, i) {
+          var x = pad.l + i * step, ratio = h[i] / n[i];
+          g.fillStyle = ratio < 0.5 ? '#8c510a' : ratio < 0.8 ? '#d8b365' : ratio <= 1.2 ? '#9ca3af' : '#5ab4ac';
+          g.fillRect(x + step * 0.18, yOf(h[i]), step * 0.64, yOf(0) - yOf(h[i]));
+          g.fillStyle = '#374151';
+          g.fillText(BULAN[parseInt(m.slice(5), 10) - 1].slice(0, 3), x + step / 2, H - pad.b + 14);
+          if (m.slice(5) === '01' || i === 0) g.fillText(m.slice(0, 4), x + step / 2, H - pad.b + 27);
+        });
+        g.strokeStyle = '#111827'; g.lineWidth = 2; g.beginPath();
+        n.forEach(function (v, i) { var x = pad.l + i * step + step / 2; if (i) g.lineTo(x, yOf(v)); else g.moveTo(x, yOf(v)); });
+        g.stroke();
+        g.textAlign = 'left'; g.fillStyle = '#6b7280'; g.fillText('mm per bulan', pad.l, pad.t - 2 + 10);
+      }
+      window.addEventListener('resize', function () { if (PANTAU) drawChart(); });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penapisan Lokasi Kaltim</title>
+  <meta name="description" content="Penapisan awal lokasi rencana kegiatan di Kalimantan Timur terhadap kawasan hutan, PIPPIB, PPKH, rawan bencana, sempadan, dan tutupan lahan.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
+  <style>
+    :root { --bg: #f5f6f4; --panel: #fff; --ink: #14201c; --muted: #6b7280; --line: #e3e6e1; --accent: #163a2e;
+            --merah: #c62828; --kuning: #e6a700; --hijau: #2e7d32; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; }
+    header.top { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--accent); color: #fff; flex-wrap: wrap; }
+    header.top h1 { font-size: 1.1rem; margin: 0; }
+    header.top p { margin: 0; font-size: .8rem; opacity: .8; }
+    header.top .grow { flex: 1; min-width: 200px; }
+    header.top a { color: #fff; font-size: .85rem; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 6px 12px; text-decoration: none; white-space: nowrap; }
+    main { flex: 1; display: grid; grid-template-columns: 1fr 420px; min-height: 0; }
+    #map { width: 100%; height: 100%; min-height: 320px; background: #e8ecef; }
+    aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 14px 16px 28px; }
+    aside h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 8px; }
+    aside h2:first-child { margin-top: 0; }
+    .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btns button, .btns label { font: inherit; font-size: .85rem; padding: 7px 12px; border: 1px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .btns button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btns input[type=file] { display: none; }
+    .hint { font-size: .78rem; color: var(--muted); margin: 8px 0 0; }
+    .card { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+    .verdict { display: flex; gap: 12px; align-items: center; }
+    .lamp { width: 46px; height: 46px; border-radius: 50%; flex: none; display: grid; place-items: center; color: #fff; font-size: 1.2rem; }
+    .verdict b { font-size: 1.05rem; display: block; }
+    .verdict span { color: var(--muted); font-size: .82rem; }
+    .doc { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: #f3f5f2; font-size: .85rem; }
+    table.chk { width: 100%; border-collapse: collapse; font-size: .82rem; margin-top: 6px; }
+    table.chk td { padding: 6px 4px; border-top: 1px solid var(--line); vertical-align: top; }
+    table.chk td:first-child { width: 18px; }
+    table.chk .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-top: 5px; }
+    table.chk .v { text-align: right; white-space: nowrap; color: var(--muted); }
+    table.chk small { color: var(--muted); display: block; line-height: 1.4; margin-top: 2px; }
+    .bars div { display: flex; align-items: center; gap: 8px; font-size: .8rem; margin: 3px 0; }
+    .bars .lbl { width: 92px; }
+    .bars .bar { flex: 1; height: 10px; border-radius: 5px; overflow: hidden; display: flex; background: #eef0ed; }
+    .bars .bar i { display: block; height: 100%; }
+    .ppkh li { font-size: .8rem; margin: 3px 0; }
+    .note { font-size: .75rem; color: var(--muted); margin-top: 16px; line-height: 1.5; }
+    .status { padding: 6px 16px; font-size: .8rem; background: #fff7e6; border-bottom: 1px solid #f6d58d; display: none; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; min-width: 210px; }
+    .wm-panel header { display: flex; justify-content: space-between; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 6px 10px 8px; max-height: 300px; overflow-y: auto; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-panel label { display: flex; gap: 6px; align-items: center; margin: 3px 0; cursor: pointer; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 2px; }
+    .legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font-size: 11.5px; line-height: 1.55; max-width: 230px; }
+    .legend b { display: block; margin-top: 4px; }
+    .legend b:first-child { margin-top: 0; }
+    .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+    .legend:empty { display: none; }
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
+      aside { border-left: 0; border-top: 1px solid var(--line); }
+      body { height: auto; }
+    }
+    @media print {
+      header.top a, .btns, #map, .status, .noprint { display: none !important; }
+      main { display: block; }
+      aside { border: 0; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="grow">
+      <h1><i class="fa-solid fa-clipboard-check"></i> Penapisan Lokasi Kaltim</h1>
+      <p>Pemeriksaan awal tapak rencana kegiatan terhadap kawasan hutan, moratorium, izin, bencana, dan sempadan</p>
+    </div>
+    <a href="project-amdal.html"><i class="fa-solid fa-circle-info"></i> Tentang</a>
+  </header>
+  <div class="status" id="status"></div>
+
+  <main>
+    <div id="map" role="region" aria-label="Peta penapisan lokasi Kalimantan Timur"></div>
+    <aside>
+      <h2>1. Tentukan tapak</h2>
+      <div class="btns">
+        <button type="button" class="primary" id="drawBtn"><i class="fa-solid fa-draw-polygon"></i> Gambar poligon</button>
+        <label><i class="fa-solid fa-upload"></i> Unggah<input type="file" id="fileIn" accept=".geojson,.json,.zip"></label>
+        <button type="button" id="demoBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Contoh tapak</button>
+      </div>
+      <p class="hint">Gambar batas tapak di peta, atau unggah file GeoJSON atau shapefile dalam bentuk .zip (WGS 84). Tapak harus berada di Kalimantan Timur.</p>
+
+      <h2>2. Hasil penapisan</h2>
+      <div id="report"><div class="card"><span class="hint" style="margin:0">Belum ada tapak. Gambar poligon, unggah file, atau coba contoh tapak.</span></div></div>
+
+      <p class="note">Hasil ini adalah penapisan awal berbasis peta indikatif dan bukan keputusan resmi. Penentuan wajib AMDAL, UKL-UPL, atau SPPL tetap ditetapkan oleh instansi lingkungan hidup berdasarkan jenis, skala, dan lokasi kegiatan. Data kawasan hutan, PIPPIB, dan PPKH dari Kementerian Kehutanan, indeks bahaya dari InaRISK BNPB, tutupan lahan dari ESA WorldCover 2021, sungai dan pantai dari OpenStreetMap. Semua lapisan dianalisis pada grid sekitar 110 m.</p>
+    </aside>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
+  <script src="https://unpkg.com/shpjs@4.0.4/dist/shp.min.js"></script>
+  <script>
+    (function () {
+      var KHT = 'https://geoportal.planologi.kehutanan.go.id/server/rest/services/Peta_Interaktif_2026/';
+      var BNPB = 'https://gis.bnpb.go.id/server/rest/services/inarisk/';
+      var KAWASAN = { 1: ['Kawasan Konservasi', '#ad3fff'], 2: ['Hutan Lindung', '#02ad00'], 3: ['Hutan Produksi Tetap', '#ffff00'], 4: ['Hutan Produksi Terbatas', '#8af200'],
+                      5: ['Hutan Produksi Konversi', '#ff5eff'], 6: ['Areal Penggunaan Lain', '#f3f4f6'], 7: ['Tubuh Air', '#00c5ff'] };
+      var PIPPIB = { 1: 'kawasan konservasi atau lindung', 2: 'hutan alam primer', 3: 'gambut' };
+      var TUTUPAN = { 10: ['Pohon', '#006400'], 20: ['Semak', '#ffbb22'], 30: ['Rumput', '#ffff4c'], 40: ['Lahan pertanian', '#f096ff'], 50: ['Lahan terbangun', '#fa0000'],
+                      60: ['Lahan terbuka', '#b4b4b4'], 80: ['Badan air', '#0064c8'], 90: ['Lahan basah', '#0096a0'], 95: ['Mangrove', '#00cf75'], 100: ['Lumut', '#fae6a0'] };
+      var STAT = { merah: ['#c62828', 'Kendala berat'], kuning: ['#e6a700', 'Perlu perhatian'], hijau: ['#2e7d32', 'Tidak ditemukan kendala'] };
+      var DEMO = [[-0.355, 117.07], [-0.355, 117.12], [-0.395, 117.12], [-0.395, 117.07]];   // diganti setelah data siap
+
+      var meta = null, cache = {};
+      var setStatus = function (s) { var el = document.getElementById('status'); el.textContent = s; el.style.display = s ? 'block' : 'none'; };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { maximumFractionDigits: d === undefined ? 1 : d }); };
+
+      // Peta dasar dan lapisan resmi yang ditampilkan langsung dari server pemiliknya
+      var map = L.map('map', { zoomSnap: 0.25 }).setView([0.4, 116.6], 7);
+      var bases = {
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' }),
+        'Abu-abu (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors' })
+      };
+      var activeBase = bases['Citra satelit (Esri)'].addTo(map);
+      L.control.scale({ imperial: false }).addTo(map);
+      var overlays = {
+        kawasan: { name: 'Kawasan hutan (Juni 2026)', layer: L.esri.dynamicMapLayer({ url: KHT + 'KWSHUTAN_AR_250K/MapServer', f: 'image', opacity: 0.55, attribution: 'Kementerian Kehutanan' }) },
+        pippib: { name: 'PIPPIB 2026 periode I', layer: L.esri.dynamicMapLayer({ url: KHT + 'PIPPIB_AR_250K/MapServer', f: 'image', opacity: 0.6 }) },
+        ppkh: { name: 'PPKH (Januari 2026)', layer: L.esri.dynamicMapLayer({ url: KHT + 'PPKH_AR_50K_012026/MapServer', f: 'image', opacity: 0.75 }) },
+        banjir: { name: 'Indeks bahaya banjir', layer: L.esri.imageMapLayer({ url: BNPB + 'INDEKS_BAHAYA_BANJIR/ImageServer', f: 'image', opacity: 0.6, attribution: 'InaRISK BNPB' }) },
+        longsor: { name: 'Indeks bahaya tanah longsor', layer: L.esri.imageMapLayer({ url: BNPB + 'INDEKS_BAHAYA_TANAHLONGSOR/ImageServer', f: 'image', opacity: 0.6 }) }
+      };
+      overlays.kawasan.layer.addTo(map);
+      var kabLayer = L.geoJSON(null, { style: { color: '#fff', weight: 1.2, fill: false, dashArray: '4 3' }, interactive: false }).addTo(map);
+      var siteLayer = new L.FeatureGroup().addTo(map);
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 900 ? ' collapsed' : ''));
+          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>';
+          Object.keys(overlays).forEach(function (k) { h += '<label><input type="checkbox" data-k="' + k + '"' + (map.hasLayer(overlays[k].layer) ? ' checked' : '') + '>' + overlays[k].name + '</label>'; });
+          h += '<div class="wm-group">Basemap</div>';
+          Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });
+          d.innerHTML = h + '</div>';
+          L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+          d.querySelector('header').addEventListener('click', function () { d.classList.toggle('collapsed'); });
+          d.querySelectorAll('input[data-k]').forEach(function (c) {
+            c.addEventListener('change', function () { var l = overlays[c.dataset.k].layer; if (c.checked) l.addTo(map); else map.removeLayer(l); legend(); });
+          });
+          d.querySelectorAll('input[name=base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = bases[r.value].addTo(map); activeBase.bringToBack(); });
+          });
+          return d;
+        }
+      });
+      new Panel().addTo(map);
+      var legDiv;
+      var Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd: function () { legDiv = L.DomUtil.create('div', 'legend'); return legDiv; } });
+      new Legend().addTo(map);
+      function legend() {
+        var h = '';
+        if (map.hasLayer(overlays.kawasan.layer)) h += '<b>Kawasan hutan</b>' + [1, 2, 3, 4, 5, 6].map(function (k) { return '<div><i style="background:' + KAWASAN[k][1] + ';border:1px solid #bbb"></i>' + KAWASAN[k][0] + '</div>'; }).join('');
+        if (map.hasLayer(overlays.banjir.layer) || map.hasLayer(overlays.longsor.layer)) h += '<b>Indeks bahaya</b><div><i style="background:linear-gradient(90deg,#2b83ba,#ffffbf,#d7191c)"></i>rendah sampai tinggi</div>';
+        legDiv.innerHTML = h;
+      }
+      legend();
+
+      // Menggambar tapak
+      var drawer = new L.Draw.Polygon(map, { allowIntersection: false, showArea: true, shapeOptions: { color: '#ff3d00', weight: 3, fillOpacity: 0.1 } });
+      document.getElementById('drawBtn').addEventListener('click', function () { drawer.enable(); setStatus('Klik di peta untuk menambah titik, lalu klik titik pertama untuk menutup poligon.'); });
+      map.on(L.Draw.Event.CREATED, function (e) { setStatus(''); useSite(e.layer.toGeoJSON()); });
+      document.getElementById('demoBtn').addEventListener('click', function () {
+        useSite({ type: 'Feature', properties: { nama: 'Contoh tapak' }, geometry: { type: 'Polygon', coordinates: [DEMO.map(function (p) { return [p[1], p[0]]; }).concat([[DEMO[0][1], DEMO[0][0]]])] } });
+      });
+      document.getElementById('fileIn').addEventListener('change', function (e) {
+        var f = e.target.files[0]; if (!f) return;
+        var rd = new FileReader();
+        if (/\.zip$/i.test(f.name)) {
+          rd.onload = function () { shp(rd.result).then(function (gj) { useSite(Array.isArray(gj) ? gj[0] : gj); }).catch(function () { setStatus('File shapefile tidak bisa dibaca. Pastikan .zip berisi .shp, .shx, .dbf, dan .prj.'); }); };
+          rd.readAsArrayBuffer(f);
+        } else {
+          rd.onload = function () { try { useSite(JSON.parse(rd.result)); } catch (err) { setStatus('File GeoJSON tidak valid.'); } };
+          rd.readAsText(f);
+        }
+        e.target.value = '';
+      });
+
+      // Ambil semua cincin poligon (Polygon/MultiPolygon, Feature, atau FeatureCollection)
+      function polygonsOf(gj) {
+        var out = [];
+        (function walk(g) {
+          if (!g) return;
+          if (g.type === 'FeatureCollection') g.features.forEach(function (f) { walk(f.geometry); });
+          else if (g.type === 'Feature') walk(g.geometry);
+          else if (g.type === 'Polygon') out.push(g.coordinates);
+          else if (g.type === 'MultiPolygon') g.coordinates.forEach(function (p) { out.push(p); });
+        })(gj);
+        return out;
+      }
+      function inRing(x, y, ring) {
+        var ins = false;
+        for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+          if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) ins = !ins;
+        }
+        return ins;
+      }
+      function inPoly(x, y, poly) { if (!inRing(x, y, poly[0])) return false; for (var h = 1; h < poly.length; h++) if (inRing(x, y, poly[h])) return false; return true; }
+
+      // Ubin PNG dibaca ke canvas sekali, lalu disimpan di memori
+      function loadTile(set, ix, iy) {
+        var key = set + '_' + ix + '_' + iy;
+        if (cache[key]) return cache[key];
+        cache[key] = new Promise(function (res, rej) {
+          var im = new Image();
+          im.onload = function () {
+            var c = document.createElement('canvas'); c.width = c.height = meta.ukuran;
+            var g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(im, 0, 0);
+            res(g.getImageData(0, 0, meta.ukuran, meta.ukuran).data);
+          };
+          im.onerror = rej; im.src = 'assets/data/amdal/' + key + '.png';
+        });
+        return cache[key];
+      }
+
+      function useSite(gj) {
+        var polys = polygonsOf(gj);
+        if (!polys.length) { setStatus('Tidak ditemukan poligon di file tersebut.'); return; }
+        siteLayer.clearLayers();
+        var lyr = L.geoJSON({ type: 'MultiPolygon', coordinates: polys }, { style: { color: '#ff3d00', weight: 3, fillOpacity: 0.08 } }).addTo(siteLayer);
+        map.fitBounds(lyr.getBounds(), { padding: [40, 40], maxZoom: 14 });
+        analyse(polys, gj);
+      }
+
+      function analyse(polys, gj) {
+        var b = L.geoJSON({ type: 'MultiPolygon', coordinates: polys }).getBounds();
+        var R = meta.res, n = meta.ukuran, PAD = 3;                       // PAD sel untuk memeriksa "berbatasan langsung"
+        var c0 = Math.floor((b.getWest() - meta.x0) / R) - PAD, c1 = Math.ceil((b.getEast() - meta.x0) / R) + PAD;
+        var r0 = Math.floor((meta.y1 - b.getNorth()) / R) - PAD, r1 = Math.ceil((meta.y1 - b.getSouth()) / R) + PAD;
+        if (c1 - c0 > 4000 || r1 - r0 > 4000) { setStatus('Tapak terlalu besar. Gunakan tapak kurang dari sekitar 4° × 4°.'); return; }
+        var tilesNeeded = {};
+        for (var r = r0; r <= r1; r++) for (var c = c0; c <= c1; c++) tilesNeeded[Math.floor(c / n) + '_' + Math.floor(r / n)] = true;
+        var keys = Object.keys(tilesNeeded).filter(function (k) { return meta.ubin.some(function (u) { return u[0] + '_' + u[1] === k; }); });
+        if (!keys.length) { setStatus('Tapak berada di luar Kalimantan Timur.'); renderEmpty(); return; }
+        setStatus('Menganalisis tapak…');
+        var jobs = [];
+        keys.forEach(function (k) { ['a', 'b', 'c', 'd'].forEach(function (s) { var p = k.split('_'); jobs.push(loadTile(s, +p[0], +p[1]).then(function (d) { return [s + k, d]; })); }); });
+        Promise.all(jobs).then(function (res) {
+          var T = {}; res.forEach(function (x) { T[x[0]] = x[1]; });
+          var px = function (s, c, r) {                                    // nilai RGB satu sel; null jika ubin tidak ada
+            var k = s + Math.floor(c / n) + '_' + Math.floor(r / n), d = T[k]; if (!d) return null;
+            var i = ((r % n) * n + (c % n)) * 4; return [d[i], d[i + 1], d[i + 2]];
+          };
+          var W = c1 - c0 + 1, H = r1 - r0 + 1, mask = new Uint8Array(W * H), ncell = 0;
+          for (var r = 0; r < H; r++) for (var c = 0; c < W; c++) {
+            var x = meta.x0 + (c0 + c + 0.5) * R, y = meta.y1 - (r0 + r + 0.5) * R;
+            if (polys.some(function (p) { return inPoly(x, y, p); })) { mask[r * W + c] = 1; ncell++; }
+          }
+          if (!ncell) {                                                   // tapak lebih kecil dari satu sel: pakai sel di titik tengahnya
+            var cc = b.getCenter(); mask[Math.floor((meta.y1 - cc.lat) / R - r0) * W + Math.floor((cc.lng - meta.x0) / R - c0)] = 1; ncell = 1;
+          }
+          var S = { cells: 0, luas: 0, kawasan: {}, pippib: {}, ppkh: {}, bahaya: { banjir: [0, 0, 0], longsor: [0, 0, 0], karhutla: [0, 0, 0] },
+                    tutupan: {}, kab: {}, dSungai: 1e9, dPantai: 1e9, dBangun: 1e9, sempadanSungai: 0, sempadanPantai: 0, luar: 0, tetanggaLindung: {} };
+          for (var r = 0; r < H; r++) for (var c = 0; c < W; c++) {
+            var gc = c0 + c, gr = r0 + r, lat = meta.y1 - (gr + 0.5) * R;
+            var aCell = Math.pow(R * 111320, 2) * Math.cos(lat * Math.PI / 180) / 1e4;   // luas sel (ha)
+            var A = px('a', gc, gr), B = px('b', gc, gr), C = px('c', gc, gr), D = px('d', gc, gr);
+            if (!mask[r * W + c]) {
+              if (A && (A[0] === 1 || A[0] === 2)) {                      // kawasan lindung di sekitar tapak (≤ 3 sel)
+                var near = false;
+                for (var dr = -PAD; dr <= PAD && !near; dr++) for (var dc = -PAD; dc <= PAD && !near; dc++) {
+                  var rr = r + dr, c2 = c + dc; if (rr >= 0 && rr < H && c2 >= 0 && c2 < W && mask[rr * W + c2]) near = true;
+                }
+                if (near) S.tetanggaLindung[A[0]] = true;
+              }
+              continue;
+            }
+            S.cells++; S.luas += aCell;
+            if (!D || D[1] === 0) { S.luar += aCell; continue; }
+            S.kab[D[1]] = (S.kab[D[1]] || 0) + aCell;
+            S.kawasan[A[0]] = (S.kawasan[A[0]] || 0) + aCell;
+            if (A[1]) S.pippib[A[1]] = (S.pippib[A[1]] || 0) + aCell;
+            if (A[2]) S.ppkh[A[2]] = (S.ppkh[A[2]] || 0) + aCell;
+            [['banjir', 0], ['longsor', 1], ['karhutla', 2]].forEach(function (h) {
+              var v = B[h[1]]; if (v) S.bahaya[h[0]][v <= 84 ? 0 : v <= 167 ? 1 : 2] += aCell;
+            });
+            S.tutupan[C[0]] = (S.tutupan[C[0]] || 0) + aCell;
+            var ds = C[1] * 20, dp = C[2] * 20, db = D[0] * 20;
+            S.dSungai = Math.min(S.dSungai, ds); S.dPantai = Math.min(S.dPantai, dp); S.dBangun = Math.min(S.dBangun, db);
+            if (ds <= 100) S.sempadanSungai += aCell;
+            if (dp <= 100) S.sempadanPantai += aCell;
+          }
+          S.luasPoligon = geoArea(polys);
+          setStatus('');
+          render(S, gj, polys);
+          fetchPPKH(polys);
+        }).catch(function () { setStatus('Data batasan gagal dimuat. Muat ulang halaman lalu coba lagi.'); });
+      }
+
+      // Luas geodesik poligon (ha), rumus luas bola sederhana
+      function geoArea(polys) {
+        var Rr = 6378137, tot = 0;
+        polys.forEach(function (p) {
+          p.forEach(function (ring, ri) {
+            var s = 0;
+            for (var i = 0; i < ring.length - 1; i++) {
+              var a = ring[i], b2 = ring[i + 1];
+              s += (b2[0] - a[0]) * Math.PI / 180 * (2 + Math.sin(a[1] * Math.PI / 180) + Math.sin(b2[1] * Math.PI / 180));
+            }
+            tot += (ri === 0 ? 1 : -1) * Math.abs(s * Rr * Rr / 2);
+          });
+        });
+        return tot / 1e4;
+      }
+
+      function renderEmpty() {
+        document.getElementById('report').innerHTML = '<div class="card"><span class="hint" style="margin:0">Tapak berada di luar wilayah Kalimantan Timur, jadi tidak bisa dianalisis.</span></div>';
+      }
+
+      function render(S, gj, polys) {
+        var L0 = S.luas - S.luar, pct = function (v) { return L0 ? v / L0 * 100 : 0; };
+        var rows = [], add = function (st, judul, nilai, ket) { rows.push({ st: st, judul: judul, nilai: nilai, ket: ket }); };
+        var ha = function (v) { return fmt(v, v < 10 ? 1 : 0) + ' ha (' + fmt(pct(v), 0) + '%)'; };
+        var lindungDalam = false, lindungBatas = false, alasan = [];
+
+        // Kawasan hutan
+        var kk = S.kawasan[1] || 0, hl = S.kawasan[2] || 0, hp = (S.kawasan[3] || 0) + (S.kawasan[4] || 0), hpk = S.kawasan[5] || 0;
+        if (kk) { add('merah', 'Kawasan konservasi', ha(kk), 'Kegiatan di kawasan konservasi sangat dibatasi dan pada umumnya tidak dapat diberikan untuk kegiatan seperti tambang atau perkebunan.'); lindungDalam = true; alasan.push('kawasan konservasi'); }
+        if (hl) { add('merah', 'Hutan lindung', ha(hl), 'Penambangan dengan pola terbuka dilarang di hutan lindung (UU No. 41/1999). Penggunaan lain memerlukan Persetujuan Penggunaan Kawasan Hutan.'); lindungDalam = true; alasan.push('hutan lindung'); }
+        if (hp) add('kuning', 'Hutan produksi (tetap dan terbatas)', ha(hp), 'Kegiatan non-kehutanan memerlukan Persetujuan Penggunaan Kawasan Hutan (PPKH) dari Kementerian Kehutanan.');
+        if (hpk) add('kuning', 'Hutan produksi yang dapat dikonversi', ha(hpk), 'Dapat dilepaskan untuk kegiatan non-kehutanan melalui pelepasan kawasan hutan, atau digunakan melalui PPKH.');
+        if (!kk && !hl && !hp && !hpk) add('hijau', 'Kawasan hutan', 'Tidak bertampalan', 'Tapak berada di Areal Penggunaan Lain (APL) atau tubuh air.');
+        if (!lindungDalam && (S.tetanggaLindung[1] || S.tetanggaLindung[2])) {
+          lindungBatas = true; alasan.push('berbatasan dengan ' + (S.tetanggaLindung[1] ? 'kawasan konservasi' : 'hutan lindung'));
+          add('kuning', 'Berbatasan dengan kawasan lindung', '≤ ' + Math.round(3 * meta.res * 111320) + ' m', 'Tapak berada sangat dekat dengan ' + (S.tetanggaLindung[1] ? 'kawasan konservasi' : 'hutan lindung') + '. Kegiatan yang berbatasan langsung dengan kawasan lindung pada umumnya wajib AMDAL.');
+        }
+        // PIPPIB
+        var pp = Object.keys(S.pippib);
+        if (pp.length) add('merah', 'PIPPIB (moratorium izin baru)', ha(pp.reduce(function (s, k) { return s + S.pippib[k]; }, 0)),
+          'Bertampalan dengan ' + pp.map(function (k) { return PIPPIB[k]; }).join(', ') + '. Izin baru di areal PIPPIB dihentikan, kecuali untuk kegiatan tertentu yang dikecualikan.');
+        else add('hijau', 'PIPPIB (moratorium izin baru)', 'Tidak bertampalan', '');
+        if (S.pippib[3]) { lindungDalam = true; alasan.push('gambut dalam PIPPIB'); }
+        // PPKH yang sudah ada
+        var pk = (S.ppkh[1] || 0) + (S.ppkh[2] || 0) + (S.ppkh[3] || 0);
+        if (pk) add('kuning', 'Persetujuan penggunaan kawasan hutan yang sudah ada', ha(pk), (S.ppkh[1] ? 'Termasuk areal tambang. ' : '') + 'Periksa kemungkinan tumpang tindih dengan pemegang persetujuan lain. Daftar nama ada di bawah.');
+        // Sempadan
+        if (S.sempadanSungai) { add('merah', 'Sempadan sungai', ha(S.sempadanSungai), 'Bagian tapak berjarak ≤ 100 m dari sungai. Sempadan sungai termasuk kawasan perlindungan setempat (Permen PUPR No. 28/2015, 50–100 m di luar kawasan perkotaan).'); lindungDalam = true; alasan.push('sempadan sungai'); }
+        if (S.sempadanPantai) { add('merah', 'Sempadan pantai', ha(S.sempadanPantai), 'Bagian tapak berjarak ≤ 100 m dari garis pantai (Perpres No. 51/2016).'); lindungDalam = true; alasan.push('sempadan pantai'); }
+        if (!S.sempadanSungai && !S.sempadanPantai) add('hijau', 'Sempadan sungai dan pantai', 'Di luar sempadan', 'Sungai terdekat ' + jarak(S.dSungai) + ', pantai terdekat ' + jarak(S.dPantai) + '.');
+        // Bencana
+        var bah = { banjir: 'banjir', longsor: 'tanah longsor', karhutla: 'kebakaran hutan dan lahan' }, tinggi = [];
+        Object.keys(bah).forEach(function (k) { if (pct(S.bahaya[k][2]) >= 10) tinggi.push(bah[k] + ' ' + fmt(pct(S.bahaya[k][2]), 0) + '%'); });
+        if (tinggi.length) add('kuning', 'Rawan bencana', 'Bahaya tinggi', 'Bagian tapak dengan indeks bahaya tinggi: ' + tinggi.join(', ') + '. Perlu kajian mitigasi dalam dokumen lingkungan.');
+        else add('hijau', 'Rawan bencana', 'Rendah sampai sedang', 'Tidak ada bahaya tinggi yang mencakup ≥ 10% tapak.');
+        // Tutupan lahan dan permukiman
+        var hutan = (S.tutupan[10] || 0), mang = (S.tutupan[95] || 0);
+        if (mang) add('kuning', 'Mangrove', ha(mang), 'Ekosistem mangrove memiliki fungsi perlindungan pantai dan stok karbon tinggi.');
+        if (pct(hutan) >= 50) add('kuning', 'Tutupan pohon', ha(hutan), 'Lebih dari separuh tapak masih berupa tutupan pohon, sehingga kegiatan berpotensi menyebabkan deforestasi.');
+        if (S.dBangun <= 500) add('kuning', 'Dekat permukiman', jarak(S.dBangun), 'Lahan terbangun berada dalam jarak ≤ 500 m. Dampak debu, kebisingan, dan sosial perlu dikaji.');
+        else add('hijau', 'Jarak ke permukiman', jarak(S.dBangun), 'Lahan terbangun terdekat berjarak lebih dari 500 m.');
+
+        var worst = rows.some(function (x) { return x.st === 'merah'; }) ? 'merah' : rows.some(function (x) { return x.st === 'kuning'; }) ? 'kuning' : 'hijau';
+        var kabUtama = Object.keys(S.kab).sort(function (a, b) { return S.kab[b] - S.kab[a]; }).map(function (k) { return meta.kabupaten[k]; });
+        var doc = (lindungDalam || lindungBatas)
+          ? '<b>Indikasi wajib AMDAL.</b> Tapak berada di dalam atau berbatasan langsung dengan kawasan lindung (' + alasan.join(', ') + '). Menurut PP No. 22/2021 dan PermenLHK No. 4/2021, kegiatan di lokasi seperti ini pada umumnya wajib AMDAL, apa pun skalanya.'
+          : '<b>Ditentukan oleh jenis dan skala kegiatan.</b> Lokasi tidak memicu kewajiban AMDAL. Dokumen yang dibutuhkan (AMDAL, UKL-UPL, atau SPPL) mengikuti daftar jenis dan skala usaha di Lampiran I PermenLHK No. 4/2021.';
+
+        var h = '<div class="card"><div class="verdict"><div class="lamp" style="background:' + STAT[worst][0] + '"><i class="fa-solid ' + (worst === 'hijau' ? 'fa-check' : worst === 'kuning' ? 'fa-exclamation' : 'fa-xmark') + '"></i></div><div><b>' + STAT[worst][1] +
+          '</b><span>' + fmt(S.luasPoligon, S.luasPoligon < 10 ? 1 : 0) + ' ha · ' + (kabUtama.join(', ') || 'di luar Kaltim') + (S.luar > 0.05 * S.luas ? ' · sebagian di luar Kaltim' : '') + '</span></div></div>' +
+          '<div class="doc">' + doc + '</div>';
+        h += '<table class="chk">' + rows.sort(function (a, b) { return ['merah', 'kuning', 'hijau'].indexOf(a.st) - ['merah', 'kuning', 'hijau'].indexOf(b.st); }).map(function (x) {
+          return '<tr><td><span class="dot" style="background:' + STAT[x.st][0] + '"></span></td><td><b>' + x.judul + '</b>' + (x.ket ? '<small>' + x.ket + '</small>' : '') + '</td><td class="v">' + x.nilai + '</td></tr>';
+        }).join('') + '</table></div>';
+
+        h += '<h2>Indeks bahaya (InaRISK)</h2><div class="card bars">' + Object.keys(bah).map(function (k) {
+          var v = S.bahaya[k], t = L0 || 1;                               // sisa bar (abu-abu) = di luar area bahaya InaRISK
+          return '<div><span class="lbl">' + bah[k].replace('kebakaran hutan dan lahan', 'Karhutla').replace(/^./, function (s) { return s.toUpperCase(); }) + '</span><span class="bar">' +
+            '<i style="width:' + v[0] / t * 100 + '%;background:#7fbf7b"></i><i style="width:' + v[1] / t * 100 + '%;background:#fdae61"></i><i style="width:' + v[2] / t * 100 + '%;background:#d7191c"></i></span><span>' + fmt(v[2] / t * 100, 0) + '%</span></div>';
+        }).join('') + '<p class="hint">Hijau rendah, jingga sedang, merah tinggi, abu-abu di luar area bahaya yang dipetakan InaRISK. Angka di kanan adalah porsi tapak dengan bahaya tinggi.</p></div>';
+
+        h += '<h2>Tutupan lahan (WorldCover 2021)</h2><div class="card bars">' + Object.keys(S.tutupan).filter(function (k) { return TUTUPAN[k]; }).sort(function (a, b) { return S.tutupan[b] - S.tutupan[a]; }).map(function (k) {
+          return '<div><span class="lbl">' + TUTUPAN[k][0] + '</span><span class="bar"><i style="width:' + pct(S.tutupan[k]) + '%;background:' + TUTUPAN[k][1] + '"></i></span><span>' + fmt(pct(S.tutupan[k]), 0) + '%</span></div>';
+        }).join('') + '</div>';
+
+        h += '<h2>Persetujuan penggunaan kawasan hutan di tapak</h2><div class="card ppkh" id="ppkhList"><span class="hint" style="margin:0">Memuat daftar dari Geoportal Kementerian Kehutanan…</span></div>';
+        h += '<div class="btns noprint" style="margin-top:14px"><button type="button" id="printBtn"><i class="fa-solid fa-print"></i> Cetak laporan</button><button type="button" id="dlBtn"><i class="fa-solid fa-download"></i> Unduh tapak (GeoJSON)</button></div>';
+        document.getElementById('report').innerHTML = h;
+        document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+        document.getElementById('dlBtn').addEventListener('click', function () {
+          var a = document.createElement('a'); a.download = 'tapak.geojson';
+          a.href = URL.createObjectURL(new Blob([JSON.stringify({ type: 'Feature', properties: {}, geometry: { type: 'MultiPolygon', coordinates: polys } })], { type: 'application/geo+json' }));
+          a.click();
+        });
+        if (window.innerWidth <= 900) document.getElementById('report').scrollIntoView({ behavior: 'smooth' });
+      }
+      function jarak(m) { return m >= 5000 ? '≥ 5 km' : m === 0 ? 'di dalam tapak' : m >= 1000 ? fmt(m / 1000, 1) + ' km' : Math.round(m) + ' m'; }
+
+      // Nama pemegang PPKH diambil langsung dari layanan resmi
+      function fetchPPKH(polys) {
+        var geom = { rings: [].concat.apply([], polys), spatialReference: { wkid: 4326 } };
+        var q = function (id) {
+          var body = new URLSearchParams({ geometry: JSON.stringify(geom), geometryType: 'esriGeometryPolygon', inSR: '4326', spatialRel: 'esriSpatialRelIntersects',
+                                           outFields: 'NAMA_PPKH,JENIS_PPKH,STATUS,LUAS_PPKH', returnGeometry: 'false', f: 'json' });
+          return fetch(KHT + 'PPKH_AR_50K_012026/MapServer/' + id + '/query', { method: 'POST', body: body }).then(function (r) { return r.json(); });
+        };
+        Promise.all([q(1), q(2)]).then(function (res) {
+          var list = [].concat(res[0].features || [], (res[1].features || []).map(function (f) { f.attributes.JENIS_PPKH = 'Eksplorasi'; return f; }));
+          var el = document.getElementById('ppkhList'); if (!el) return;
+          el.innerHTML = list.length ? '<ul style="margin:0;padding-left:18px">' + list.map(function (f) {
+            var a = f.attributes; return '<li><b>' + a.NAMA_PPKH + '</b> · ' + a.JENIS_PPKH + ' · ' + fmt(a.LUAS_PPKH || 0, 0) + ' ha · ' + (a.STATUS || '-') + '</li>';
+          }).join('') + '</ul>' : '<span class="hint" style="margin:0">Tidak ada persetujuan penggunaan kawasan hutan yang bertampalan dengan tapak.</span>';
+        }).catch(function () {
+          var el = document.getElementById('ppkhList'); if (el) el.innerHTML = '<span class="hint" style="margin:0">Daftar tidak dapat dimuat dari Geoportal Kementerian Kehutanan saat ini.</span>';
+        });
+      }
+
+      Promise.all([
+        fetch('assets/data/amdal/meta.json').then(function (r) { return r.json(); }),
+        fetch('assets/data/amdal/kaltim.geojson').then(function (r) { return r.json(); })
+      ]).then(function (x) {
+        meta = x[0]; kabLayer.addData(x[1]);
+        if (meta.contoh) DEMO = meta.contoh;
+        if (!siteLayer.getLayers().length) map.fitBounds(kabLayer.getBounds(), { padding: [10, 10] });
+      }).catch(function () { setStatus('Data dasar aplikasi gagal dimuat.'); });
+    })();
+  </script>
+</body>
+</html>

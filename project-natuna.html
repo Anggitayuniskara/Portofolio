@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mendeteksi Kapal Ikan Mencurigakan di Laut Natuna Utara 2024–2026 dengan Data AIS</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .data-table tr.group-row td { background: #f3f4f6; font-weight: 700; text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+
+    #shipMap { width: 100%; height: 580px; border-radius: 12px; border: 1px solid var(--line); background: #0b1726; }
+    .post-content #shipMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: center; margin-top: 6px; }
+    .time-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .time-bar button { font: inherit; font-size: 0.85rem; padding: 6px 14px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; min-width: 92px; }
+    .time-bar button.on { background: #111827; color: #fff; border-color: #111827; }
+    .time-bar input[type=range] { flex: 1; min-width: 180px; }
+    .time-label { font-weight: 700; min-width: 240px; }
+    .time-label span { font-weight: 400; color: #6b7280; font-size: 0.85rem; margin-left: 6px; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 230px; }
+    .wm-panel header { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 8px 10px; max-height: 340px; overflow-y: auto; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 4px; }
+    .wm-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .wm-row select { width: 100%; font: inherit; padding: 3px 4px; margin-bottom: 4px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 12px/1.5 system-ui, sans-serif; color: #222; max-width: 240px; }
+    .wm-legend h4 { margin: 6px 0 2px; font-size: 12px; }
+    .wm-legend h4:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 50%; }
+    .wm-legend i.line { width: 16px; height: 0; border-radius: 0; border-top: 2px dashed #f8fafc; background: none; vertical-align: 3px; box-shadow: 0 0 0 1px #9ca3af inset; }
+    .wm-legend i.area { border-radius: 2px; border: 2px solid #4ade80; background: transparent; }
+    .wm-legend i.ring { background: #facc15; border: 2px solid #111; }
+    .wm-legend span { color: #666; }
+    .wm-home a { font-size: 15px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    .wm-popup .ttl { font-weight: 700; padding-bottom: 4px; }
+    .ship-label { background: #facc15; border: 1px solid #111; border-radius: 3px; font: 700 10px/1 system-ui, sans-serif; padding: 2px 3px; color: #111; white-space: nowrap; }
+    @media (max-width: 600px) {
+      #shipMap { height: 460px; }
+      .wm-legend { font-size: 10px; padding: 6px 8px; max-width: 150px; }
+      .wm-legend h4 { font-size: 10px; }
+      .wm-legend span { display: none; }
+      .time-label { min-width: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Maritime Surveillance</span>
+      <h1>Mendeteksi Kapal Ikan Mencurigakan di Laut Natuna Utara 2024–2026 dengan Data AIS</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Laut Natuna Utara adalah salah satu perairan paling kaya ikan di Indonesia, sekaligus salah satu yang paling sering didatangi kapal asing. Hal ini terjadi karena letaknya berbatasan langsung dengan perairan Malaysia dan Vietnam, dan sebagian wilayahnya juga tumpang tindih dengan klaim sembilan garis putus-putus Tiongkok yang tidak diakui Indonesia. Kasus kapal ikan asing yang ditangkap di perairan ini hampir selalu muncul setiap tahun.</p>
+      <p>Masalahnya, luas Zona Ekonomi Eksklusif (ZEE) Indonesia di kawasan ini lebih dari 250 ribu km², hampir dua kali luas Pulau Jawa. Kapal patroli tidak mungkin mengawasi semuanya sekaligus. Di sinilah data satelit bisa membantu. Sebagian besar kapal besar memancarkan sinyal AIS (Automatic Identification System) yang berisi posisi, kecepatan, dan identitasnya. Dari pola pergerakan itu, bisa diketahui kapal mana yang sedang menangkap ikan, kapal mana yang berhenti lama di tengah laut, dan di mana semua itu terjadi.</p>
+      <p>Proyek ini mencoba menjawab tiga pertanyaan. Seberapa sering kapal asing tercatat menangkap ikan di ZEE Indonesia di Laut Natuna Utara? Di mana dan kapan mereka paling sering muncul? Dan dari ratusan kapal yang tercatat, kapal mana yang paling layak diperiksa lebih dulu?</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kejadian menangkap ikan (fishing events), Januari 2024–Oktober 2026</td><td>Titik kejadian</td><td>Sekunder</td><td>Global Fishing Watch API v3</td></tr>
+            <tr><td>Kejadian berhenti lama di laut (loitering events), Januari 2024–Oktober 2026</td><td>Titik kejadian</td><td>Sekunder</td><td>Global Fishing Watch API v3</td></tr>
+            <tr><td>Batas ZEE Indonesia dan garis batas dengan negara tetangga</td><td>Vektor</td><td>Sekunder</td><td>Marine Regions (VLIZ)</td></tr>
+            <tr><td>Kawasan konservasi perairan</td><td>Vektor</td><td>Sekunder</td><td>World Database on Protected Areas (UNEP-WCMC)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Global Fishing Watch mengolah miliaran sinyal AIS dari seluruh dunia dan memakai model machine learning untuk menandai kapan sebuah kapal sedang menangkap ikan, berdasarkan pola kecepatan dan arah geraknya. Setiap kejadian dicatat lengkap dengan posisi, waktu mulai dan selesai, bendera kapal, serta jaraknya dari pelabuhan. Kawasan studi dibatasi pada bagian ZEE Indonesia di sebelah utara Kepulauan Natuna, antara 104,8°–110,0° BT dan 2,0°–6,8° LU.</p>
+
+      <h2>Metode</h2>
+
+      <p>Langkah pertama adalah mengumpulkan semua kejadian menangkap ikan dan berhenti lama di kawasan studi, bulan demi bulan dari Januari 2024 sampai Oktober 2026. Kejadian berhenti lama hanya diambil untuk kapal ikan dan kapal pengangkut yang berada lebih dari 50 km dari pelabuhan. Kapal yang berhenti di dekat pelabuhan umumnya hanya sedang berlabuh atau menunggu giliran bongkar muatan, sehingga tidak perlu dicurigai. Lain halnya jika kapal berhenti berjam-jam di tengah laut, jauh dari pelabuhan. Kapal itu bisa saja sedang berlindung dari cuaca buruk, tetapi bisa juga sedang memindahkan hasil tangkapan ke kapal lain secara diam-diam, supaya ikannya tidak tercatat saat kembali ke pelabuhan.</p>
+      <p>Setelah itu, setiap kapal diberi skor dengan dua cara. Cara pertama adalah skor aturan, yaitu poin yang ditambahkan setiap kali sebuah kapal menunjukkan perilaku yang patut dicurigai. Bobotnya bisa dilihat pada tabel berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Perilaku</th>
+              <th>Poin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kapal berbendera asing tercatat menangkap ikan di ZEE Indonesia</td><td>50</td></tr>
+            <tr><td>Kapal berbendera asing hanya berhenti lama, tanpa tercatat menangkap ikan</td><td>20</td></tr>
+            <tr><td>Menangkap ikan di dalam kawasan konservasi perairan</td><td>20</td></tr>
+            <tr><td>Menangkap ikan kurang dari 20 km dari garis batas ZEE</td><td>15</td></tr>
+            <tr><td>Berhenti lama lebih dari 50 km dari pelabuhan, total 72 jam atau lebih</td><td>15</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Total poin dibatasi sampai 100, lalu dikelompokkan menjadi empat kategori, yaitu rendah (0–19), perlu dicermati (20–39), tinggi (40–59), dan sangat tinggi (60–100).</p>
+      <p>Bobot ini ditentukan berdasarkan seberapa kecil kemungkinan sebuah perilaku punya alasan yang sah. Kapal asing yang menangkap ikan mendapat poin terbesar, karena Indonesia tidak lagi memberikan izin tangkap untuk kapal berbendera asing. Sebaliknya, berhenti lama atau berada dekat garis batas hanya diberi poin kecil, karena keduanya bisa terjadi karena alasan yang wajar, seperti cuaca buruk atau posisi AIS yang sedikit meleset. Batas 72 jam dipilih karena separuh kapal yang pernah berhenti lama jauh dari pelabuhan hanya berhenti kurang dari 30 jam secara total, sehingga yang terjaring hanya kapal yang jauh di atas kebiasaan. Dengan susunan ini, satu bukti kuat ditambah satu bukti pendukung sudah cukup untuk membuat sebuah kapal masuk kategori sangat tinggi.</p>
+      <p>Untuk memastikan daftar prioritas benar-benar mencerminkan perilaku kapal, bukan sekadar hasil dari angka bobot yang dipilih, dilakukan uji sensitivitas. Setiap bobot diubah secara acak antara 50% sampai 150% dari nilai awalnya, misalnya poin kapal asing yang menangkap ikan bisa menjadi 25 atau 75, lalu semua kapal diurutkan ulang. Percobaan ini diulang 2.000 kali dengan kombinasi bobot yang berbeda-beda. Jika kapal yang sama tetap muncul di urutan teratas, berarti daftar prioritas ini cukup kokoh dan bisa dipercaya.</p>
+      <p>Cara kedua memakai Isolation Forest, sebuah metode machine learning yang mencari data paling "aneh" dibanding yang lain. Cara kerjanya mirip permainan tebak-tebakan. Data dipotong-potong secara acak berulang kali, dan kapal yang bisa dipisahkan dari kelompoknya hanya dengan sedikit potongan dianggap tidak biasa. Model ini melihat delapan ciri setiap kapal sekaligus, mulai dari bendera, lama menangkap ikan, aktivitas di kawasan konservasi, jarak ke perbatasan, lama berhenti di laut, sampai berapa bulan kapal itu aktif. Sebanyak 5% kapal dengan pola paling berbeda ditandai sebagai anomali.</p>
+      <p>Dua cara ini sengaja dipakai bersamaan. Skor aturan hanya menangkap perilaku yang sudah kita duga sebelumnya, sedangkan Isolation Forest bisa menemukan pola janggal yang tidak terpikirkan saat aturan dibuat.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Selama Januari 2024 sampai Oktober 2026, tercatat 864 kapal yang menangkap ikan atau berhenti lama di kawasan studi. Sebanyak 565 kapal berbendera Indonesia, 284 kapal berbendera asing, dan 15 kapal tidak diketahui benderanya. Kapal asing terbanyak berasal dari Tiongkok (170 kapal) dan Vietnam (73 kapal). Namun, tidak semua kapal asing tercatat menangkap ikan. Sebagian besar hanya berhenti lama, mungkin sedang melintas atau menunggu. Kapal asing yang benar-benar tercatat menangkap ikan di ZEE Indonesia ada 107 kapal, dengan total 272 kejadian.</p>
+
+      <div class="stat-row">
+        <div><strong>107</strong><span>Kapal asing yang tercatat menangkap ikan di ZEE Indonesia</span></div>
+        <div><strong>272</strong><span>Kejadian menangkap ikan oleh kapal asing</span></div>
+        <div><strong>39</strong><span>Kapal dengan skor kecurigaan sangat tinggi</span></div>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/natuna-tren-bulanan.png" target="_blank" rel="noopener">
+          <img src="assets/maps/natuna-tren-bulanan.png" alt="Grafik jumlah kapal berbendera Indonesia dan asing yang tercatat menangkap ikan per bulan di Laut Natuna Utara dari Januari 2024 sampai Oktober 2026">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Jumlah kapal yang tercatat menangkap ikan per bulan di ZEE Indonesia, Laut Natuna Utara, Januari 2024–Oktober 2026</figcaption>
+      </figure>
+
+      <p>Kapal Indonesia jelas mendominasi. Rata-rata ada 55 kapal Indonesia yang menangkap ikan setiap bulan, sedangkan kapal asing hanya sekitar 4 kapal. Kapal asing muncul hampir setiap bulan, dan paling ramai pada September sampai November. Pada tiga bulan itu tercatat 134 kejadian, hampir separuh dari seluruh kejadian kapal asing. Bulan dengan kapal asing terbanyak adalah Juni 2026 dengan 11 kapal.</p>
+      <p>Jumlah kapal Indonesia yang tercatat pada 2026 terlihat lebih sedikit dibanding dua tahun sebelumnya, yaitu 188 kapal, sementara pada 2024 ada 256 kapal dan pada 2025 ada 275 kapal. Penurunan ini belum tentu berarti aktivitas penangkapan ikan berkurang. Bisa jadi lebih banyak kapal yang mematikan atau tidak memasang AIS, atau data tahun berjalan belum diproses sepenuhnya oleh Global Fishing Watch.</p>
+
+      <p>Peta di bawah memperlihatkan di mana kapal-kapal ini menangkap ikan dari bulan ke bulan. Tekan tombol putar untuk melihat perubahannya, atau tekan "Semua bulan" untuk melihat seluruh kejadian sekaligus.</p>
+
+      <figure class="chart-figure">
+        <div id="shipMap" role="region" aria-label="Peta interaktif kejadian menangkap ikan dan berhenti lama di Laut Natuna Utara 2024 sampai 2026"></div>
+        <div class="time-bar">
+          <button type="button" id="playBtn"><i class="fa-solid fa-play"></i> Putar</button>
+          <button type="button" id="allBtn">Semua bulan</button>
+          <input type="range" id="monthSlider" min="0" max="33" value="21" aria-label="Pilih bulan">
+          <div class="time-label" id="monthLabel">Oktober 2025</div>
+        </div>
+        <p class="map-hint">Klik sebuah titik untuk melihat detail kejadian. Pilih kapal pada menu "Sorot kapal prioritas" untuk melihat seluruh jejaknya. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 2.</strong> Peta interaktif kejadian menangkap ikan dan berhenti lama di ZEE Indonesia, Laut Natuna Utara, Januari 2024–Oktober 2026</figcaption>
+      </figure>
+
+      <p>Polanya cukup jelas. Kapal Indonesia menyebar luas di bagian selatan dan tengah kawasan, sedangkan kapal asing berkumpul di dua tempat. Kapal Vietnam paling banyak muncul di bagian utara, tidak jauh dari garis batas dengan Vietnam. Kapal Tiongkok terbagi di dua tempat, yaitu di bagian utara bersama kapal Vietnam, dan di bagian barat daya yang dekat dengan garis batas Malaysia. Separuh kejadian kapal asing berada dalam jarak 46 km dari garis batas, sementara separuh kejadian kapal Indonesia berada lebih dari 122 km dari garis batas. Artinya, sebagian besar kapal asing tidak masuk terlalu jauh, tetapi tetap berada di dalam wilayah Indonesia. Ada 67 kejadian kapal asing yang terjadi kurang dari 20 km dari garis batas.</p>
+      <p>Di kawasan konservasi, tercatat 650 kejadian menangkap ikan oleh 115 kapal. Hampir semuanya terjadi di Kawasan Konservasi Kepulauan Anambas dan Laut Sekitarnya, dan hanya 4 kejadian yang dilakukan kapal asing. Perlu dicatat, kawasan Anambas termasuk kategori VI IUCN, yaitu kawasan konservasi yang tetap mengizinkan penangkapan ikan secara terbatas di zona tertentu. Jadi menangkap ikan di sini tidak otomatis melanggar aturan, tetapi tetap perlu dicek apakah terjadi di zona yang diperbolehkan.</p>
+
+      <h3>Kapal yang paling layak diperiksa</h3>
+
+      <p>Dari skor aturan, 39 kapal masuk kategori sangat tinggi dan 102 kapal masuk kategori tinggi. Semua kapal kategori sangat tinggi adalah kapal ikan berbendera asing, terutama dari Tiongkok (24 kapal) dan Vietnam (12 kapal). Isolation Forest menandai 44 kapal sebagai anomali, dan 29 di antaranya juga masuk kategori tinggi atau sangat tinggi. Artinya, kedua cara ini cukup sejalan dalam menunjuk kapal yang perlu diperhatikan.</p>
+      <p>Tabel di bawah berisi 12 kapal asing dengan skor tertinggi dan 5 kapal Indonesia yang paling janggal menurut Isolation Forest. Identitas kapal sengaja disamarkan, karena daftar ini adalah petunjuk awal untuk diperiksa, bukan bukti pelanggaran.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kapal</th>
+              <th>Bendera</th>
+              <th>Skor aturan</th>
+              <th>Skor anomali</th>
+              <th>Kejadian menangkap</th>
+              <th>Jam menangkap</th>
+              <th>Di kawasan konservasi</th>
+              <th>Dekat batas (%)</th>
+              <th>Berhenti lama (jam)</th>
+              <th>Bulan aktif</th>
+              <th>Terakhir terdeteksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-row"><td colspan="11">Kapal berbendera asing</td></tr>
+            <tr><td>Kapal A</td><td>Vietnam</td><td>100</td><td>0,71</td><td>11</td><td>103</td><td>4</td><td>27</td><td>121</td><td>1</td><td>Jan 2026</td></tr>
+            <tr><td>Kapal B</td><td>Tiongkok</td><td>80</td><td>1,00</td><td>35</td><td>265</td><td>0</td><td>77</td><td>346</td><td>15</td><td>Mei 2026</td></tr>
+            <tr><td>Kapal C</td><td>Vietnam</td><td>80</td><td>0,75</td><td>44</td><td>107</td><td>0</td><td>11</td><td>705</td><td>10</td><td>Jul 2026</td></tr>
+            <tr><td>Kapal D</td><td>Thailand</td><td>80</td><td>0,43</td><td>6</td><td>18</td><td>0</td><td>17</td><td>121</td><td>1</td><td>Mar 2024</td></tr>
+            <tr><td>Kapal E</td><td>Vietnam</td><td>80</td><td>0,78</td><td>1</td><td>0,4</td><td>0</td><td>100</td><td>207</td><td>2</td><td>Jun 2024</td></tr>
+            <tr><td>Kapal F</td><td>Vietnam</td><td>65</td><td>0,86</td><td>3</td><td>60</td><td>0</td><td>100</td><td>62</td><td>2</td><td>Mei 2025</td></tr>
+            <tr><td>Kapal G</td><td>Vietnam</td><td>65</td><td>0,81</td><td>2</td><td>33</td><td>0</td><td>100</td><td>8</td><td>2</td><td>Des 2025</td></tr>
+            <tr><td>Kapal H</td><td>Tiongkok</td><td>65</td><td>0,52</td><td>3</td><td>26</td><td>0</td><td>33</td><td>2</td><td>2</td><td>Jan 2026</td></tr>
+            <tr><td>Kapal I</td><td>Tiongkok</td><td>65</td><td>0,47</td><td>4</td><td>37</td><td>0</td><td>25</td><td>61</td><td>2</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal J</td><td>Tiongkok</td><td>65</td><td>0,44</td><td>3</td><td>25</td><td>0</td><td>33</td><td>27</td><td>2</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal K</td><td>Tiongkok</td><td>65</td><td>0,44</td><td>3</td><td>24</td><td>0</td><td>33</td><td>26</td><td>2</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal L</td><td>Tiongkok</td><td>65</td><td>0,44</td><td>3</td><td>26</td><td>0</td><td>33</td><td>28</td><td>2</td><td>Okt 2026</td></tr>
+            <tr class="group-row"><td colspan="11">Kapal berbendera Indonesia dengan pola paling janggal</td></tr>
+            <tr><td>Kapal M</td><td>Indonesia</td><td>50</td><td>0,88</td><td>216</td><td>1.794</td><td>35</td><td>0</td><td>3.845</td><td>24</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal N</td><td>Indonesia</td><td>30</td><td>0,87</td><td>531</td><td>7.430</td><td>0</td><td>5</td><td>7.566</td><td>26</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal O</td><td>Indonesia</td><td>35</td><td>0,84</td><td>333</td><td>1.682</td><td>18</td><td>0</td><td>2.680</td><td>21</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal P</td><td>Indonesia</td><td>35</td><td>0,83</td><td>257</td><td>2.683</td><td>11</td><td>0</td><td>5.250</td><td>23</td><td>Okt 2026</td></tr>
+            <tr><td>Kapal Q</td><td>Indonesia</td><td>50</td><td>0,82</td><td>206</td><td>1.972</td><td>20</td><td>1</td><td>1.493</td><td>24</td><td>Okt 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Skor anomali berkisar 0–1, semakin mendekati 1 berarti pola kapal semakin berbeda dari kapal lain. "Dekat batas" adalah persentase kejadian menangkap ikan yang terjadi kurang dari 20 km dari garis batas ZEE. "Berhenti lama" adalah total jam berhenti lebih dari 50 km dari pelabuhan.</p>
+
+      <p>Beberapa kapal menonjol karena alasan yang berbeda. Kapal A, kapal Vietnam, mendapat skor penuh karena dalam satu bulan saja ia menangkap ikan 11 kali, 4 di antaranya di dalam kawasan konservasi, sebagian dekat garis batas, lalu berhenti lebih dari 120 jam di tengah laut. Kapal B, kapal Tiongkok, mendapat skor anomali tertinggi. Ia muncul selama 15 bulan berbeda, menangkap ikan 35 kali, dan tiga perempat di antaranya terjadi di dekat garis batas. Polanya seperti kapal yang terus-menerus kembali ke tempat yang sama. Kapal C juga mirip, aktif selama 10 bulan dengan total lebih dari 700 jam berhenti di laut.</p>
+      <p>Kapal I, J, K, dan L punya cerita sendiri. Keempatnya berbendera Tiongkok dan selalu tercatat di tempat dan waktu yang hampir sama, dengan selisih hanya beberapa menit. Pada 1 Oktober 2026 mereka menangkap ikan bersama di sekitar 106,2° BT, 4,5° LU, lalu esok harinya berpindah ke dekat garis batas di barat daya. Pola seperti ini khas armada yang beroperasi berkelompok, sehingga lebih tepat diperiksa sebagai satu armada daripada empat kapal terpisah.</p>
+      <p>Tidak semua kapal dengan skor tinggi punya bukti yang sama kuatnya. Kapal E, misalnya, hanya tercatat menangkap ikan sekali selama kurang dari setengah jam. Kejadian sesingkat ini bisa saja kapal yang sedang melintas pelan lalu terbaca sebagai sedang menangkap ikan. Dari 107 kapal asing yang tercatat menangkap ikan, 38 kapal hanya punya satu kejadian di bawah 3 jam, dan hanya 18 kapal yang menangkap ikan berulang kali, yaitu minimal 5 kejadian atau total minimal 24 jam. Kapal-kapal yang polanya berulang inilah yang paling layak diprioritaskan.</p>
+      <p>Uji sensitivitas memperlihatkan bahwa urutan kapal secara keseluruhan hampir tidak berubah meskipun bobotnya diubah-ubah, dengan korelasi urutan rata-rata 0,98. Kapal A sampai E selalu berada di urutan teratas pada hampir semua percobaan. Kapal F sampai L sedikit berbeda. Ketujuh kapal ini punya skor yang sama, yaitu 65, bersama 27 kapal asing lain yang juga menangkap ikan dekat garis batas. Pada sekitar 1 dari 5 percobaan, kapal-kapal ini tergeser oleh kapal Indonesia yang menangkap ikan di kawasan konservasi sekaligus berhenti lama di laut. Hal ini terjadi ketika bobot kapal asing yang menangkap ikan menjadi lebih kecil daripada gabungan bobot kawasan konservasi dan berhenti lama. Jadi, kapal dengan skor tertinggi tidak bergantung pada bobot yang dipilih, sedangkan urutan kapal di bawahnya bergantung pada satu pertanyaan, yaitu mana yang lebih mencurigakan antara kapal asing yang menangkap ikan dekat perbatasan atau kapal Indonesia yang berulang kali menangkap ikan di kawasan konservasi.</p>
+      <p>Isolation Forest juga menemukan sesuatu yang tidak tertangkap oleh skor aturan. Dari 44 kapal yang ditandai sebagai anomali, 25 justru kapal Indonesia. Kapal-kapal ini tidak melanggar aturan yang dibuat di awal, tetapi aktivitasnya jauh di atas kapal lain. Kapal N misalnya, tercatat menangkap ikan 531 kali dengan total lebih dari 7.400 jam selama 26 bulan. Sebanyak 19 kapal Indonesia yang ditandai anomali juga menangkap ikan di kawasan konservasi, seperti Kapal M yang tercatat 35 kali di dalam kawasan. Aktivitas sebesar ini belum tentu melanggar, tetapi wajar jika izin dan zona tangkapnya ikut diperiksa.</p>
+
+      <h2>Kesimpulan</h2>
+
+      <p>Kapal ikan asing hampir selalu ada di ZEE Indonesia di Laut Natuna Utara sepanjang 2024–2026. Jumlahnya memang kecil dibanding kapal Indonesia, sekitar 4 kapal setiap bulan, tetapi kehadirannya konsisten dan paling ramai pada September sampai November. Kapal Vietnam banyak beroperasi di bagian utara dekat garis batas, sedangkan kapal Tiongkok muncul di bagian utara dan barat daya, beberapa di antaranya bergerak sebagai satu armada.</p>
+      <p>Dengan menggabungkan skor aturan dan Isolation Forest, ratusan kapal bisa disaring menjadi daftar pendek yang layak diperiksa lebih dulu. Daftar ini tidak hanya berisi kapal asing, tetapi juga kapal Indonesia dengan aktivitas yang jauh di atas rata-rata, termasuk di dalam kawasan konservasi. Cara seperti ini bisa membantu patroli memilih ke mana harus pergi lebih dulu di perairan seluas lebih dari 250 ribu km².</p>
+      <p>Hasil ini tetap punya keterbatasan. Data hanya mencakup kapal yang memancarkan AIS, sedangkan kapal yang sengaja mematikan AIS atau tidak memasangnya sama sekali tidak akan terlihat, padahal kapal seperti inilah yang paling mungkin melanggar. Bendera kapal juga dibaca dari sinyal AIS, yang bisa saja salah atau dipalsukan. Kejadian menangkap ikan adalah hasil perkiraan model, bukan pengamatan langsung, dan garis batas yang dipakai adalah versi Marine Regions yang belum tentu sama persis dengan batas resmi terbaru. Langkah berikutnya adalah menggabungkan data ini dengan deteksi kapal dari citra radar Sentinel-1, yang bisa melihat kapal meskipun AIS-nya dimatikan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var VIEW = [[1.9, 104.6], [7.0, 110.2]];
+      var FIT = { paddingBottomRight: [window.innerWidth < 600 ? 0 : 150, 0] };   // sisakan ruang untuk legenda di kanan
+      var BULAN = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var NEGARA = { IDN: 'Indonesia', CHN: 'Tiongkok', VNM: 'Vietnam', TWN: 'Taiwan', THA: 'Thailand', MYS: 'Malaysia', PAN: 'Panama', RUS: 'Rusia', SGP: 'Singapura', USA: 'Amerika Serikat', 'Tidak diketahui': 'Tidak diketahui' };
+      var C_IDN = '#38bdf8', C_ASING = '#f97316', C_LOITER = '#c084fc';
+      var fmt = function (v) { return v.toLocaleString('id-ID'); };
+      var monthName = function (m) { return BULAN[parseInt(m.slice(5), 10) - 1] + ' ' + m.slice(0, 4); };
+
+      var box = document.getElementById('shipMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.5, preferCanvas: true });
+      map.fitBounds(VIEW, FIT);
+      var fitted = box.clientWidth > 0;
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () {
+          map.invalidateSize();
+          if (!fitted && box.clientWidth > 0) { map.fitBounds(VIEW, FIT); fitted = true; }
+        }).observe(box);
+      }
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var basemaps = {
+        'Gelap (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 16, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors' }),
+        'Laut (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 13, attribution: 'Tiles &copy; Esri &mdash; GEBCO, NOAA, National Geographic, DeLorme, HERE, Geonames.org' }),
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' })
+      };
+      var activeBase = basemaps['Gelap (Esri)'].addTo(map);
+      var aoiLayer = L.layerGroup().addTo(map);
+      var mpaLayer = L.layerGroup().addTo(map);
+      var borderLayer = L.layerGroup().addTo(map);
+      var loiterLayer = L.layerGroup();
+      var idnLayer = L.layerGroup().addTo(map);
+      var asingLayer = L.layerGroup().addTo(map);
+      var prioLayer = L.layerGroup().addTo(map);
+      var DATA = null, idx = 21, allMonths = false, timer = null;
+
+      var slider = document.getElementById('monthSlider'), label = document.getElementById('monthLabel');
+      var playBtn = document.getElementById('playBtn'), allBtn = document.getElementById('allBtn');
+
+      function popup(r, m) {
+        var bendera = DATA.bendera[r[6]], alias = r[7] >= 0 ? DATA.alias[r[7]] : null;
+        return '<table class="wm-popup"><tr><td colspan="2" class="ttl">' + (r[2] ? 'Berhenti lama di laut' : 'Menangkap ikan') + (alias ? ' · ' + alias : '') + '</td></tr>' +
+          '<tr><td>Tanggal</td><td>' + r[8] + ' ' + monthName(m) + '</td></tr>' +
+          '<tr><td>Bendera</td><td>' + (NEGARA[bendera] || bendera) + '</td></tr>' +
+          '<tr><td>Durasi</td><td><strong>' + r[5].toLocaleString('id-ID') + ' jam</strong></td></tr>' +
+          (r[4] ? '<tr><td>Lokasi</td><td>Di dalam kawasan konservasi</td></tr>' : '') +
+          '<tr><td>Posisi</td><td>' + r[1].toFixed(3) + '° LU, ' + r[0].toFixed(3) + '° BT</td></tr></table>';
+      }
+
+      function addPoint(r, m) {
+        var layer = r[2] ? loiterLayer : (r[3] ? asingLayer : idnLayer);
+        var color = r[2] ? C_LOITER : (r[3] ? C_ASING : C_IDN);
+        L.circleMarker([r[1], r[0]], { radius: r[3] && !r[2] ? 4.5 : 3, stroke: !!r[3], color: '#111', weight: 0.6, fillColor: color, fillOpacity: r[3] ? 0.95 : 0.7 })
+          .bindPopup(popup(r, m)).addTo(layer);
+      }
+
+      function draw(i) {
+        idx = i; slider.value = i;
+        [idnLayer, asingLayer, loiterLayer].forEach(function (l) { l.clearLayers(); });
+        var months = allMonths ? DATA.bulan : [DATA.bulan[i]], nIdn = 0, nAsing = 0;
+        months.forEach(function (m) {
+          var rows = (DATA.data[m] || []).slice().sort(function (a, b) { return a[3] - b[3]; });   // kapal asing digambar paling atas
+          rows.forEach(function (r) { addPoint(r, m); if (!r[2]) { if (r[3]) nAsing++; else nIdn++; } });
+        });
+        label.innerHTML = (allMonths ? 'Januari 2024–Oktober 2026' : monthName(DATA.bulan[i])) +
+          '<span>' + fmt(nIdn) + ' kejadian kapal Indonesia, ' + fmt(nAsing) + ' kejadian kapal asing</span>';
+      }
+
+      function stop() { if (timer) { clearInterval(timer); timer = null; } playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Putar'; }
+      function setAll(on) { allMonths = on; allBtn.classList.toggle('on', on); }
+      playBtn.addEventListener('click', function () {
+        if (timer) { stop(); return; }
+        setAll(false);
+        if (idx >= DATA.bulan.length - 1) draw(0);
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Jeda';
+        timer = setInterval(function () { if (idx >= DATA.bulan.length - 1) { stop(); return; } draw(idx + 1); }, 900);
+      });
+      allBtn.addEventListener('click', function () { stop(); setAll(!allMonths); draw(idx); });
+      slider.addEventListener('input', function () { stop(); setAll(false); draw(parseInt(slider.value, 10)); });
+
+      // Jejak satu kapal prioritas di seluruh bulan, diurutkan menurut waktu
+      function showVessel(a) {
+        prioLayer.clearLayers();
+        if (a === '') return;
+        var ai = parseInt(a, 10), pts = [];
+        DATA.bulan.forEach(function (m) {
+          (DATA.data[m] || []).forEach(function (r) { if (r[7] === ai) pts.push({ r: r, m: m }); });
+        });
+        if (!pts.length) return;
+        L.polyline(pts.map(function (p) { return [p.r[1], p.r[0]]; }), { color: '#facc15', weight: 1.5, dashArray: '4 4', opacity: 0.9 }).addTo(prioLayer);
+        pts.forEach(function (p) {
+          L.circleMarker([p.r[1], p.r[0]], { radius: 6, color: '#111', weight: 1.5, fillColor: '#facc15', fillOpacity: 1 }).bindPopup(popup(p.r, p.m)).addTo(prioLayer);
+        });
+        var last = pts[pts.length - 1].r;
+        L.marker([last[1], last[0]], { icon: L.divIcon({ className: '', html: '<span class="ship-label">' + DATA.alias[ai] + '</span>', iconAnchor: [-8, 8] }), interactive: false }).addTo(prioLayer);
+        if (!map.hasLayer(prioLayer)) prioLayer.addTo(map);
+        map.fitBounds(L.latLngBounds(pts.map(function (p) { return [p.r[1], p.r[0]]; })).pad(0.3), { maxZoom: 9 });
+        updateLegend();
+      }
+
+      fetch('assets/data/natuna-kejadian.json').then(function (r) { return r.json(); }).then(function (d) {
+        DATA = d; slider.max = d.bulan.length - 1;
+        L.geoJSON(d.aoi, { style: { color: '#7dd3fc', weight: 1, fillColor: '#0ea5e9', fillOpacity: 0.05 }, interactive: false }).addTo(aoiLayer);
+        d.batas.forEach(function (g) { L.geoJSON(g, { style: { color: '#f8fafc', weight: 2, dashArray: '6 5' }, interactive: false }).addTo(borderLayer); });
+        d.mpa.forEach(function (p) {
+          L.geoJSON(p.geom, { style: { color: '#4ade80', weight: 1.5, fillColor: '#4ade80', fillOpacity: 0.08 } })
+            .bindPopup('<table class="wm-popup"><tr><td colspan="2" class="ttl">' + p.nama + '</td></tr>' +
+              '<tr><td>Kategori IUCN</td><td>' + p.iucn + '</td></tr><tr><td>Luas laut</td><td>' + fmt(p.luas_km2) + ' km²</td></tr>' +
+              '<tr><td>Ditetapkan</td><td>' + p.tahun + '</td></tr></table>').addTo(mpaLayer);
+        });
+        var sel = document.getElementById('vesselSelect');
+        d.prioritas.forEach(function (p, i) {
+          var o = document.createElement('option'); o.value = i;
+          o.textContent = p.alias + ' · ' + (NEGARA[p.bendera] || p.bendera) + ' · skor ' + p.skor;
+          sel.appendChild(o);
+        });
+        draw(d.bulan.indexOf('2025-10'));
+      });
+
+      var overlays = [
+        { id: 'idn', name: 'Menangkap ikan, kapal Indonesia', layer: idnLayer },
+        { id: 'asing', name: 'Menangkap ikan, kapal asing', layer: asingLayer },
+        { id: 'loiter', name: 'Berhenti lama jauh dari pelabuhan', layer: loiterLayer },
+        { id: 'prio', name: 'Jejak kapal prioritas', layer: prioLayer },
+        { id: 'mpa', name: 'Kawasan konservasi perairan', layer: mpaLayer },
+        { id: 'border', name: 'Garis batas ZEE', layer: borderLayer },
+        { id: 'aoi', name: 'Kawasan studi', layer: aoiLayer }
+      ];
+      var byId = function (id) { return overlays.filter(function (o) { return o.id === id; })[0]; };
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var html = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body">' +
+            '<div class="wm-group">Sorot kapal prioritas</div><div class="wm-row"><select id="vesselSelect" aria-label="Pilih kapal prioritas"><option value="">Pilih kapal</option></select></div>' +
+            '<div class="wm-group">Layer</div>';
+          overlays.forEach(function (o) {
+            html += '<div class="wm-row"><label><input type="checkbox" data-id="' + o.id + '"' + (map.hasLayer(o.layer) ? ' checked' : '') + '>' + o.name + '</label></div>';
+          });
+          html += '<div class="wm-group">Basemap</div>';
+          Object.keys(basemaps).forEach(function (k, i) {
+            html += '<div class="wm-row"><label><input type="radio" name="wm-base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label></div>';
+          });
+          div.innerHTML = html + '</div>';
+          L.DomEvent.disableClickPropagation(div);
+          L.DomEvent.disableScrollPropagation(div);
+          div.querySelector('header').addEventListener('click', function () { div.classList.toggle('collapsed'); });
+          div.querySelector('#vesselSelect').addEventListener('change', function (e) {
+            showVessel(e.target.value);
+            div.querySelector('input[data-id="prio"]').checked = map.hasLayer(prioLayer);
+          });
+          div.querySelectorAll('input[name=wm-base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = basemaps[r.value].addTo(map); activeBase.bringToBack(); });
+          });
+          div.querySelectorAll('input[data-id]').forEach(function (cb) {
+            cb.addEventListener('change', function () {
+              var o = byId(cb.dataset.id);
+              if (cb.checked) o.layer.addTo(map); else map.removeLayer(o.layer);
+              updateLegend();
+            });
+          });
+          return div;
+        }
+      });
+      new Panel().addTo(map);
+
+      var legendDiv;
+      var Legend = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () { legendDiv = L.DomUtil.create('div', 'wm-legend'); L.DomEvent.disableClickPropagation(legendDiv); return legendDiv; }
+      });
+      new Legend().addTo(map);
+      function updateLegend() {
+        var h = '', ev = '';
+        if (map.hasLayer(idnLayer)) ev += '<div><i style="background:' + C_IDN + '"></i>Menangkap ikan <span>kapal Indonesia</span></div>';
+        if (map.hasLayer(asingLayer)) ev += '<div><i style="background:' + C_ASING + ';border:1px solid #111"></i>Menangkap ikan <span>kapal asing</span></div>';
+        if (map.hasLayer(loiterLayer)) ev += '<div><i style="background:' + C_LOITER + '"></i>Berhenti lama <span>&gt; 50 km dari pelabuhan</span></div>';
+        if (ev) h += '<h4>Kejadian</h4>' + ev;
+        if (map.hasLayer(prioLayer) && prioLayer.getLayers().length) h += '<h4>Kapal prioritas</h4><div><i class="ring"></i>Jejak kapal terpilih</div>';
+        var bt = '';
+        if (map.hasLayer(mpaLayer)) bt += '<div><i class="area"></i>Kawasan konservasi</div>';
+        if (map.hasLayer(borderLayer)) bt += '<div><i class="line"></i>Garis batas ZEE</div>';
+        if (bt) h += '<h4>Batas</h4>' + bt;
+        legendDiv.style.display = h ? '' : 'none';
+        legendDiv.innerHTML = h;
+      }
+      updateLegend();
+
+      var Home = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+          var div = L.DomUtil.create('div', 'leaflet-bar wm-home');
+          div.innerHTML = '<a href="#" title="Kembali ke seluruh kawasan" role="button" aria-label="Kembali ke seluruh kawasan"><i class="fa-solid fa-house"></i></a>';
+          L.DomEvent.on(div.firstChild, 'click', function (e) { L.DomEvent.preventDefault(e); L.DomEvent.stopPropagation(e); map.fitBounds(VIEW, FIT); });
+          return div;
+        }
+      });
+      new Home().addTo(map);
+    })();
+  </script>
+</body>
+</html>

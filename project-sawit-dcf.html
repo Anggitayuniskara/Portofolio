@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemetaan dan Prioritas Keterlibatan Perusahaan Sawit untuk Komoditas Bebas Deforestasi dan Konversi di Riau</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: center; margin-top: 6px; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+
+    .dash { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; margin: 18px 0 6px; }
+    .dash-top { display: grid; grid-template-columns: 1fr 340px; min-height: 460px; }
+    #millMap { width: 100%; height: 460px; background: #e8ecef; }
+    .post-content #millMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .profile { border-left: 1px solid var(--line); padding: 14px 16px; overflow-y: auto; max-height: 460px; font-size: 0.85rem; line-height: 1.5; }
+    .profile h4 { margin: 0 0 2px; font-size: 1rem; }
+    .profile .sub { color: #6b7280; font-size: 0.8rem; }
+    .profile .score { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+    .profile .score b { font-size: 2rem; line-height: 1; padding: 8px 12px; border-radius: 8px; color: #fff; }
+    .profile table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .profile td { padding: 4px 2px; border-top: 1px solid var(--line); }
+    .profile td:last-child { text-align: right; white-space: nowrap; }
+    .bar { height: 6px; background: #eef0ed; border-radius: 3px; overflow: hidden; margin-top: 2px; }
+    .bar i { display: block; height: 100%; background: #6b7280; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 10px 12px; border-top: 1px solid var(--line); background: #fafaf8; font-size: 0.82rem; }
+    .filters select, .filters input[type=search] { font: inherit; font-size: 0.82rem; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+    .filters input[type=search] { flex: 1; min-width: 160px; }
+    .filters .seg button { font: inherit; font-size: 0.8rem; padding: 5px 10px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+    .filters .seg button:first-child { border-radius: 6px 0 0 6px; }
+    .filters .seg button:last-child { border-radius: 0 6px 6px 0; border-left: 0; }
+    .filters .seg button.on { background: #163a2e; color: #fff; border-color: #163a2e; }
+    .tbl-wrap { max-height: 340px; overflow-y: auto; border-top: 1px solid var(--line); }
+    table.dt { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    table.dt th { position: sticky; top: 0; background: #f3f5f2; text-align: left; padding: 6px 8px; font-weight: 600; cursor: pointer; white-space: nowrap; z-index: 1; }
+    table.dt td { padding: 5px 8px; border-top: 1px solid var(--line); }
+    table.dt tr { cursor: pointer; }
+    table.dt tr:hover td, table.dt tr.sel td { background: #f3f5f2; }
+    table.dt td.num { text-align: right; }
+    .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; color: #fff; font-size: 0.72rem; font-weight: 600; }
+    .count { color: #6b7280; font-size: 0.8rem; padding: 6px 12px; border-top: 1px solid var(--line); }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 11.5px/1.55 system-ui, sans-serif; color: #222; }
+    .wm-legend b { display: block; margin-top: 4px; }
+    .wm-legend b:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 50%; }
+    .wm-legend i.sq { border-radius: 2px; }
+    @media (max-width: 860px) {
+      .dash-top { grid-template-columns: 1fr; }
+      .profile { border-left: 0; border-top: 1px solid var(--line); max-height: none; }
+      #millMap { height: 380px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Supply Chain</span>
+      <h1>Pemetaan dan Prioritas Keterlibatan Perusahaan Sawit untuk Komoditas Bebas Deforestasi dan Konversi di Riau</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Pasar global semakin menuntut minyak sawit yang bebas deforestasi dan konversi (deforestation- and conversion-free atau DCF). Artinya, sawit tidak boleh berasal dari lahan yang dulunya hutan, dan juga tidak boleh berasal dari ekosistem alami lain yang dikonversi, seperti lahan gambut. Tuntutan ini datang dari regulasi seperti EUDR di Uni Eropa, dari komitmen pembeli besar, dan dari standar sukarela seperti RSPO.</p>
+      <p>Masalahnya, sebagian besar pembeli tidak membeli langsung dari kebun, melainkan dari pabrik kelapa sawit yang menampung tandan buah segar dari ratusan kebun di sekitarnya. Karena itu, perubahan di lapangan sangat bergantung pada keterlibatan perusahaan pemilik pabrik. Di project <a href="project-eudr.html">EUDR sawit Bengkalis</a>, pengecekan dilakukan per kebun. Project ini naik satu tingkat, yaitu ke tingkat pabrik dan perusahaan.</p>
+      <p>Pertanyaannya, dari 267 pabrik kelapa sawit di Riau, mana yang wilayah pasokannya paling banyak terpapar deforestasi, konversi gambut, dan sawit di kawasan hutan? Dan perusahaan mana yang paling perlu didekati lebih dulu untuk mendorong rantai pasok yang bebas deforestasi dan konversi?</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Lokasi pabrik kelapa sawit, grup perusahaan, dan status RSPO (Agustus 2025)</td><td>Titik</td><td>Sekunder</td><td>Universal Mill List (WRI, Rainforest Alliance, Proforest, Trase, dan mitra)</td></tr>
+            <tr><td>Peta tutupan hutan 2020 (10 m)</td><td>Raster</td><td>Sekunder</td><td>JRC Komisi Eropa (GFC2020 V4)</td></tr>
+            <tr><td>Kehilangan tutupan pohon 2021–2025 dan peringatan radar sampai Oktober 2026</td><td>Raster</td><td>Sekunder</td><td>Hansen/UMD dan RADD (Wageningen University)</td></tr>
+            <tr><td>Sebaran sawit 2020 dan 2024</td><td>Raster</td><td>Sekunder</td><td>Forest Data Partnership</td></tr>
+            <tr><td>Sebaran lahan gambut</td><td>Raster</td><td>Sekunder</td><td>Global Peatland Database (Greifswald Mire Centre)</td></tr>
+            <tr><td>Kawasan hutan (revisi I, Juni 2026)</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Data satelit diolah di Google Earth Engine, lalu dirangkum ke dalam grid berukuran sekitar 110 m yang mencakup seluruh Riau dan sekitarnya.</p>
+
+      <h2>Metode</h2>
+
+      <p>Setiap pabrik diberi wilayah pasokan berupa lingkaran dengan jari-jari 50 km. Jarak ini umum dipakai sebagai perkiraan, karena tandan buah segar harus diolah dalam waktu kurang dari sehari setelah dipanen, sehingga kebun pemasok biasanya tidak jauh dari pabrik. Di dalam wilayah pasokan itu, dihitung tiga indikator.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Indikator</th>
+              <th>Yang diukur</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sawit di lahan deforestasi</td><td>Luas sawit 2024 yang berdiri di atas lahan yang masih hutan pada 2020 lalu hilang setelahnya</td></tr>
+            <tr><td>Konversi gambut</td><td>Luas hutan gambut 2020 yang hilang setelah 2020, apa pun penggunaannya sekarang</td></tr>
+            <tr><td>Sawit di kawasan hutan</td><td>Porsi sawit 2024 yang berada di dalam kawasan hutan (konservasi, lindung, atau produksi)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Ketiga indikator lalu diubah menjadi peringkat persentil, sehingga nilai 100 berarti pabrik tersebut paling terpapar di antara seluruh pabrik di Riau. Skor risiko adalah rata-rata dari ketiga peringkat dengan bobot yang sama, karena ketiganya mewakili tiga sisi berbeda dari DCF, yaitu deforestasi, konversi ekosistem, dan legalitas lahan. Ketiga indikator juga hampir tidak berkorelasi satu sama lain, sehingga masing-masing menambahkan informasi baru.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Prioritas keterlibatan</th>
+              <th>Aturan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dot" style="background:#c62828"></span>Tinggi</td><td>Skor risiko ≥ 67 dan pabrik belum tersertifikasi RSPO</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Sedang</td><td>Skor ≥ 67 tetapi sudah tersertifikasi RSPO, atau skor 34–66 dan belum tersertifikasi</td></tr>
+            <tr><td><span class="dot" style="background:#2e7d32"></span>Rendah</td><td>Lainnya</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Sertifikasi RSPO dipakai sebagai pembeda, karena pabrik yang sudah tersertifikasi setidaknya sudah memiliki komitmen dan sistem penelusuran pasokan. Pabrik yang belum tersertifikasi tetapi wilayah pasokannya paling terpapar adalah kelompok yang paling membutuhkan pendampingan.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Wilayah pasokan gabungan dari 267 pabrik mencakup sekitar 4,26 juta hektare kebun sawit. Di dalamnya, sekitar 256 ribu hektare hutan hilang setelah 2020, dan 78 ribu hektare di antaranya berada di lahan gambut. Sementara itu, sekitar 1,59 juta hektare sawit, atau 37%, berada di dalam kawasan hutan.</p>
+
+      <div class="stat-row">
+        <div><strong>46</strong><span>Pabrik dengan prioritas keterlibatan tinggi</span></div>
+        <div><strong>78 ribu ha</strong><span>Hutan gambut yang hilang setelah 2020 di wilayah pasokan</span></div>
+        <div><strong>37%</strong><span>Sawit di wilayah pasokan yang berada di kawasan hutan</span></div>
+      </div>
+
+      <p>Gunakan dashboard di bawah untuk menjelajahi setiap pabrik dan grup perusahaan. Klik sebuah pabrik di peta atau di tabel untuk melihat wilayah pasokan dan profil risikonya.</p>
+
+      <div class="dash" id="dash">
+        <div class="dash-top">
+          <div id="millMap" role="region" aria-label="Peta pabrik kelapa sawit Riau berdasarkan prioritas keterlibatan"></div>
+          <div class="profile" id="profile"><span class="sub">Klik sebuah pabrik di peta atau di tabel untuk melihat profilnya.</span></div>
+        </div>
+        <div class="filters">
+          <span class="seg"><button type="button" data-v="pabrik" class="on">Per pabrik</button><button type="button" data-v="grup">Per grup</button></span>
+          <select id="fPrio" aria-label="Filter prioritas"><option value="">Semua prioritas</option><option>Tinggi</option><option>Sedang</option><option>Rendah</option></select>
+          <select id="fKab" aria-label="Filter kabupaten"><option value="">Semua kabupaten</option></select>
+          <select id="fRspo" aria-label="Filter RSPO"><option value="">RSPO dan non-RSPO</option><option value="1">Tersertifikasi RSPO</option><option value="0">Belum tersertifikasi</option></select>
+          <input type="search" id="fCari" placeholder="Cari pabrik atau grup…" aria-label="Cari pabrik atau grup">
+        </div>
+        <div class="tbl-wrap"><table class="dt" id="tbl"></table></div>
+        <div class="count" id="count"></div>
+      </div>
+      <p class="map-hint">Lingkaran di peta menunjukkan wilayah pasokan 50 km pabrik yang dipilih. Warna merah di latar menunjukkan deforestasi setelah 2020, kuning muda menunjukkan sawit 2024. Klik judul kolom untuk mengurutkan tabel.</p>
+
+      <p>Pabrik dengan prioritas tinggi terkumpul di dua wilayah. Yang pertama di bagian selatan Riau, yaitu Indragiri Hulu (13 pabrik) dan Kuantan Singingi (11 pabrik). Di sini, lebih dari separuh sawit di wilayah pasokannya berada di kawasan hutan, dan luas sawit di lahan deforestasinya termasuk yang tertinggi, terutama di sekitar pabrik-pabrik di Kuantan Singingi. Yang kedua di pesisir timur, yaitu Rokan Hilir, Bengkalis, dan Dumai. Di wilayah ini, deforestasinya didominasi lahan gambut, dengan lebih dari 10 ribu hektare hutan gambut hilang di sekitar beberapa pabrik.</p>
+      <p>Sertifikasi RSPO ternyata belum menjangkau wilayah yang paling membutuhkan. Hanya 6% pabrik dengan skor risiko tinggi yang tersertifikasi, sementara di antara pabrik dengan skor rendah angkanya mencapai 24%. Artinya, pabrik bersertifikat cenderung berada di wilayah yang memang sudah relatif aman, sedangkan wilayah dengan tekanan deforestasi dan konversi terbesar justru dilayani oleh pabrik yang belum memiliki sistem penelusuran pasokan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Kabupaten lokasi pabrik</th>
+              <th>Pabrik</th>
+              <th>Tersertifikasi RSPO</th>
+              <th>Rata-rata skor risiko</th>
+              <th>Prioritas tinggi</th>
+            </tr>
+          </thead>
+          <tbody id="kabBody"></tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Skor risiko 0–100 adalah rata-rata peringkat persentil ketiga indikator. Kota Dumai dan Pekanbaru hanya memiliki 2–3 pabrik, sehingga rata-ratanya mudah berubah.</p>
+
+      <h3>Apa artinya bagi kebijakan dan pasar</h3>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Acuan</th>
+              <th>Cakupan</th>
+              <th>Tanggal batas</th>
+              <th>Relevansi bagi pabrik di Riau</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>EUDR (Uni Eropa)</td><td>Deforestasi dan legalitas</td><td>31 Desember 2020</td><td>Wajib bagi pasokan ke pasar Uni Eropa, termasuk lokasi kebun</td></tr>
+            <tr><td>Standar DCF (Accountability Framework)</td><td>Deforestasi dan konversi ekosistem alami, termasuk gambut</td><td>Paling lambat 2020</td><td>Acuan komitmen banyak pembeli global</td></tr>
+            <tr><td>RSPO (Prinsip dan Kriteria 2018)</td><td>Tanpa deforestasi dan tanpa penanaman baru di gambut</td><td>November 2018</td><td>Sukarela, saat ini mencakup 18% pabrik di Riau</td></tr>
+            <tr><td>ISPO</td><td>Legalitas dan praktik budidaya berkelanjutan</td><td>Tidak menetapkan tanggal batas deforestasi</td><td>Wajib bagi seluruh perkebunan sawit di Indonesia</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Perbandingan ini memperlihatkan celah yang perlu dijembatani. Sebagian besar pabrik di Riau hanya diwajibkan memenuhi ISPO, yang fokus pada legalitas dan praktik budidaya. Sementara itu, pasar global menuntut lebih jauh, yaitu bebas deforestasi dan konversi dengan tanggal batas yang tegas. Bagi pabrik di Indragiri Hulu dan Kuantan Singingi, tantangan terbesarnya adalah legalitas lahan, karena lebih dari separuh sawit di wilayah pasokannya berada di kawasan hutan. Bagi pabrik di pesisir timur, tantangannya adalah konversi gambut, yang tidak tercakup EUDR tetapi menjadi syarat dalam standar DCF dan RSPO.</p>
+
+      <h3>Rekomendasi keterlibatan</h3>
+      <p>Pertama, pendekatan dimulai dari grup perusahaan yang memiliki beberapa pabrik prioritas tinggi sekaligus, karena satu komitmen di tingkat grup bisa berdampak pada beberapa wilayah pasokan. Kedua, pesan keterlibatan perlu disesuaikan dengan profil risiko setiap wilayah, yaitu penyelesaian status lahan untuk pabrik di selatan dan perlindungan gambut untuk pabrik di pesisir timur. Ketiga, pabrik yang sudah tersertifikasi RSPO tetapi wilayah pasokannya berisiko tinggi dapat menjadi mitra awal, karena sudah memiliki sistem penelusuran yang bisa diperluas ke pemasok di sekitarnya.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Pemetaan wilayah pasokan pabrik bisa membantu memilih perusahaan mana yang perlu didekati lebih dulu dan pesan apa yang paling relevan untuk masing-masing. Di Riau, tekanan deforestasi dan konversi paling besar berada di sekitar pabrik-pabrik di Indragiri Hulu, Kuantan Singingi, dan pesisir timur, sementara sertifikasi RSPO lebih banyak berada di wilayah yang relatif aman. Keterlibatan yang efektif perlu menjangkau pabrik-pabrik yang belum tersertifikasi ini, dengan fokus yang berbeda untuk legalitas lahan dan perlindungan gambut.</p>
+      <p>Hasil ini tetap punya keterbatasan. Wilayah pasokan 50 km hanyalah perkiraan, sehingga paparan risiko tidak berarti sebuah pabrik benar-benar membeli dari lahan yang mengalami deforestasi. Wilayah pasokan pabrik yang berdekatan juga saling tumpang tindih, sehingga beberapa pabrik bisa mendapat skor yang mirip karena berbagi lanskap yang sama. Peta gambut global beresolusi sekitar 1 km, dan nama grup perusahaan mengikuti Universal Mill List yang bisa berbeda dengan struktur kepemilikan terbaru. Langkah berikutnya adalah melengkapi analisis ini dengan data daftar pemasok yang dipublikasikan pembeli, komitmen kebijakan setiap grup, dan data tujuan ekspor.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var PRIO = { Tinggi: '#c62828', Sedang: '#e6a700', Rendah: '#2e7d32' };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { maximumFractionDigits: d || 0 }); };
+      var cap = function (s) { return s.toLowerCase().replace(/(^|\s|-)\S/g, function (t) { return t.toUpperCase(); }); };
+      var D = null, mode = 'pabrik', sortKey = 'skor', sortAsc = false, selId = null;
+
+      var box = document.getElementById('millMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.25 }).setView([0.5, 101.8], 7.5);
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      if (window.ResizeObserver) new ResizeObserver(function () { map.invalidateSize(); }).observe(box);
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16, attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors' }).addTo(map);
+      L.imageOverlay('assets/maps/sawit-dcf-overlay.png', [[-2, 100], [3, 104]], { opacity: 0.8, interactive: false }).addTo(map);
+      L.control.scale({ imperial: false }).addTo(map);
+      var millLayer = L.layerGroup().addTo(map), ringLayer = L.layerGroup().addTo(map), markers = {};
+      var Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd: function () {
+        var d = L.DomUtil.create('div', 'wm-legend');
+        d.innerHTML = '<b>Prioritas pabrik</b>' + Object.keys(PRIO).map(function (k) { return '<div><i style="background:' + PRIO[k] + '"></i>' + k + '</div>'; }).join('') +
+          '<div><i style="background:#fff;border:2px solid #163a2e"></i>Tersertifikasi RSPO</div><b>Latar</b><div><i class="sq" style="background:#d50000"></i>Deforestasi setelah 2020</div><div><i class="sq" style="background:#fad678"></i>Sawit 2024</div>';
+        return d;
+      } });
+      new Legend().addTo(map);
+
+      function groups() {
+        var g = {};
+        D.pabrik.forEach(function (p) {
+          var x = g[p.grup] || (g[p.grup] = { id: 'G:' + p.grup, grup: p.grup, pabrik: [], kab: {}, rspo: 0 });
+          x.pabrik.push(p); x.kab[p.kab] = 1; if (p.rspo) x.rspo++;
+        });
+        return Object.keys(g).map(function (k) {
+          var x = g[k], n = x.pabrik.length, avg = function (f) { return x.pabrik.reduce(function (s, p) { return s + p[f]; }, 0) / n; };
+          var tinggi = x.pabrik.filter(function (p) { return p.prio === 'Tinggi'; }).length;
+          return { id: x.id, grup: k, n: n, kab: Object.keys(x.kab).sort().join(', '), rspo: x.rspo, skor: Math.round(avg('skor') * 10) / 10,
+                   sawit_defor: avg('sawit_defor'), defor_gambut: avg('defor_gambut'), kh: avg('kh'), tinggi: tinggi,
+                   prio: tinggi ? 'Tinggi' : x.pabrik.some(function (p) { return p.prio === 'Sedang'; }) ? 'Sedang' : 'Rendah', pabrikList: x.pabrik };
+        });
+      }
+
+      function filtered() {
+        var fp = document.getElementById('fPrio').value, fk = document.getElementById('fKab').value, fr = document.getElementById('fRspo').value,
+            q = document.getElementById('fCari').value.trim().toLowerCase();
+        var rows = mode === 'pabrik' ? D.pabrik.slice() : groups();
+        rows = rows.filter(function (r) {
+          if (fp && r.prio !== fp) return false;
+          if (fk && (mode === 'pabrik' ? r.kab !== fk : r.kab.split(', ').indexOf(fk) < 0)) return false;
+          if (fr === '1' && !(mode === 'pabrik' ? r.rspo : r.rspo > 0)) return false;
+          if (fr === '0' && (mode === 'pabrik' ? r.rspo : r.rspo > 0)) return false;
+          if (q && (r.grup + ' ' + (r.nama || '')).toLowerCase().indexOf(q) < 0) return false;
+          return true;
+        });
+        rows.sort(function (a, b) { var x = a[sortKey], y = b[sortKey]; var c = typeof x === 'string' ? x.localeCompare(y) : (x - y); return sortAsc ? c : -c; });
+        return rows;
+      }
+
+      var COLS = {
+        pabrik: [['nama', 'Pabrik'], ['grup', 'Grup'], ['kab', 'Kabupaten'], ['rspo', 'RSPO'], ['skor', 'Skor'], ['prio', 'Prioritas']],
+        grup: [['grup', 'Grup'], ['n', 'Pabrik'], ['kab', 'Kabupaten'], ['rspo', 'RSPO'], ['skor', 'Skor rata-rata'], ['tinggi', 'Prioritas tinggi']]
+      };
+      function renderTable() {
+        var rows = filtered(), cols = COLS[mode];
+        var h = '<thead><tr>' + cols.map(function (c) { return '<th data-k="' + c[0] + '">' + c[1] + (sortKey === c[0] ? (sortAsc ? ' ▲' : ' ▼') : '') + '</th>'; }).join('') + '</tr></thead><tbody>';
+        h += rows.map(function (r) {
+          var cells = cols.map(function (c) {
+            var v = r[c[0]];
+            if (c[0] === 'nama' || c[0] === 'grup') return '<td>' + cap(v) + '</td>';
+            if (c[0] === 'rspo') return '<td>' + (mode === 'pabrik' ? (v ? 'Ya' : '–') : v + '/' + r.n) + '</td>';
+            if (c[0] === 'prio') return '<td><span class="pill" style="background:' + PRIO[v] + '">' + v + '</span></td>';
+            if (typeof v === 'number') return '<td class="num">' + fmt(v, c[0] === 'skor' ? 1 : 0) + '</td>';
+            return '<td>' + v + '</td>';
+          }).join('');
+          return '<tr data-id="' + r.id + '"' + (selId === r.id ? ' class="sel"' : '') + '>' + cells + '</tr>';
+        }).join('') + '</tbody>';
+        var t = document.getElementById('tbl'); t.innerHTML = h;
+        t.querySelectorAll('th').forEach(function (th) { th.addEventListener('click', function () {
+          if (sortKey === th.dataset.k) sortAsc = !sortAsc; else { sortKey = th.dataset.k; sortAsc = typeof rows[0] !== 'undefined' && typeof rows[0][sortKey] === 'string'; }
+          renderTable(); }); });
+        t.querySelectorAll('tbody tr').forEach(function (tr) { tr.addEventListener('click', function () { select(tr.dataset.id, true); }); });
+        document.getElementById('count').textContent = 'Menampilkan ' + rows.length + (mode === 'pabrik' ? ' pabrik' : ' grup');
+        var ids = {}; (mode === 'pabrik' ? rows : [].concat.apply([], rows.map(function (g) { return g.pabrikList; }))).forEach(function (p) { ids[p.id] = 1; });
+        Object.keys(markers).forEach(function (id) { var m = markers[id]; if (ids[id]) { if (!millLayer.hasLayer(m)) m.addTo(millLayer); } else millLayer.removeLayer(m); });
+      }
+
+      function row(label, val, pct) {
+        return '<tr><td>' + label + (pct !== undefined ? '<div class="bar"><i style="width:' + Math.max(2, pct) + '%"></i></div>' : '') + '</td><td>' + val + '</td></tr>';
+      }
+      function select(id, zoom) {
+        selId = id; ringLayer.clearLayers();
+        var html;
+        if (id.indexOf('G:') === 0) {
+          var g = groups().filter(function (x) { return x.id === id; })[0];
+          g.pabrikList.forEach(function (p) { L.circle([p.lat, p.lon], { radius: D.radius_km * 1000, color: '#163a2e', weight: 1.5, fill: false, dashArray: '4 4', interactive: false }).addTo(ringLayer); });
+          if (zoom) map.fitBounds(L.featureGroup(ringLayer.getLayers()).getBounds(), { padding: [10, 10] });
+          html = '<h4>' + cap(g.grup) + '</h4><div class="sub">' + g.n + ' pabrik · ' + g.kab + '</div>' +
+            '<div class="score"><b style="background:' + PRIO[g.prio] + '">' + fmt(g.skor, 0) + '</b><div>Skor risiko rata-rata<br><span class="sub">' + g.tinggi + ' pabrik prioritas tinggi · ' + g.rspo + ' tersertifikasi RSPO</span></div></div>' +
+            '<table>' + row('Sawit di lahan deforestasi (rata-rata)', fmt(g.sawit_defor) + ' ha') + row('Konversi gambut (rata-rata)', fmt(g.defor_gambut) + ' ha') + row('Sawit di kawasan hutan (rata-rata)', fmt(g.kh, 1) + '%') + '</table>' +
+            '<p class="sub" style="margin-top:10px">Pabrik: ' + g.pabrikList.map(function (p) { return cap(p.nama) + ' (' + p.prio.toLowerCase() + ')'; }).join(', ') + '</p>';
+        } else {
+          var p = D.pabrik.filter(function (x) { return x.id === id; })[0];
+          L.circle([p.lat, p.lon], { radius: D.radius_km * 1000, color: '#163a2e', weight: 2, fillOpacity: 0.04, interactive: false }).addTo(ringLayer);
+          if (zoom) map.fitBounds(ringLayer.getLayers()[0].getBounds(), { padding: [10, 10] });
+          var pct = function (f) { var all = D.pabrik.map(function (x) { return x[f]; }).sort(function (a, b) { return a - b; }); return all.filter(function (v) { return v <= p[f]; }).length / all.length * 100; };
+          html = '<h4>' + cap(p.nama) + '</h4><div class="sub">' + cap(p.grup) + ' · ' + p.kab + (p.rspo ? ' · tersertifikasi RSPO' : ' · belum tersertifikasi RSPO') + '</div>' +
+            '<div class="score"><b style="background:' + PRIO[p.prio] + '">' + fmt(p.skor, 0) + '</b><div>Skor risiko<br><span class="sub">Prioritas ' + p.prio.toLowerCase() + '</span></div></div>' +
+            '<table>' + row('Sawit di lahan deforestasi', fmt(p.sawit_defor) + ' ha', pct('sawit_defor')) + row('Konversi gambut', fmt(p.defor_gambut) + ' ha', pct('defor_gambut')) +
+            row('Sawit di kawasan hutan', fmt(p.kh, 1) + '%', pct('kh')) + row('Sawit di kawasan konservasi atau lindung', fmt(p.kk_hl) + ' ha') +
+            row('Seluruh deforestasi setelah 2020', fmt(p.defor) + ' ha') + row('Sawit 2024 di wilayah pasokan', fmt(p.sawit) + ' ha') + '</table>' +
+            '<p class="sub" style="margin-top:10px">Batang abu-abu menunjukkan peringkat pabrik ini di antara 267 pabrik di Riau. Lokasi pabrik ' + ({ '1-Fully Verified': 'sudah terverifikasi penuh', '2-High Confidence': 'berkeyakinan tinggi', '3-Low Confidence': 'berkeyakinan rendah' }[p.yakin] || 'belum diketahui tingkat keyakinannya') + ' menurut Universal Mill List.</p>';
+        }
+        document.getElementById('profile').innerHTML = html;
+        document.querySelectorAll('#tbl tbody tr').forEach(function (tr) { tr.classList.toggle('sel', tr.dataset.id === id); });
+      }
+
+      document.querySelectorAll('.seg button').forEach(function (b) { b.addEventListener('click', function () {
+        mode = b.dataset.v; document.querySelectorAll('.seg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        sortKey = 'skor'; sortAsc = false; renderTable(); }); });
+      ['fPrio', 'fKab', 'fRspo'].forEach(function (id) { document.getElementById(id).addEventListener('change', renderTable); });
+      document.getElementById('fCari').addEventListener('input', renderTable);
+
+      fetch('assets/data/sawit-dcf.json').then(function (r) { return r.json(); }).then(function (d) {
+        D = d;
+        d.pabrik.slice().reverse().forEach(function (p) {
+          var m = L.circleMarker([p.lat, p.lon], { radius: 5, fillColor: PRIO[p.prio], fillOpacity: 0.95, color: p.rspo ? '#163a2e' : '#fff', weight: p.rspo ? 2.5 : 1 })
+            .bindTooltip(cap(p.nama) + ' · skor ' + fmt(p.skor, 0)).on('click', function () { select(p.id, false); });
+          markers[p.id] = m; m.addTo(millLayer);
+        });
+        var kabs = d.kabupaten.map(function (k) { return k.nama; }).sort();
+        document.getElementById('fKab').innerHTML += kabs.map(function (k) { return '<option>' + k + '</option>'; }).join('');
+        document.getElementById('kabBody').innerHTML = d.kabupaten.map(function (k) {
+          return '<tr><td>' + k.nama + '</td><td>' + k.pabrik + '</td><td>' + k.rspo + '</td><td>' + fmt(k.skor, 1) + '</td><td>' + k.tinggi + '</td></tr>';
+        }).join('');
+        map.fitBounds(L.featureGroup(Object.keys(markers).map(function (k) { return markers[k]; })).getBounds(), { padding: [10, 10] });
+        renderTable();
+      });
+    })();
+  </script>
+</body>
+</html>

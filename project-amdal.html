@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Penapisan Lokasi untuk AMDAL dan UKL-UPL di Kalimantan Timur</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0 6px; counter-reset: step; }
+    .flow div { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; position: relative; background: #fff; }
+    .flow div::before { counter-increment: step; content: counter(step); position: absolute; top: -10px; left: 12px; background: #111827; color: #fff; font-size: 0.75rem; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; }
+    .flow strong { display: block; font-size: 0.95rem; margin: 4px 0; }
+    .flow span { font-size: 0.82rem; color: #6b7280; line-height: 1.45; display: block; }
+    .app-frame { width: 100%; height: 760px; border: 1px solid var(--line); border-radius: 12px; display: block; background: #f5f6f4; }
+    .open-app { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 4px; padding: 10px 18px; background: #163a2e; color: #fff !important; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .open-app:hover { background: #1f4d3d; }
+    .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+    @media (max-width: 600px) { .app-frame { height: 680px; } }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Web App</span>
+      <h1>Aplikasi Penapisan Lokasi untuk AMDAL dan UKL-UPL di Kalimantan Timur</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Kalimantan Timur adalah salah satu provinsi dengan aktivitas pembukaan lahan paling tinggi di Indonesia. Tambang batubara, perkebunan, dan pembangunan Ibu Kota Nusantara terus membutuhkan lahan baru, sementara sebagian besar wilayahnya masih berupa kawasan hutan. Sebelum sebuah kegiatan dibangun, pemrakarsa harus mengetahui dokumen lingkungan apa yang dibutuhkan, yaitu AMDAL, UKL-UPL, atau cukup SPPL. Penentunya bukan hanya jenis dan skala kegiatan, tetapi juga lokasinya. Kegiatan yang berada di dalam atau berbatasan langsung dengan kawasan lindung pada umumnya wajib AMDAL, meskipun skalanya kecil.</p>
+      <p>Di konsultan lingkungan, langkah pertama ini disebut penapisan lokasi. Tapak rencana kegiatan ditumpangkan dengan berbagai peta, mulai dari kawasan hutan, moratorium izin, izin yang sudah ada, rawan bencana, sampai sempadan sungai. Pekerjaan ini biasanya dilakukan secara manual di perangkat lunak GIS dan memakan waktu. Project ini membangun aplikasi web yang melakukan penapisan tersebut secara otomatis. Pengguna cukup menggambar atau mengunggah batas tapak, lalu aplikasi menampilkan laporan dalam hitungan detik.</p>
+
+      <p><a class="open-app" href="app-amdal.html" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Buka aplikasi Penapisan Lokasi Kaltim</a></p>
+
+      <iframe class="app-frame" src="app-amdal.html" title="Aplikasi Penapisan Lokasi Kaltim" loading="lazy"></iframe>
+      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Tekan "Contoh tapak", gambar poligon sendiri, atau unggah file GeoJSON atau shapefile (.zip).</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kawasan hutan (revisi I, Juni 2026)</td><td>Layanan peta</td><td>Sekunder</td><td>Geoportal Planologi Kementerian Kehutanan</td></tr>
+            <tr><td>Peta Indikatif Penghentian Pemberian Izin Baru (PIPPIB) 2026 periode I</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Planologi Kementerian Kehutanan</td></tr>
+            <tr><td>Persetujuan Penggunaan Kawasan Hutan (PPKH), Januari 2026</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Planologi Kementerian Kehutanan</td></tr>
+            <tr><td>Indeks bahaya banjir, tanah longsor, dan kebakaran hutan dan lahan</td><td>Raster</td><td>Sekunder</td><td>InaRISK, Badan Nasional Penanggulangan Bencana</td></tr>
+            <tr><td>Tutupan lahan 2021 (resolusi 10 m)</td><td>Raster</td><td>Sekunder</td><td>ESA WorldCover</td></tr>
+            <tr><td>Sungai dan garis pantai</td><td>Vektor</td><td>Sekunder</td><td>OpenStreetMap</td></tr>
+            <tr><td>Batas kabupaten/kota</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Semua data berasal dari layanan yang terbuka untuk umum. Data kawasan hutan, PIPPIB, dan PPKH diambil langsung dari Geoportal Kementerian Kehutanan, sehingga sama dengan yang ditampilkan di peta interaktif SIGAP. Area tambang yang berada di dalam kawasan hutan juga ikut tercakup melalui data PPKH, karena setiap tambang di kawasan hutan wajib memiliki persetujuan ini.</p>
+
+      <h2>Cara kerja</h2>
+
+      <div class="flow">
+        <div><strong>Unduh dan potong</strong><span>Setiap lapisan diunduh dari instansi pemiliknya dan dipotong untuk wilayah Kalimantan Timur</span></div>
+        <div><strong>Satukan dalam grid</strong><span>Semua lapisan diubah ke grid yang sama berukuran sekitar 110 m, lalu disimpan sebagai ubin gambar</span></div>
+        <div><strong>Tentukan tapak</strong><span>Pengguna menggambar poligon atau mengunggah GeoJSON atau shapefile</span></div>
+        <div><strong>Analisis di browser</strong><span>Setiap sel grid di dalam tapak diperiksa, lalu luas setiap batasan dijumlahkan</span></div>
+        <div><strong>Laporan</strong><span>Status setiap batasan, indikasi dokumen lingkungan, dan daftar pemegang PPKH di tapak</span></div>
+      </div>
+
+      <p>Bagian yang paling menantang adalah data kawasan hutan. Data ini hanya tersedia dalam bentuk gambar peta, seperti foto, bukan data yang bisa langsung dihitung luasnya. Dari gambar saja, warna hijau tidak bisa langsung dihitung sebagai hutan lindung, karena isinya hanya kumpulan titik warna tanpa keterangan. Untuk mengatasinya, peta tersebut ditampilkan ulang dengan aturan warna buatan sendiri, sehingga setiap fungsi kawasan hutan punya satu warna khusus yang tidak dipakai oleh fungsi lain. Setelah itu, warna setiap titik pada gambar dibaca satu per satu dan diterjemahkan kembali menjadi fungsi kawasan hutannya. Hasilnya adalah peta kawasan hutan yang bisa dihitung luasnya seperti data biasa. Langkah ini tidak diperlukan untuk PIPPIB dan PPKH, karena keduanya sudah tersedia dalam bentuk data yang bisa langsung diolah.</p>
+      <p>Semua perhitungan dilakukan langsung di perangkat pengguna. Artinya, batas tapak yang digambar atau diunggah tidak disimpan di mana pun. Batas tapak hanya dipakai satu kali di luar perangkat, yaitu saat aplikasi mencari daftar pemegang PPKH di tapak tersebut melalui Geoportal Kementerian Kehutanan.</p>
+
+      <h2>Aturan penapisan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Batasan</th>
+              <th>Alasan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dot" style="background:#c62828"></span>Kendala berat</td><td>Kawasan konservasi</td><td>Penggunaan untuk kegiatan seperti tambang dan perkebunan pada umumnya tidak dapat diberikan</td></tr>
+            <tr><td><span class="dot" style="background:#c62828"></span>Kendala berat</td><td>Hutan lindung</td><td>Penambangan dengan pola terbuka dilarang (UU No. 41/1999)</td></tr>
+            <tr><td><span class="dot" style="background:#c62828"></span>Kendala berat</td><td>PIPPIB</td><td>Pemberian izin baru di hutan alam primer dan gambut dihentikan, kecuali kegiatan yang dikecualikan</td></tr>
+            <tr><td><span class="dot" style="background:#c62828"></span>Kendala berat</td><td>Sempadan sungai dan pantai (≤ 100 m)</td><td>Termasuk kawasan perlindungan setempat (Permen PUPR No. 28/2015 dan Perpres No. 51/2016)</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Perlu perhatian</td><td>Hutan produksi</td><td>Kegiatan non-kehutanan memerlukan PPKH atau pelepasan kawasan hutan</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Perlu perhatian</td><td>PPKH yang sudah ada</td><td>Potensi tumpang tindih dengan pemegang persetujuan lain</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Perlu perhatian</td><td>Bahaya tinggi mencakup ≥ 10% tapak</td><td>Perlu kajian mitigasi bencana</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Perlu perhatian</td><td>Mangrove, tutupan pohon ≥ 50%, atau permukiman ≤ 500 m</td><td>Potensi dampak ekologis dan sosial yang perlu dikaji</td></tr>
+            <tr><td><span class="dot" style="background:#e6a700"></span>Perlu perhatian</td><td>Berbatasan dengan kawasan lindung</td><td>Kegiatan yang berbatasan langsung dengan kawasan lindung pada umumnya wajib AMDAL</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Jika tapak berada di dalam atau berbatasan langsung dengan kawasan lindung, yaitu kawasan konservasi, hutan lindung, gambut dalam PIPPIB, atau sempadan sungai dan pantai, aplikasi menampilkan indikasi wajib AMDAL. Jika tidak, dokumen yang dibutuhkan ditentukan oleh jenis dan skala kegiatan sesuai Lampiran I PermenLHK No. 4/2021. Ambang skala tersebut sengaja tidak dimasukkan ke aplikasi, karena sangat beragam untuk setiap jenis usaha dan lebih tepat dicek langsung pada peraturannya.</p>
+
+      <h2>Contoh hasil penapisan</h2>
+      <p>Tombol "Contoh tapak" di aplikasi memuat sebuah kotak seluas sekitar 1.983 hektare di perbatasan Kabupaten Kutai Kartanegara dan Kutai Timur, salah satu kawasan tambang batubara di Kalimantan Timur. Hasil penapisannya menunjukkan bahwa satu tapak bisa memuat banyak kendala sekaligus.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Pemeriksaan</th>
+              <th>Hasil</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Hutan produksi</td><td>1.579 ha (80%)</td><td><span class="dot" style="background:#e6a700"></span>Perlu PPKH</td></tr>
+            <tr><td>PPKH yang sudah ada</td><td>746 ha (38%), untuk tambang</td><td><span class="dot" style="background:#e6a700"></span>Potensi tumpang tindih</td></tr>
+            <tr><td>Sempadan sungai</td><td>47 ha (2%)</td><td><span class="dot" style="background:#c62828"></span>Kawasan lindung</td></tr>
+            <tr><td>Bahaya banjir tinggi</td><td>21% tapak</td><td><span class="dot" style="background:#e6a700"></span>Perlu mitigasi</td></tr>
+            <tr><td>Tutupan pohon</td><td>1.810 ha (91%)</td><td><span class="dot" style="background:#e6a700"></span>Potensi deforestasi</td></tr>
+            <tr><td>PIPPIB</td><td>Tidak bertampalan</td><td><span class="dot" style="background:#2e7d32"></span>Aman</td></tr>
+            <tr><td>Jarak ke permukiman</td><td>≥ 5 km</td><td><span class="dot" style="background:#2e7d32"></span>Aman</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Sebagian besar tapak berada di hutan produksi, sehingga kegiatan non-kehutanan di sini memerlukan PPKH. Hampir 40% tapak juga sudah berada di dalam areal PPKH tambang milik pihak lain, yang berarti ada potensi tumpang tindih yang perlu dicek sejak awal. Karena sebagian kecil tapak masuk sempadan sungai, aplikasi menampilkan indikasi wajib AMDAL. Pemrakarsa bisa memilih untuk menggeser batas tapak agar keluar dari sempadan, atau tetap menyiapkan AMDAL. Selain itu, sekitar seperlima tapak termasuk bahaya banjir tinggi dan hampir seluruhnya masih berupa tutupan pohon, sehingga kajian banjir dan dampak deforestasi perlu menjadi perhatian utama dalam dokumen lingkungannya.</p>
+
+      <h2>Keterbatasan</h2>
+      <p>Aplikasi ini adalah alat bantu penapisan awal, bukan pengganti keputusan resmi. Semua peta yang dipakai bersifat indikatif, dan keputusan wajib AMDAL tetap ditetapkan oleh instansi lingkungan hidup. Analisis dilakukan pada grid sekitar 110 m, sehingga tapak yang sangat kecil atau batasan yang sangat sempit seperti sempadan sungai 50 m hanya terbaca secara kasar. Sungai dari OpenStreetMap juga belum tentu lengkap, terutama sungai-sungai kecil di pedalaman. Kesesuaian dengan Rencana Tata Ruang Wilayah (RTRW) dan izin usaha pertambangan di luar kawasan hutan juga belum diperiksa, karena datanya belum tersedia secara terbuka dan seragam untuk seluruh kabupaten. Kedua data ini menjadi pengembangan berikutnya yang paling penting.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Penapisan lokasi yang biasanya dikerjakan berjam-jam secara manual bisa diringkas menjadi beberapa detik dengan menggabungkan data terbuka dari berbagai instansi ke dalam satu grid. Hasilnya bukan keputusan akhir, tetapi cukup untuk memberi gambaran awal kepada pemrakarsa dan konsultan tentang kendala apa saja yang mungkin dihadapi sebuah tapak sebelum masuk ke penyusunan dokumen lingkungan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
