@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemantauan Pembukaan Lahan Food Estate Merauke per Triwulan, 2023–2026</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; text-align: left; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: left; margin-top: 6px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .lanjutan { border: 1px solid var(--line); border-left: 4px solid #163a2e; border-radius: 8px; padding: 12px 16px; background: #f3f5f2; margin: 0 0 24px; }
+    .post-content .lanjutan p { margin: 0; font-size: 0.92rem; }
+    #mrkMap { width: 100%; height: 600px; border-radius: 12px; border: 1px solid var(--line); background: #0b1726; }
+    .post-content #mrkMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .leaflet-image-layer.pix { image-rendering: pixelated; }
+    .time-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .time-bar button { font: inherit; font-size: 0.85rem; padding: 6px 14px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; min-width: 92px; }
+    .time-bar input[type=range] { flex: 1; min-width: 180px; }
+    .time-label { font-weight: 700; min-width: 260px; }
+    .time-label span { font-weight: 400; color: #6b7280; font-size: 0.85rem; margin-left: 6px; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 210px; }
+    .wm-panel header { display: flex; justify-content: space-between; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 6px 10px 8px; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-panel label { display: flex; gap: 6px; align-items: center; margin: 3px 0; cursor: pointer; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 2px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 11.5px/1.55 system-ui, sans-serif; color: #222; }
+    .wm-legend b { display: block; margin-top: 4px; }
+    .wm-legend b:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    @media (max-width: 600px) {
+      #mrkMap { height: 460px; }
+      .time-label { min-width: 0; width: 100%; }
+      .wm-legend { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Environmental Impact</span>
+      <h1>Pemantauan Pembukaan Lahan Food Estate Merauke per Triwulan, 2023–2026</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <div class="lanjutan"><p><i class="fa-solid fa-link"></i> Project ini berangkat dari temuan di project <a href="project-fire.html">Kebakaran Hutan dan Lahan 2026</a>, yang menunjukkan bahwa sebagian besar lahan terbakar di Papua bagian selatan berada di blok-blok yang baru dibuka.</p></div>
+
+      <h2>Latar belakang</h2>
+      <p>Kabupaten Merauke di Papua Selatan dikenal dengan bentang alamnya yang khas, berupa hutan dataran rendah, savana, dan rawa yang sangat luas. Sejak 2024, wilayah ini menjadi lokasi Proyek Strategis Nasional pangan dan energi, yang mencakup perkebunan tebu dan pencetakan sawah baru dalam skala ratusan ribu hektare. Rencana sebesar ini memunculkan pertanyaan yang wajar. Seberapa cepat lahan sebenarnya dibuka, dan ekosistem apa yang digantikan?</p>
+      <p>Dalam project kebakaran hutan dan lahan, citra Sentinel-2 di sekitar Merauke sudah memperlihatkan hamparan lahan terbuka dengan batas-batas lurus yang muncul hanya dalam beberapa bulan. Project ini melanjutkan temuan itu ke seluruh kabupaten. Pembukaan lahan dipetakan per triwulan sejak 2023, lalu dicocokkan dengan jenis ekosistem, tutupan hutan, dan status kawasan hutan.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Citra Sentinel-2 Level-2A (10–20 m), Juli 2022–Oktober 2026</td><td>Raster</td><td>Sekunder</td><td>ESA Copernicus, melalui Google Earth Engine</td></tr>
+            <tr><td>Penyaring awan Cloud Score+</td><td>Raster</td><td>Sekunder</td><td>Google</td></tr>
+            <tr><td>Tutupan lahan ESA WorldCover 2021 (10 m)</td><td>Raster</td><td>Sekunder</td><td>European Space Agency</td></tr>
+            <tr><td>Tutupan hutan 2020 (GFC2020)</td><td>Raster</td><td>Sekunder</td><td>European Commission JRC</td></tr>
+            <tr><td>Kawasan hutan (Juni 2026) dan areal pelepasan kawasan hutan</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+            <tr><td>Persetujuan Penggunaan Kawasan Hutan (PPKH), Januari 2026</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+            <tr><td>Batas Kabupaten Merauke</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Merauke punya musim hujan yang panjang dari sekitar Desember sampai April, sehingga citra pada bulan-bulan itu sering tertutup awan. Karena itu, citra Sentinel-2 digabung menjadi komposit untuk setiap musim kemarau (Juli–Oktober) dari 2022 sampai 2026, ditambah komposit per triwulan sejak Januari 2024. Bagian yang tertutup awan dibuang lebih dulu dengan Cloud Score+.</p>
+      <p>Pada setiap komposit, sebuah piksel dianggap baru dibuka jika vegetasinya sangat rendah (NDVI &lt; 0,2), menunjukkan ciri tanah terbuka (BSI &gt; 0,05), bukan air (MNDWI &lt; 0), dan permukaannya cukup terang. Syarat terakhir ini penting di Merauke. Tanah yang baru dikupas tampak terang, sedangkan bekas kebakaran tampak gelap dan savana yang mengering masih menyisakan sedikit warna hijau, sehingga keduanya tidak ikut terhitung. Selain itu, lahan tersebut harus masih bervegetasi pada musim kemarau 2022 (NDVI ≥ 0,35), agar lahan yang sudah terbuka sejak lama atau terbuka secara alami tidak dianggap sebagai pembukaan baru.</p>
+      <p>Waktu pembukaan setiap piksel ditentukan dari triwulan pertama lahan itu terlihat terbuka. Bercak yang luasnya kurang dari 5 hektare dibuang, karena bercak sekecil ini umumnya berupa genangan yang mengering, bayangan awan, atau savana terbakar yang tersebar. Pembukaan yang tersisa lalu dicocokkan dengan jenis ekosistem sebelum dibuka, tutupan hutan 2020, fungsi kawasan hutan, areal pelepasan kawasan hutan, dan areal PPKH.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Sejak 2023, sekitar 45.800 hektare lahan di Kabupaten Merauke telah dibuka, kira-kira seluas 80 ribu lapangan sepak bola. Pembukaannya berjalan sangat cepat dan terus menanjak. Pada 2023 hanya terdeteksi 839 hektare, lalu 2.457 hektare pada 2024 dan 13.917 hektare pada 2025. Pada 2026, meskipun baru sampai Oktober, luasnya sudah mencapai 28.601 hektare, lebih dari dua kali lipat tahun sebelumnya.</p>
+
+      <div class="stat-row">
+        <div><strong>45.814 ha</strong><span>Lahan yang dibuka sejak 2023</span></div>
+        <div><strong>62%</strong><span>Di antaranya dibuka pada Januari–Oktober 2026</span></div>
+        <div><strong>88%</strong><span>Sebelumnya berupa hutan dan pepohonan</span></div>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/merauke-grafik.png" target="_blank" rel="noopener">
+          <img src="assets/maps/merauke-grafik.png" alt="Grafik luas lahan yang baru dibuka per triwulan di Kabupaten Merauke dan totalnya sejak 2023">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Luas lahan yang baru dibuka per triwulan di Kabupaten Merauke (batang) dan totalnya sejak 2023 (garis)</figcaption>
+      </figure>
+
+      <p class="table-note">Lonjakan pada triwulan Juli–September sebagian dipengaruhi musim. Komposit musim kemarau paling bersih dari awan, sehingga lahan yang dibuka saat musim hujan sering baru terdeteksi pada kemarau berikutnya. Triwulan Juli–September 2026 juga sudah mencakup citra bulan Oktober.</p>
+
+      <p>Peta di bawah memperlihatkan kapan setiap bagian lahan mulai dibuka. Warna kuning menunjukkan pembukaan pada 2023, sedangkan warna merah tua menunjukkan pembukaan pada 2026. Geser penanda waktu untuk melihat bagaimana pembukaan menyebar dari triwulan ke triwulan, atau ganti citra latar untuk membandingkan kondisi 2022 dan 2026.</p>
+
+      <figure class="chart-figure">
+        <div id="mrkMap" role="region" aria-label="Peta interaktif pembukaan lahan di Kabupaten Merauke per triwulan 2023 sampai 2026"></div>
+        <div class="time-bar">
+          <button type="button" id="playBtn"><i class="fa-solid fa-play"></i> Putar</button>
+          <input type="range" id="qSlider" min="1" max="12" value="12" aria-label="Pilih triwulan">
+          <div class="time-label" id="qLabel">Juli–Oktober 2026</div>
+        </div>
+        <p class="map-hint">Pembukaan ditampilkan dalam sel sekitar 120 m agar blok kecil tetap terlihat saat peta diperkecil. Perbesar ke sekitar Jagebob di bagian timur untuk melihat blok-blok terbesar. Klik areal PPKH untuk melihat nama dan luasnya. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 2.</strong> Peta interaktif pembukaan lahan di Kabupaten Merauke per triwulan, 2023–2026</figcaption>
+      </figure>
+
+      <p>Pembukaan tidak menyebar merata, melainkan terkumpul di tiga wilayah. Yang terbesar berada di sekitar Jagebob dan Ngguti Bob, dengan luas sekitar 23.800 hektare. Sekitar 15.500 hektare lainnya berada di sebelah utaranya, di sekitar Blandin Kakayo. Keduanya berupa blok-blok raksasa bersisi lurus dengan pola petak di dalamnya, ciri khas pembukaan perkebunan skala besar. Wilayah ketiga berada di sekitar Wanam, Distrik Ilwayab, seluas sekitar 4.100 hektare, yang memanjang di sepanjang jalur baru dari barat ke timur. Sisanya, sekitar 2.400 hektare, tersebar dalam bercak-bercak kecil.</p>
+      <p>Blok di sekitar Blandin Kakayo juga menjadi lokasi yang diamati dalam project kebakaran hutan dan lahan. Di sana, sekitar 5.798 hektare lahan terbakar pada Juli–Oktober 2026, dan sebagian besar berada di blok yang baru dibuka pada periode yang sama. Kedua hasil ini saling menguatkan, bahwa titik api di wilayah ini kemungkinan besar berasal dari pembakaran sisa vegetasi saat lahan dibuka.</p>
+
+      <h3>Ekosistem apa yang digantikan?</h3>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tutupan lahan sebelum dibuka</th>
+              <th>Luas (ha)</th>
+              <th>Persentase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Hutan dan pepohonan</td><td>40.464</td><td>88,3%</td></tr>
+            <tr><td>Rawa dan lahan basah</td><td>2.483</td><td>5,4%</td></tr>
+            <tr><td>Savana dan padang rumput</td><td>2.270</td><td>5,0%</td></tr>
+            <tr><td>Lahan pertanian lama</td><td>534</td><td>1,2%</td></tr>
+            <tr><td>Mangrove</td><td>51</td><td>0,1%</td></tr>
+            <tr><td>Lainnya</td><td>13</td><td>&lt; 0,1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Tutupan lahan sebelum dibuka diambil dari ESA WorldCover 2021. Kelas hutan dan pepohonan mencakup hutan dataran rendah dan savana berpohon rapat.</p>
+
+      <p>Merauke sering digambarkan sebagai hamparan savana dan rawa yang cocok untuk dijadikan lahan pertanian. Namun lahan yang benar-benar dibuka sejauh ini justru sebagian besar berupa hutan. Hampir 9 dari 10 hektare pembukaan sebelumnya ditumbuhi pepohonan, dan data tutupan hutan JRC memberi hasil yang hampir sama, yaitu 40.099 hektare atau 88% pembukaan berada di lahan yang masih berupa hutan pada 2020. Savana dan rawa, yang selama ini menjadi gambaran umum wilayah Merauke, hanya menyumbang sekitar sepersepuluh dari total pembukaan.</p>
+
+      <h3>Di kawasan apa lahan dibuka?</h3>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Status kawasan</th>
+              <th>Luas (ha)</th>
+              <th>Persentase</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>APL hasil pelepasan kawasan hutan</td><td>26.229</td><td>57,3%</td></tr>
+            <tr><td>APL lainnya</td><td>16.325</td><td>35,6%</td></tr>
+            <tr><td>Kawasan konservasi</td><td>1.551</td><td>3,4%</td></tr>
+            <tr><td>Hutan produksi yang dapat dikonversi</td><td>975</td><td>2,1%</td></tr>
+            <tr><td>Hutan lindung</td><td>368</td><td>0,8%</td></tr>
+            <tr><td>Hutan produksi tetap dan terbatas</td><td>367</td><td>0,8%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">APL adalah Areal Penggunaan Lain, yaitu lahan di luar kawasan hutan. Fungsi kawasan hutan memakai peta Juni 2026 berskala 1:250.000, sehingga di sekitar batas kawasan bisa terjadi pergeseran beberapa ratus meter.</p>
+
+      <p>Sekitar 93% pembukaan berada di APL, dan lebih dari separuhnya berada di areal yang sebelumnya berstatus kawasan hutan lalu dilepaskan. Artinya, sebagian besar hutan yang hilang sudah lebih dulu diubah statusnya secara resmi sehingga boleh dibuka. Hanya sekitar 3.261 hektare atau 7% pembukaan yang masih berada di dalam kawasan hutan.</p>
+      <p>Pembukaan di kawasan konservasi tercatat 1.551 hektare, tetapi sekitar 1.289 hektare di antaranya ada di Pulau Kimaam yang hampir seluruhnya berupa rawa dan padang rumput. Perubahan di sana kemungkinan besar adalah rawa yang mengering atau terbakar saat kemarau, bukan pembukaan lahan. Taman Nasional Wasur di selatan juga relatif aman, dengan hanya sekitar 54 hektare bercak kecil yang terdeteksi di dalamnya. Yang lebih perlu diperiksa adalah 368 hektare pembukaan di hutan lindung, karena fungsi kawasan ini tidak bisa dipakai untuk kegiatan budi daya.</p>
+      <p>Di sekitar Wanam, hampir seluruh pembukaan lahan, sekitar 4.048 hektare, berada di dalam satu areal PPKH non-tambang seluas 54.621 hektare atas nama Kementerian Pertahanan, yang memanjang di sepanjang jalur barat–timur tersebut. Artinya, pembukaan di wilayah ini sudah memiliki persetujuan penggunaan kawasan hutan, dan baru memakai sekitar 7% dari luas areal yang disetujui.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Citra satelit memperlihatkan bahwa pembukaan lahan di Merauke berlangsung sangat cepat dan terus bertambah. Dalam waktu kurang dari empat tahun, sekitar 45.800 hektare lahan telah dibuka, dan lebih dari 60% di antaranya terjadi hanya dalam sepuluh bulan pertama 2026. Berbeda dari gambaran Merauke sebagai hamparan savana dan rawa, hampir 90% lahan yang dibuka sebelumnya berupa hutan. Sebagian besar pembukaan memang berada di APL atau di areal yang sudah dilepaskan dari kawasan hutan, sehingga secara status boleh dibuka. Namun ratusan hektare di hutan lindung dan hutan produksi tetap perlu diverifikasi.</p>
+      <p>Meski begitu, resolusi 30 m dan ambang indeks yang dipakai bisa melewatkan pembukaan kecil, dan lahan yang dibuka lalu cepat ditanami bisa jadi tidak sempat terlihat terbuka pada komposit mana pun. Sebaliknya, rawa yang mengering di musim kemarau masih bisa terhitung sebagai pembukaan, seperti yang terlihat di Pulau Kimaam. Awan pada musim hujan membuat waktu pembukaan cenderung bergeser ke triwulan kemarau, dan data 2026 baru mencakup sampai Oktober. Karena itu, angka 45.800 hektare lebih tepat dibaca sebagai batas bawah. Pembukaan juga masih terus bertambah setiap triwulan, sehingga pemantauannya perlu dilanjutkan dengan citra radar Sentinel-1 yang tidak terhalang awan, lalu dicocokkan dengan peta hak guna usaha untuk mengetahui perusahaan mana yang membuka setiap blok.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var KAB = [[-9.12, 137.64], [-6.618, 141.019]];
+      var NAMA = ['2023', 'Januari–Maret 2024', 'April–Juni 2024', 'Juli–September 2024', 'Oktober–Desember 2024',
+                  'Januari–Maret 2025', 'April–Juni 2025', 'Juli–September 2025', 'Oktober–Desember 2025',
+                  'Januari–Maret 2026', 'April–Juni 2026', 'Juli–Oktober 2026'];
+      // Warna per tahun untuk kode waktu 1 (2023) sampai 12 (Juli-Oktober 2026)
+      var TAHUN = [['2023', '#ffd54f', [1]], ['2024', '#ff8a65', [2, 3, 4, 5]], ['2025', '#e53935', [6, 7, 8, 9]], ['2026', '#880e4f', [10, 11, 12, 13]]];
+      var RGB = {}; TAHUN.forEach(function (t) { t[2].forEach(function (k) { RGB[k] = [parseInt(t[1].substr(1, 2), 16), parseInt(t[1].substr(3, 2), 16), parseInt(t[1].substr(5, 2), 16)]; }); });
+      var box = document.getElementById('mrkMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.25, maxBounds: [[-9.6, 137.2], [-6.2, 141.5]] });
+      map.fitBounds(KAB);
+      if (window.ResizeObserver) new ResizeObserver(function () { map.invalidateSize(); }).observe(box);
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var bases = {
+        'Citra Sentinel-2 2026': L.imageOverlay('assets/maps/merauke-rgb-2026.jpg', KAB, { attribution: 'Sentinel-2 &copy; ESA Copernicus' }),
+        'Citra Sentinel-2 2022': L.imageOverlay('assets/maps/merauke-rgb-2022.jpg', KAB, { attribution: 'Sentinel-2 &copy; ESA Copernicus' }),
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' })
+      };
+      var activeBase = bases['Citra Sentinel-2 2026'].addTo(map);
+      var bukaLayer = null, LUAS = null;
+      var ppkhLayer = L.geoJSON(null, {
+        style: { color: '#00e5ff', weight: 1.5, fill: true, fillOpacity: 0.05 },
+        onEachFeature: function (f, l) {
+          var p = f.properties;
+          l.bindPopup('<table class="wm-popup"><tr><td colspan="2"><b>' + p.NAMA_PPKH + '</b></td></tr><tr><td>Jenis</td><td>' + p.JENIS_PPKH + '</td></tr><tr><td>Luas tercatat</td><td>' +
+            Math.round(p.LUAS_PPKH).toLocaleString('id-ID') + ' ha</td></tr><tr><td>Status</td><td>' + (p.STATUS || '-') + '</td></tr></table>');
+        }
+      });
+
+      // Kode waktu disimpan di kanal merah PNG, lalu diwarnai ulang di canvas sesuai triwulan yang dipilih
+      var src = new Image(), canvas = document.createElement('canvas'), ctx = null, orig = null;
+      var slider = document.getElementById('qSlider'), label = document.getElementById('qLabel'), playBtn = document.getElementById('playBtn'), timer = null;
+      function draw(q) {
+        slider.value = q;
+        label.innerHTML = NAMA[q - 1] + (LUAS ? '<span>' + LUAS[q - 1].toLocaleString('id-ID') + ' ha sudah dibuka</span>' : '');
+        if (!orig) return;
+        var out = ctx.createImageData(canvas.width, canvas.height);
+        for (var i = 0; i < orig.data.length; i += 4) {
+          var k = orig.data[i];
+          if (!k || k > q) continue;
+          var c = RGB[k]; out.data[i] = c[0]; out.data[i + 1] = c[1]; out.data[i + 2] = c[2]; out.data[i + 3] = 240;
+        }
+        ctx.putImageData(out, 0, 0);
+        bukaLayer.setUrl(canvas.toDataURL());
+      }
+      fetch('assets/data/merauke.json').then(function (r) { return r.json(); }).then(function (m) {
+        var b = m.bounds, s = 0;
+        LUAS = Object.keys(m.per_triwulan).slice(0, 12).map(function (k) { s += m.per_triwulan[k]; return s; });
+        bukaLayer = L.imageOverlay('', [[b[0], b[1]], [b[2], b[3]]], { opacity: 0.95, interactive: false, className: 'pix' }).addTo(map);
+        src.onload = function () {
+          canvas.width = src.width; canvas.height = src.height; ctx = canvas.getContext('2d', { willReadFrequently: true });
+          ctx.drawImage(src, 0, 0); orig = ctx.getImageData(0, 0, canvas.width, canvas.height); draw(+slider.value); legend();
+        };
+        src.src = 'assets/maps/merauke-bukaan.png';
+      });
+      fetch('assets/data/merauke-ppkh.geojson').then(function (r) { return r.json(); }).then(function (g) { ppkhLayer.addData(g); ppkhLayer.addTo(map); legend(); });
+      fetch('assets/data/merauke-batas.geojson').then(function (r) { return r.json(); }).then(function (g) {
+        L.geoJSON(g, { style: { color: '#ffffff', weight: 2, dashArray: '6 4', fill: false }, interactive: false }).addTo(map);
+      });
+
+      function stop() { if (timer) { clearInterval(timer); timer = null; } playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Putar'; }
+      playBtn.addEventListener('click', function () {
+        if (timer) { stop(); return; }
+        var q = +slider.value >= 12 ? 1 : +slider.value; draw(q);
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Jeda';
+        timer = setInterval(function () { if (+slider.value >= 12) { stop(); return; } draw(+slider.value + 1); }, 900);
+      });
+      slider.addEventListener('input', function () { stop(); draw(+slider.value); });
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
+            '<label><input type="checkbox" data-k="buka" checked>Pembukaan lahan</label><label><input type="checkbox" data-k="ppkh" checked>Areal PPKH</label><div class="wm-group">Citra latar</div>';
+          Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });
+          d.innerHTML = h + '</div>';
+          L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+          d.querySelector('header').addEventListener('click', function () { d.classList.toggle('collapsed'); });
+          d.querySelectorAll('input[data-k]').forEach(function (c) {
+            c.addEventListener('change', function () {
+              var l = { buka: bukaLayer, ppkh: ppkhLayer }[c.dataset.k];
+              if (!l) return;
+              if (c.checked) l.addTo(map); else map.removeLayer(l);
+              legend(); });
+          });
+          d.querySelectorAll('input[name=base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = bases[r.value].addTo(map); if (activeBase.bringToBack) activeBase.bringToBack(); });
+          });
+          return d;
+        }
+      });
+      new Panel().addTo(map);
+      var legDiv;
+      var Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd: function () { legDiv = L.DomUtil.create('div', 'wm-legend'); return legDiv; } });
+      new Legend().addTo(map);
+      function legend() {
+        var h = '';
+        if (bukaLayer && map.hasLayer(bukaLayer)) h += '<b>Tahun mulai dibuka</b>' + TAHUN.map(function (t) { return '<div><i style="background:' + t[1] + '"></i>' + t[0] + '</div>'; }).join('');
+        h += '<b>Batas</b>' + (map.hasLayer(ppkhLayer) ? '<div><i style="background:transparent;border:2px solid #00e5ff"></i>Areal PPKH</div>' : '') +
+             '<div><i style="background:transparent;border:2px dashed #999"></i>Kabupaten Merauke</div>';
+        legDiv.innerHTML = h;
+      }
+      legend();
+    })();
+  </script>
+</body>
+</html>

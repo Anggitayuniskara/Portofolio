@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemodelan Banjir Ciliwung Condet–Manggarai dengan HEC-RAS 2D dan Emulator Machine Learning</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; text-align: left; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: left; margin-top: 6px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .app { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fafafa; }
+    .app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px; }
+    .ctrl { display: grid; gap: 12px; align-content: start; }
+    .ctrl label { display: block; font-size: 0.88rem; font-weight: 600; }
+    .ctrl label span { float: right; font-weight: 400; color: #374151; }
+    .ctrl small { display: block; font-size: 0.76rem; color: #6b7280; line-height: 1.4; margin-top: 2px; }
+    .ctrl input[type=range] { width: 100%; margin: 4px 0 0; }
+    .preset { display: flex; flex-wrap: wrap; gap: 6px; }
+    .preset button { font: inherit; font-size: 0.8rem; padding: 5px 10px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; }
+    .preset button:hover { border-color: #1f5f99; }
+    .out-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .out-row div { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+    .out-row strong { display: block; font-size: 1.15rem; }
+    .out-row span { font-size: 0.74rem; color: #6b7280; }
+    .warn { display: none; font-size: 0.8rem; color: #92400e; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; padding: 6px 10px; }
+    .hg { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 6px 2px; }
+    .hg-title { font-size: 0.78rem; color: #374151; font-weight: 600; margin: 2px 4px; }
+    .hg svg { display: block; width: 100%; height: auto; }
+    .hg-tip { position: absolute; pointer-events: none; background: #111827; color: #fff; font-size: 0.74rem; padding: 3px 7px; border-radius: 5px; white-space: nowrap; display: none; }
+    #cwMap { width: 100%; height: 680px; border-radius: 10px; border: 1px solid var(--line); background: #0b1726; }
+    .post-content #cwMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .leaflet-image-layer.pix { image-rendering: pixelated; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 190px; }
+    .wm-panel header { display: flex; justify-content: space-between; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 6px 10px 8px; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-panel label { display: flex; gap: 6px; align-items: center; margin: 3px 0; cursor: pointer; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 2px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 11.5px/1.55 system-ui, sans-serif; color: #222; }
+    .wm-legend b { display: block; margin-top: 4px; }
+    .wm-legend b:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    @media (max-width: 760px) {
+      .app-grid { grid-template-columns: 1fr; }
+      #cwMap { height: 520px; }
+      .out-row strong { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Flood Modeling</span>
+      <h1>Pemodelan Banjir Ciliwung Condet–Manggarai dengan HEC-RAS 2D dan Emulator Machine Learning</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Hampir setiap musim hujan, permukiman di sepanjang Ciliwung antara Condet dan Manggarai kembali tergenang. Air yang menggenangi Kampung Melayu, Bidara Cina, atau Rawajati sering kali tidak berasal dari hujan di Jakarta, melainkan dari hujan deras di Bogor dan Depok beberapa jam sebelumnya. Karena itu, saat hujan deras turun di hulu, warga di hilir biasanya ingin tahu seberapa luas dan seberapa dalam banjir yang akan datang.</p>
+      <p>Model hidraulik dua dimensi seperti HEC-RAS 2D bisa menjawab hal itu dengan cukup rinci. Namun setiap simulasi harus disiapkan secara manual dan butuh waktu beberapa menit sampai beberapa jam untuk dijalankan. Di project ini, penyiapan dan pengolahan hasil HEC-RAS dijalankan otomatis dengan Python untuk 80 skenario hujan. Hasilnya lalu dipakai untuk melatih emulator machine learning, yaitu model yang meniru hasil HEC-RAS tetapi bisa dihitung jauh lebih cepat.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Model elevasi digital FABDEM (30 m, tanpa bangunan dan pohon)</td><td>Raster</td><td>Sekunder</td><td>University of Bristol, melalui Google Earth Engine</td></tr>
+            <tr><td>Tutupan lahan ESA WorldCover 2021 (10 m)</td><td>Raster</td><td>Sekunder</td><td>European Space Agency</td></tr>
+            <tr><td>Kelompok hidrologi tanah HiHydroSoil v2.0 (250 m)</td><td>Raster</td><td>Sekunder</td><td>FutureWater</td></tr>
+            <tr><td>Citra Sentinel-2 Level-2A, Juni 2024–Oktober 2025</td><td>Raster</td><td>Sekunder</td><td>ESA Copernicus, melalui Google Earth Engine</td></tr>
+            <tr><td>Hasil 80 simulasi HEC-RAS 2D</td><td>Tabular dan grid</td><td>Primer</td><td>Hasil pemodelan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <h3>Dari hujan menjadi debit</h3>
+      <p>Daerah aliran sungai (DAS) Ciliwung dari hulu sampai Condet memiliki luas sekitar 317 km² dan dibagi menjadi tiga bagian, yaitu hulu sampai Katulampa, Katulampa sampai Depok, serta Depok sampai Condet. Batas DAS dan alur sungai diturunkan dari FABDEM. Di setiap bagian, jumlah air hujan yang menjadi limpasan dihitung dengan metode SCS Curve Number. Nilai Curve Number diturunkan dari tutupan lahan dan jenis tanah, lalu disesuaikan dengan kondisi tanah sebelum hujan, yaitu kering, normal, atau basah.</p>
+      <p>Limpasan dari setiap bagian diubah menjadi hidrograf, yaitu grafik debit terhadap waktu, dengan metode hidrograf satuan SCS. Hidrograf ini lalu dialirkan ke hilir dengan metode Muskingum, sehingga diperoleh debit Ciliwung di Condet setiap 15 menit. Karena belum ada data muka air yang bisa dipakai untuk kalibrasi, nilai Curve Number diturunkan 10 poin. Penyesuaian ini dibuat agar debit puncak dari hujan besar tidak melampaui kisaran debit banjir Ciliwung yang umum dilaporkan.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Bagian DAS</th>
+              <th>Luas (km²)</th>
+              <th>Curve Number</th>
+              <th>Waktu jeda</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Hulu sampai Katulampa</td><td>151,0</td><td>79,8</td><td>1 jam 55 menit</td></tr>
+            <tr><td>Katulampa sampai Depok</td><td>73,9</td><td>88,9</td><td>5 jam 3 menit</td></tr>
+            <tr><td>Depok sampai Condet</td><td>91,7</td><td>90,6</td><td>5 jam 22 menit</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Curve Number pada tabel adalah nilai dari peta sebelum diturunkan 10 poin. Waktu jeda adalah selang antara pusat hujan dan puncak limpasan di setiap bagian DAS.</p>
+
+      <h3>Model banjir HEC-RAS 2D</h3>
+      <p>Genangan dimodelkan di dataran banjir Ciliwung dari Condet sampai Manggarai yang memiliki luas sekitar 19 km². Area ini mencakup lahan yang tingginya kurang dari 10 m dari permukaan sungai terdekat dan berjarak paling jauh 1,5 km dari alur utama. Resolusi FABDEM diperhalus menjadi 10 m, lalu alur sungai diperdalam 3 m dengan lebar 30 m, karena DEM 30 m tidak bisa menggambarkan palung sungai yang sempit. Area model kemudian dibagi menjadi sekitar 30 ribu sel berukuran 25 × 25 m.</p>
+      <p>Debit dari Condet dimasukkan di batas hulu, sedangkan di batas hilir dekat Manggarai air dibiarkan keluar mengikuti kemiringan sungai. Kekasaran permukaan dibuat seragam dengan koefisien Manning 0,06 untuk mewakili permukiman padat. Seluruh file model, mulai dari geometri, kondisi batas, sampai rencana simulasi, ditulis dengan Python dan dijalankan langsung dari baris perintah HEC-RAS 6.5, tanpa membuka antarmukanya sama sekali.</p>
+
+      <h3>80 skenario hujan</h3>
+      <p>Skenario hujan dibuat dengan Latin Hypercube Sampling, yaitu cara memilih kombinasi yang tersebar merata di seluruh rentang lima variabel berikut.</p>
+      <ul>
+        <li>Total hujan rata-rata DAS, 40–220 mm</li>
+        <li>Lama hujan, 3–24 jam</li>
+        <li>Posisi puncak hujan, dari awal sampai akhir kejadian</li>
+        <li>Perbandingan hujan di hulu Katulampa terhadap rata-rata DAS, 0,6–1,6 kali</li>
+        <li>Kondisi tanah sebelum hujan, dari kering sampai basah</li>
+      </ul>
+      <p>Lama simulasi setiap skenario adalah lama hujan ditambah 18 jam, agar puncak banjir sempat terlewati. Hasil yang diambil dari setiap simulasi adalah kedalaman air maksimum di setiap sel.</p>
+
+      <h3>Emulator machine learning</h3>
+      <p>Setiap peta kedalaman berisi puluhan ribu sel, sehingga terlalu banyak untuk diprediksi satu per satu. Karena itu, 80 peta kedalaman diringkas lebih dulu dengan Principal Component Analysis (PCA) menjadi 20 pola dasar. Setiap peta banjir bisa disusun kembali dari kombinasi 20 pola ini.</p>
+      <p>Bobot setiap pola lalu diprediksi dengan Gaussian Process dari tiga ciri hidrograf di Condet, yaitu debit puncak, volume air banjir, dan lamanya debit bertahan di atas separuh puncaknya. Untuk menguji ketepatannya, 16 skenario disisihkan dan tidak ikut dipakai saat pelatihan. Hasil emulator pada 16 skenario itu kemudian dibandingkan dengan hasil HEC-RAS. Setelah pengujian selesai, emulator dilatih ulang dengan seluruh 80 skenario.</p>
+
+      <h2>Hasil</h2>
+
+      <div class="stat-row">
+        <div><strong>80</strong><span>Simulasi HEC-RAS 2D yang dijalankan otomatis</span></div>
+        <div><strong>1,4 cm</strong><span>Galat kedalaman emulator pada skenario uji (RMSE)</span></div>
+        <div><strong>± 4 milidetik</strong><span>Waktu emulator membuat satu peta, dibanding ± 3 menit di HEC-RAS</span></div>
+      </div>
+
+      <p>Ke-80 skenario selesai disimulasikan dalam sekitar 5 jam, atau rata-rata 3 menit per skenario, tanpa ada yang gagal. Galat volume air di semua simulasi kurang dari 0,04%, artinya hampir tidak ada air yang hilang atau bertambah dengan sendirinya selama perhitungan.</p>
+      <p>Hasil 80 skenario menunjukkan bahwa luas genangan bertambah sangat cepat ketika debit di Condet naik dari 50 sampai sekitar 400 m³/s. Pada debit 100 m³/s, sekitar 140 hektare di luar alur utama sudah tergenang lebih dari 10 cm. Pada 400 m³/s, luasnya sudah mencapai sekitar 445 hektare. Setelah itu pertambahannya melambat, karena dataran rendah di kiri dan kanan sungai sudah terisi, dan air yang datang lebih banyak menambah kedalaman daripada memperluas genangan. Pada debit sekitar 1.000 m³/s, genangan mencapai sekitar 800 hektare.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/ciliwung-grafik.png" target="_blank" rel="noopener">
+          <img src="assets/maps/ciliwung-grafik.png" alt="Grafik luas genangan terhadap debit puncak dari 80 skenario, dan perbandingan kedalaman emulator dengan HEC-RAS per sel pada 16 skenario uji">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Luas genangan dari 80 skenario HEC-RAS dan hasil emulator pada skenario uji (kiri), serta kedalaman per sel hasil emulator dibandingkan HEC-RAS (kanan)</figcaption>
+      </figure>
+
+      <p class="table-note">Luas genangan dihitung dari sel dengan kedalaman lebih dari 10 cm di luar alur sungai yang selalu basah, sehingga bantaran sungai ikut terhitung. Luas genangan pada debit besar juga dibatasi oleh batas area model.</p>
+
+      <p>Dua puluh pola dasar dari PCA sudah mewakili 99,99% variasi seluruh peta kedalaman. Karena luas genangan sangat bergantung pada debit puncak, emulator juga bisa meniru hasil HEC-RAS dengan baik. Pada 16 skenario uji, kedalaman hasil emulator rata-rata hanya berbeda 0,7 cm dari HEC-RAS, dan luas genangannya rata-rata berselisih 6 hektare atau sekitar 1,7%. Kesesuaian sebaran genangan yang diukur dengan Critical Success Index (CSI) rata-rata mencapai 0,96, dengan nilai 1 berarti sama persis. Nilai terendah, sekitar 0,82, muncul pada banjir kecil dengan debit di bawah 120 m³/s, karena genangannya sempit sehingga selisih sedikit saja di tepinya sudah berpengaruh besar.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Model yang dicoba</th>
+              <th>CSI rata-rata</th>
+              <th>Galat kedalaman (RMSE)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Gaussian Process dengan ciri hidrograf</strong></td><td><strong>0,96</strong></td><td><strong>1,4 cm</strong></td></tr>
+            <tr><td>Gradient Boosting dengan ciri hidrograf</td><td>0,90</td><td>5,7 cm</td></tr>
+            <tr><td>Peta skenario latih dengan debit puncak terdekat</td><td>0,91</td><td>7,4 cm</td></tr>
+            <tr><td>Gaussian Process dengan parameter hujan langsung</td><td>0,82</td><td>8,6 cm</td></tr>
+            <tr><td>Gradient Boosting dengan parameter hujan langsung</td><td>0,66</td><td>28,1 cm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Semua model diuji pada 16 skenario yang sama. CSI dihitung dari sel di luar alur sungai dengan ambang kedalaman 10 cm, sedangkan RMSE dihitung pada sel yang basah menurut HEC-RAS atau emulator.</p>
+
+      <p>Dari beberapa model yang dicoba, masukan yang dipakai lebih berpengaruh daripada jenis algoritmanya. Emulator yang langsung memakai lima parameter hujan jauh kurang akurat, karena hubungan antara hujan dan banjir di hilir tidak sederhana. Hujan 150 mm yang turun dalam 4 jam, misalnya, menghasilkan debit puncak yang lebih tinggi daripada hujan 200 mm yang tersebar selama sehari. Karena itu, hujan diubah dulu menjadi hidrograf dengan model hujan-debit, sehingga emulator cukup mempelajari hubungan antara hidrograf dan banjir yang jauh lebih teratur.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/ciliwung-banding.png" target="_blank" rel="noopener">
+          <img src="assets/maps/ciliwung-banding.png" alt="Peta kedalaman banjir maksimum hasil HEC-RAS dan emulator untuk skenario uji 181 mm, serta peta selisihnya">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Kedalaman banjir maksimum hasil HEC-RAS 2D dan emulator untuk salah satu skenario uji, yaitu hujan 181 mm selama 12,5 jam dengan debit puncak 805 m³/s</figcaption>
+      </figure>
+
+      <p class="table-note">Skenario ini tidak dipakai saat melatih emulator. Selisih yang lebih kecil dari 1 cm tidak ditampilkan. Luas genangannya 723 hektare menurut HEC-RAS dan 721 hektare menurut emulator.</p>
+
+      <p>Pada skenario di atas, sebaran dan kedalaman banjir dari emulator hampir tidak bisa dibedakan dari HEC-RAS. Dari Condet sampai Rawajati, lembah sungainya sempit sehingga genangan tidak melebar jauh, tetapi kedalamannya rata-rata sekitar 2 meter. Dari Cawang, Bidara Cina, sampai Kampung Melayu, dataran di kiri dan kanan sungai lebih landai, sehingga air menyebar lebih luas dengan kedalaman rata-rata sekitar 1 meter. Menjelang Manggarai, genangan bahkan meluas ke dataran rendah di sisi barat sungai.</p>
+
+      <h3>Coba sendiri</h3>
+      <p>Emulator di bawah ini berjalan langsung di halaman web. Setelah hujan diatur dengan penggeser, model hujan-debit akan menghitung hidrograf di Condet, lalu emulator menyusun peta kedalaman maksimum di sepanjang Ciliwung. Pilih salah satu contoh untuk memulai, atau klik peta untuk melihat kedalaman di titik tertentu.</p>
+
+      <figure class="chart-figure">
+        <div class="app">
+          <div class="app-grid">
+            <div class="ctrl">
+              <div class="preset" role="group" aria-label="Contoh skenario hujan">
+                <button type="button" data-p="50,6,0.4,1,1.5">Hujan biasa</button>
+                <button type="button" data-p="120,12,0.4,1,2">Hujan lebat</button>
+                <button type="button" data-p="150,6,0.35,1.6,2.5">Hujan deras di Bogor</button>
+                <button type="button" data-p="210,20,0.5,1.2,3">Hujan ekstrem</button>
+              </div>
+              <div><label for="sTotal">Total hujan rata-rata DAS <span id="vTotal"></span></label><input type="range" id="sTotal" min="40" max="220" step="5" value="120"></div>
+              <div><label for="sDur">Lama hujan <span id="vDur"></span></label><input type="range" id="sDur" min="3" max="24" step="0.5" value="12"></div>
+              <div><label for="sPk">Posisi puncak hujan <span id="vPk"></span></label><input type="range" id="sPk" min="0.2" max="0.8" step="0.05" value="0.4"></div>
+              <div><label for="sHulu">Hujan di hulu Katulampa <span id="vHulu"></span></label><input type="range" id="sHulu" min="0.6" max="1.6" step="0.05" value="1"><small>Dibanding rata-rata DAS. Nilai di atas 1 berarti hujan lebih banyak turun di Bogor.</small></div>
+              <div><label for="sAmc">Kondisi tanah sebelum hujan <span id="vAmc"></span></label><input type="range" id="sAmc" min="1" max="3" step="0.1" value="2"></div>
+              <div class="out-row">
+                <div><strong id="oQp">–</strong><span>Debit puncak di Condet</span></div>
+                <div><strong id="oLuas">–</strong><span>Luas genangan di luar alur</span></div>
+                <div><strong id="oMs">–</strong><span>Waktu hitung emulator</span></div>
+              </div>
+              <div class="warn" id="warn">Debit puncak berada di luar rentang 80 skenario latih (42–1.413 m³/s), sehingga hasil emulator kurang bisa diandalkan.</div>
+              <div class="hg">
+                <div class="hg-title">Hidrograf debit di Condet</div>
+                <svg id="hgSvg" viewBox="0 0 420 170" role="img" aria-label="Grafik debit Ciliwung di Condet terhadap waktu"></svg>
+                <div class="hg-tip" id="hgTip"></div>
+              </div>
+            </div>
+            <div>
+              <div id="cwMap" role="region" aria-label="Peta interaktif kedalaman banjir maksimum Ciliwung dari Condet sampai Manggarai"></div>
+            </div>
+          </div>
+        </div>
+        <p class="map-hint">Peta menampilkan kedalaman air maksimum selama kejadian, bukan kondisi pada satu waktu. Alur sungai ikut berwarna biru tua karena selalu berisi air. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 3.</strong> Web app emulator banjir Ciliwung dari Condet sampai Manggarai</figcaption>
+      </figure>
+
+      <p>Kondisi tanah sebelum hujan sangat menentukan besarnya banjir. Hujan 100 mm selama 12 jam menghasilkan debit puncak sekitar 145 m³/s di Condet jika tanah sedang kering, tetapi hampir empat kali lipatnya, sekitar 560 m³/s, jika turun setelah beberapa hari hujan ketika tanah sudah jenuh air. Hujan yang lebih banyak turun di Bogor tidak selalu membuat puncak banjir lebih tinggi, tetapi membuat puncaknya tiba lebih lambat di Condet, karena air butuh waktu untuk mengalir dari hulu. Selisih waktu ini dipakai sebagai dasar peringatan dini banjir kiriman dari Katulampa.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Luas dan kedalaman banjir di sepanjang Ciliwung antara Condet dan Manggarai terutama ditentukan oleh besarnya debit yang datang dari hulu. Genangan meluas dengan cepat selama debit di Condet masih di bawah sekitar 400 m³/s. Setelah itu, luasnya hanya bertambah sedikit, karena dataran rendah di sekitar sungai sudah terisi dan air yang datang lebih banyak menambah kedalaman. Kedalamannya juga berbeda di setiap bagian sungai. Dari Condet sampai Rawajati, genangan lebih sempit tetapi lebih dalam, sedangkan dari Cawang sampai Kampung Melayu, genangan lebih luas tetapi lebih dangkal. Banjir juga akan lebih besar jika hujan turun saat tanah sudah basah karena hujan pada hari-hari sebelumnya.</p>
+      <p>Emulator yang dilatih dari 80 simulasi HEC-RAS bisa menghasilkan perkiraan luas dan kedalaman banjir untuk berbagai skenario hujan dalam waktu kurang dari satu detik, dengan galat kedalaman sekitar 1 cm. Dengan begitu, gambaran banjir bisa langsung dilihat begitu besar hujan diketahui, tanpa perlu menjalankan HEC-RAS lagi.</p>
+      <p>Meski begitu, hasil ini masih berupa gambaran dari model, bukan prakiraan banjir yang sebenarnya. Model belum memakai DEM yang rinci, penampang sungai yang sebenarnya, bangunan, tanggul, maupun pintu air Manggarai, dan model hujan-debitnya baru dikalibrasi secara kasar. Emulator juga hanya bisa diandalkan dalam rentang skenario yang dipakai untuk melatihnya. Jika dilengkapi dengan DEM LiDAR, data penampang sungai, dan data muka air di Katulampa, Depok, dan Manggarai, perkiraan luas dan kedalaman banjir dari alur kerja ini bisa lebih mendekati kondisi di lapangan.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var RGB_B = [[-6.294101, 106.825309], [-6.190801, 106.884409]];
+      var KELAS = [[0.1, '#c6dbef', '0,1–0,5 m'], [0.5, '#6baed6', '0,5–1 m'], [1, '#2171b5', '1–2 m'], [2, '#08519c', '2–3 m'], [3, '#08306b', 'Lebih dari 3 m']];
+      var KRGB = KELAS.map(function (k) { return [parseInt(k[1].substr(1, 2), 16), parseInt(k[1].substr(3, 2), 16), parseInt(k[1].substr(5, 2), 16)]; });
+      var E = null, M = null, IDX = null, depth = null, W = 0, H = 0, B = null;
+      var canvas = document.createElement('canvas'), ctx = null, layer = null;
+      var el = function (id) { return document.getElementById(id); };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); };
+
+      // ---------- Model hujan-debit (SCS Curve Number, hidrograf satuan SCS, Muskingum), sama dengan versi Python
+      function interp(x, xs, ys) {
+        if (x <= xs[0]) return ys[0];
+        if (x >= xs[xs.length - 1]) return ys[ys.length - 1];
+        for (var i = 1; i < xs.length; i++) if (x <= xs[i]) return ys[i - 1] + (ys[i] - ys[i - 1]) * (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
+      }
+      function cnAmc(cn, amc) { return interp(amc, [1, 2, 3], [4.2 * cn / (10 - 0.058 * cn), cn, 23 * cn / (10 + 0.13 * cn)]); }
+      function hietograf(total, dur, pk, n, dt) {
+        var k = Math.round(dur / dt), w = [], s = 0, p = new Float64Array(n);
+        for (var j = 0; j < k; j++) { var t = (j + 0.5) / k; var v = t <= pk ? t / Math.max(pk, 1e-6) : (1 - t) / Math.max(1 - pk, 1e-6); v = Math.max(v, 0); w.push(v); s += v; }
+        for (j = 0; j < k && j < n; j++) p[j] = total * w[j] / s;
+        return p;
+      }
+      function limpasan(p, cn) {
+        var S = 25400 / cn - 254, Ia = 0.2 * S, P = 0, prev = 0, out = new Float64Array(p.length);
+        for (var i = 0; i < p.length; i++) { P += p[i]; var Q = P > Ia ? (P - Ia) * (P - Ia) / (P - Ia + S) : 0; out[i] = Q - prev; prev = Q; }
+        return out;
+      }
+      function uh(luas, lag, h) {
+        var dt = h.dt, tp = dt / 2 + lag, qp = 0.208 * luas / tp, n = Math.ceil((5 * tp + dt) / dt), u = [], s = 0;
+        for (var i = 0; i < n; i++) { var v = interp(i * dt / tp, h.uh_t, h.uh_q) * qp; u.push(v); s += v; }
+        var f = s ? luas * 1000 / (s * dt * 3600) : 0;
+        return u.map(function (v) { return v * f; });
+      }
+      function konvolusi(a, b, n) {
+        var out = new Float64Array(n);
+        for (var i = 0; i < n; i++) { var s = 0; for (var j = Math.max(0, i - b.length + 1); j <= i; j++) s += a[j] * b[i - j]; out[i] = s; }
+        return out;
+      }
+      function muskingum(inp, K, X, dt) {
+        var d = 2 * K * (1 - X) + dt, c0 = (dt - 2 * K * X) / d, c1 = (dt + 2 * K * X) / d, c2 = (2 * K * (1 - X) - dt) / d;
+        var out = new Float64Array(inp.length); out[0] = inp[0];
+        for (var i = 1; i < inp.length; i++) out[i] = c0 * inp[i] + c1 * inp[i - 1] + c2 * out[i - 1];
+        return out;
+      }
+      function debitCondet(total, dur, pk, rasio, amc) {
+        var h = E.hidrologi, dt = h.dt, jam = Math.ceil(dur + h.tambahan_jam), n = Math.floor(jam / dt) + 1, sub = h.subdas;
+        var L = sub.reduce(function (a, s) { return a + s.luas; }, 0), l0 = sub[0].luas;
+        var fl = Math.max((L - rasio * l0) / (L - l0), 0.2), fak = [rasio, fl, fl];
+        var q = sub.map(function (s, i) { return konvolusi(limpasan(hietograf(total * fak[i], dur, pk, n, dt), cnAmc(s.cn, amc)), uh(s.luas, s.lag, h), n); });
+        var a = new Float64Array(n); for (var i = 0; i < n; i++) a[i] = q[0][i] + h.dasar_hulu;
+        var depok = muskingum(a, h.k1, h.x, dt); for (i = 0; i < n; i++) depok[i] += q[1][i];
+        var out = muskingum(depok, h.k2, h.x, dt); for (i = 0; i < n; i++) out[i] += q[2][i] + h.dasar_hilir;
+        return out;
+      }
+
+      // ---------- Emulator: ciri hidrograf -> Gaussian Process per komponen PCA -> peta kedalaman
+      function emulator(q) {
+        var dt = E.hidrologi.dt, qp = 0, vol = 0, lama = 0, i, k;
+        for (i = 0; i < q.length; i++) qp = Math.max(qp, q[i]);
+        for (i = 0; i < q.length; i++) { vol += Math.max(q[i] - 12, 0); if (q[i] > 0.5 * qp) lama++; }
+        var x = [Math.log(qp), Math.log(vol * dt * 3600 / 1e6 + 0.1), Math.log(lama * dt)];
+        var c = E.ciri, xn = x.map(function (v, j) { return (v - c.mu[j]) / c.sd[j]; }), z = [];
+        E.gp.forEach(function (p) {
+          var s = 0;
+          for (var j = 0; j < c.X.length; j++) {
+            var d2 = 0; for (var m = 0; m < 3; m++) { var r = (xn[m] - c.X[j][m]) / p.l[m]; d2 += r * r; }
+            s += p.c * Math.exp(-0.5 * d2) * p.a[j];
+          }
+          z.push(s * p.ys + p.ym);
+        });
+        var n = E.n_sel, sk = E.skala;
+        for (i = 0; i < n; i++) depth[i] = M[i] * sk[0];
+        for (k = 0; k < E.n_pc; k++) { var f = z[k] * sk[k + 1], o = (k + 1) * n; for (i = 0; i < n; i++) depth[i] += f * M[o + i]; }
+        var luas = 0, oa = (E.n_pc + 1) * n, oc = (E.n_pc + 2) * n;
+        for (i = 0; i < n; i++) { if (depth[i] < 0) depth[i] = 0; if (depth[i] > 0.1 && !M[oc + i]) luas += M[oa + i]; }
+        return { qp: qp, luas: luas / 1e4 };
+      }
+
+      function gambar() {
+        var img = ctx.createImageData(W, H), d = img.data;
+        for (var p = 0, i = 0; p < IDX.length; p++, i += 4) {
+          var ix = IDX[p]; if (!ix) continue;
+          var v = depth[ix - 1]; if (v <= 0.1) continue;
+          var k = v > 3 ? 4 : v > 2 ? 3 : v > 1 ? 2 : v > 0.5 ? 1 : 0, c = KRGB[k];
+          d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 225;
+        }
+        ctx.putImageData(img, 0, 0);
+        layer.setUrl(canvas.toDataURL());
+      }
+
+      // ---------- Hidrograf
+      var svg = el('hgSvg'), tip = el('hgTip'), Qnow = null;
+      function hidrograf(q) {
+        var Wv = 420, Hv = 170, l = 44, r = 10, t = 10, b = 26, dt = E.hidrologi.dt, n = q.length, qmax = 0;
+        for (var i = 0; i < n; i++) qmax = Math.max(qmax, q[i]);
+        var step = qmax > 800 ? 400 : qmax > 400 ? 200 : qmax > 160 ? 100 : 50, ymax = Math.ceil(qmax * 1.08 / step) * step, tmax = (n - 1) * dt;
+        var X = function (h) { return l + h / tmax * (Wv - l - r); }, Y = function (v) { return Hv - b - v / ymax * (Hv - t - b); };
+        var s = '';
+        for (var v = 0; v <= ymax; v += step) s += '<line x1="' + l + '" x2="' + (Wv - r) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke="#e5e7eb"/><text x="' + (l - 6) + '" y="' + (Y(v) + 3.5) + '" font-size="10" fill="#6b7280" text-anchor="end">' + fmt(v) + '</text>';
+        var tstep = tmax > 30 ? 12 : 6;
+        for (var h = 0; h <= tmax; h += tstep) s += '<text x="' + X(h) + '" y="' + (Hv - b + 14) + '" font-size="10" fill="#6b7280" text-anchor="middle">' + h + '</text>';
+        s += '<text x="' + (Wv - r) + '" y="' + (Hv - 2) + '" font-size="10" fill="#6b7280" text-anchor="end">jam sejak hujan mulai</text>';
+        s += '<text x="4" y="' + (t + 2) + '" font-size="10" fill="#6b7280">m³/s</text>';
+        var d = '';
+        for (i = 0; i < n; i++) d += (i ? 'L' : 'M') + X(i * dt).toFixed(1) + ',' + Y(q[i]).toFixed(1);
+        s += '<path d="' + d + '" fill="none" stroke="#1f5f99" stroke-width="2" stroke-linejoin="round"/>';
+        s += '<line id="hgX" y1="' + t + '" y2="' + (Hv - b) + '" stroke="#9ca3af" stroke-dasharray="3 3" visibility="hidden"/><circle id="hgDot" r="4" fill="#1f5f99" stroke="#fff" stroke-width="2" visibility="hidden"/>';
+        svg.innerHTML = s;
+        Qnow = { q: q, X: X, Y: Y, dt: dt, l: l, r: r, Wv: Wv };
+      }
+      function hover(ev) {
+        if (!Qnow) return;
+        var rc = svg.getBoundingClientRect(), xv = (ev.clientX - rc.left) / rc.width * Qnow.Wv;
+        var i = Math.round((xv - Qnow.l) / (Qnow.Wv - Qnow.l - Qnow.r) * (Qnow.q.length - 1));
+        if (i < 0 || i >= Qnow.q.length) { leave(); return; }
+        var px = Qnow.X(i * Qnow.dt), py = Qnow.Y(Qnow.q[i]);
+        var lx = svg.querySelector('#hgX'), dot = svg.querySelector('#hgDot');
+        lx.setAttribute('x1', px); lx.setAttribute('x2', px); lx.setAttribute('visibility', 'visible');
+        dot.setAttribute('cx', px); dot.setAttribute('cy', py); dot.setAttribute('visibility', 'visible');
+        var jam = i * Qnow.dt, hh = Math.floor(jam), mm = Math.round((jam - hh) * 60);
+        tip.textContent = 'Jam ke-' + hh + (mm ? ':' + (mm < 10 ? '0' : '') + mm : '') + ' · ' + fmt(Qnow.q[i]) + ' m³/s';
+        tip.style.display = 'block';
+        var tx = px / Qnow.Wv * rc.width + 6 + 16, tw = tip.offsetWidth;
+        tip.style.left = Math.min(tx, rc.width - tw) + 'px'; tip.style.top = (py / 170 * rc.height + 18) + 'px';
+      }
+      function leave() { tip.style.display = 'none'; svg.querySelectorAll('#hgX,#hgDot').forEach(function (e) { e.setAttribute('visibility', 'hidden'); }); }
+      svg.addEventListener('mousemove', hover); svg.addEventListener('mouseleave', leave);
+      svg.addEventListener('touchmove', function (e) { hover(e.touches[0]); }, { passive: true });
+
+      // ---------- Kontrol
+      var S = { total: el('sTotal'), dur: el('sDur'), pk: el('sPk'), hulu: el('sHulu'), amc: el('sAmc') };
+      function label() {
+        el('vTotal').textContent = S.total.value + ' mm';
+        var d = +S.dur.value; el('vDur').textContent = Math.floor(d) + ' jam' + (d % 1 ? ' 30 menit' : '');
+        var p = +S.pk.value; el('vPk').textContent = p < 0.4 ? 'awal' : p > 0.6 ? 'akhir' : 'tengah';
+        el('vHulu').textContent = fmt(+S.hulu.value, 2) + ' kali';
+        var a = +S.amc.value; el('vAmc').textContent = a < 1.5 ? 'kering' : a > 2.5 ? 'basah' : 'normal';
+      }
+      var pending = false;
+      function hitung() {
+        label();
+        if (!E || pending) return;
+        pending = true;
+        requestAnimationFrame(function () {
+          pending = false;
+          var t0 = performance.now();
+          var q = debitCondet(+S.total.value, +S.dur.value, +S.pk.value, +S.hulu.value, +S.amc.value);
+          var t1 = performance.now(), o = emulator(q), t2 = performance.now();
+          el('oQp').textContent = fmt(o.qp) + ' m³/s';
+          el('oLuas').textContent = fmt(o.luas) + ' ha';
+          el('oMs').textContent = (t2 - t1 < 1 ? '< 1' : fmt(t2 - t1)) + ' md';
+          el('warn').style.display = (o.qp < E.rentang.qp[0] || o.qp > E.rentang.qp[1]) ? 'block' : 'none';
+          hidrograf(q); gambar();
+        });
+      }
+      Object.keys(S).forEach(function (k) { S[k].addEventListener('input', hitung); });
+      document.querySelectorAll('.preset button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var v = b.dataset.p.split(','); ['total', 'dur', 'pk', 'hulu', 'amc'].forEach(function (k, i) { S[k].value = v[i]; }); hitung();
+        });
+      });
+      label();
+
+      // ---------- Peta
+      var box = el('cwMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.25, maxBounds: [[-6.33, 106.78], [-6.15, 106.93]], minZoom: 12 });
+      map.fitBounds(RGB_B);
+      if (window.ResizeObserver) new ResizeObserver(function () { map.invalidateSize(); }).observe(box);
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+      var bases = {
+        'Citra Sentinel-2 2025': L.imageOverlay('assets/maps/ciliwung-rgb.jpg', RGB_B, { attribution: 'Sentinel-2 &copy; ESA Copernicus' }),
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' }),
+        'Peta jalan (OSM)': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' })
+      };
+      var activeBase = bases['Citra Sentinel-2 2025'].addTo(map);
+      var areaLayer = L.geoJSON(null, { style: { color: '#ffffff', weight: 1.5, dashArray: '5 4', fill: false }, interactive: false });
+      var sungaiLayer = L.geoJSON(null, { style: { color: '#00e5ff', weight: 1.2, opacity: 0.8 }, interactive: false });
+      fetch('assets/data/ciliwung-area.geojson').then(function (r) { return r.json(); }).then(function (g) { areaLayer.addData(g).addTo(map); });
+      fetch('assets/data/ciliwung-sungai.geojson').then(function (r) { return r.json(); }).then(function (g) { sungaiLayer.addData(g); });
+
+      Promise.all([
+        fetch('assets/data/ciliwung-emulator.json').then(function (r) { return r.json(); }),
+        fetch('assets/data/ciliwung-pca.bin').then(function (r) { return r.arrayBuffer(); }),
+        new Promise(function (ok, gagal) { var im = new Image(); im.onload = function () { ok(im); }; im.onerror = gagal; im.src = 'assets/maps/ciliwung-sel.png'; })
+      ]).then(function (res) {
+        E = res[0]; M = new Int16Array(res[1]); depth = new Float32Array(E.n_sel);
+        var im = res[2]; W = im.width; H = im.height; canvas.width = W; canvas.height = H;
+        ctx = canvas.getContext('2d', { willReadFrequently: true }); ctx.drawImage(im, 0, 0);
+        var px = ctx.getImageData(0, 0, W, H).data; IDX = new Uint16Array(W * H);
+        for (var p = 0; p < IDX.length; p++) IDX[p] = px[p * 4] * 256 + px[p * 4 + 1];
+        B = E.bounds;
+        layer = L.imageOverlay('', [[B[0], B[1]], [B[2], B[3]]], { opacity: 0.92, interactive: false, className: 'pix' }).addTo(map);
+        hitung(); legend();
+      });
+
+      map.on('click', function (e) {
+        if (!IDX) return;
+        var x = Math.floor((e.latlng.lng - B[1]) / (B[3] - B[1]) * W), y = Math.floor((B[2] - e.latlng.lat) / (B[2] - B[0]) * H);
+        if (x < 0 || y < 0 || x >= W || y >= H || !IDX[y * W + x]) return;
+        var i = IDX[y * W + x] - 1, v = depth[i], alur = M[(E.n_pc + 2) * E.n_sel + i];
+        L.popup().setLatLng(e.latlng).setContent(alur ? 'Alur sungai<br>Kedalaman maksimum ' + fmt(v, 1) + ' m' : (v > 0.1 ? 'Kedalaman maksimum ' + fmt(v, 2) + ' m' : 'Tidak tergenang (kurang dari 10 cm)')).openOn(map);
+      });
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
+            '<label><input type="checkbox" data-k="banjir" checked>Kedalaman banjir</label><label><input type="checkbox" data-k="area" checked>Batas area model</label>' +
+            '<label><input type="checkbox" data-k="sungai">Alur utama model</label><div class="wm-group">Peta latar</div>';
+          Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });
+          d.innerHTML = h + '</div>';
+          L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+          d.querySelector('header').addEventListener('click', function () { d.classList.toggle('collapsed'); });
+          d.querySelectorAll('input[data-k]').forEach(function (c) {
+            c.addEventListener('change', function () {
+              var l = { banjir: layer, area: areaLayer, sungai: sungaiLayer }[c.dataset.k];
+              if (!l) return;
+              if (c.checked) l.addTo(map); else map.removeLayer(l);
+              legend();
+            });
+          });
+          d.querySelectorAll('input[name=base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = bases[r.value].addTo(map); if (activeBase.bringToBack) activeBase.bringToBack(); });
+          });
+          return d;
+        }
+      });
+      new Panel().addTo(map);
+      var legDiv;
+      var Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd: function () { legDiv = L.DomUtil.create('div', 'wm-legend'); return legDiv; } });
+      new Legend().addTo(map);
+      function legend() {
+        var h = '';
+        if (layer && map.hasLayer(layer)) h += '<b>Kedalaman maksimum</b>' + KELAS.map(function (k) { return '<div><i style="background:' + k[1] + '"></i>' + k[2] + '</div>'; }).join('');
+        if (map.hasLayer(areaLayer)) h += '<b>Batas</b><div><i style="background:transparent;border:2px dashed #999"></i>Area model 2D</div>';
+        if (map.hasLayer(sungaiLayer)) h += '<div><i style="background:#00e5ff;height:3px;vertical-align:3px"></i>Alur utama model</div>';
+        legDiv.innerHTML = h;
+      }
+      legend();
+    })();
+  </script>
+</body>
+</html>

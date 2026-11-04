@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perluasan Tambang Nikel di Morowali dan Dampaknya, 2019–2026</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: center; margin-top: 6px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .lanjutan { border: 1px solid var(--line); border-left: 4px solid #163a2e; border-radius: 8px; padding: 12px 16px; background: #f3f5f2; margin: 0 0 24px; }
+    .post-content .lanjutan p { margin: 0; font-size: 0.92rem; }
+    #moroMap { width: 100%; height: 600px; border-radius: 12px; border: 1px solid var(--line); background: #0b1726; }
+    .post-content #moroMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .time-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; flex-wrap: wrap; }
+    .time-bar button { font: inherit; font-size: 0.85rem; padding: 6px 14px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; min-width: 92px; }
+    .time-bar input[type=range] { flex: 1; min-width: 180px; }
+    .time-label { font-weight: 700; min-width: 240px; }
+    .time-label span { font-weight: 400; color: #6b7280; font-size: 0.85rem; margin-left: 6px; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 210px; }
+    .wm-panel header { display: flex; justify-content: space-between; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 6px 10px 8px; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-panel label { display: flex; gap: 6px; align-items: center; margin: 3px 0; cursor: pointer; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 2px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 11.5px/1.55 system-ui, sans-serif; color: #222; }
+    .wm-legend b { display: block; margin-top: 4px; }
+    .wm-legend b:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    @media (max-width: 600px) {
+      #moroMap { height: 460px; }
+      .time-label { min-width: 0; width: 100%; }
+      .wm-legend { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Environmental Impact</span>
+      <h1>Perluasan Tambang Nikel di Morowali dan Dampaknya, 2019–2026</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <div class="lanjutan"><p><i class="fa-solid fa-link"></i> Project ini adalah lanjutan dari kajian <a href="project-tambang.html">Kerusakan Lingkungan akibat Penambangan Nikel di Kabupaten Morowali</a> (September 2023), yang menimbang manfaat dan kerusakan tambang nikel berdasarkan studi literatur.</p></div>
+
+      <h2>Latar belakang</h2>
+      <p>Pada 2023, kajian sebelumnya menyimpulkan bahwa kerusakan akibat tambang nikel di Morowali menyebar ke hampir semua unsur lingkungan, mulai dari bentang lahan, hutan, sungai, sampai laut. Kesimpulan itu disusun dari jurnal dan berita, sedangkan bukaan tambangnya dipetakan dengan digitasi manual dari Google Earth. Cara ini cukup untuk memberi gambaran, tetapi belum bisa menjawab pertanyaan yang lebih terukur. Seberapa cepat sebenarnya tambang bertambah luas? Berapa banyak hutan yang hilang? Dan apakah perubahan itu terjadi di dalam areal yang memang sudah diizinkan?</p>
+      <p>Tiga tahun kemudian, pertanyaan-pertanyaan itu dijawab langsung dari citra satelit. Project ini memetakan bukaan lahan di Kabupaten Morowali setiap tahun dari 2019 sampai 2026, lalu mencocokkannya dengan data hutan, fungsi kawasan hutan, dan persetujuan penggunaan kawasan hutan untuk tambang.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Citra Sentinel-2 Level-2A (10–20 m), Januari 2019–Oktober 2026</td><td>Raster</td><td>Sekunder</td><td>ESA Copernicus, melalui Google Earth Engine</td></tr>
+            <tr><td>Penyaring awan Cloud Score+</td><td>Raster</td><td>Sekunder</td><td>Google</td></tr>
+            <tr><td>Segmen pesisir 5 km dan reflektansi kanal merah perairan, 2019–2026</td><td>Vektor dan tabel</td><td>Turunan</td><td>Diolah dari Sentinel-2</td></tr>
+            <tr><td>Tutupan pohon 2000 dan kehilangan tutupan pohon 2019–2025</td><td>Raster</td><td>Sekunder</td><td>Hansen / University of Maryland</td></tr>
+            <tr><td>Persetujuan Penggunaan Kawasan Hutan (PPKH), Januari 2026</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+            <tr><td>Kawasan hutan (revisi I, Juni 2026)</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+            <tr><td>Batas Kabupaten Morowali</td><td>Vektor</td><td>Sekunder</td><td>geoBoundaries (ADM2)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>Morowali hampir selalu berawan, sehingga satu citra saja jarang bisa memperlihatkan seluruh wilayah. Karena itu, semua citra Sentinel-2 dalam satu tahun digabung menjadi satu komposit, setelah bagian yang tertutup awan dibuang dengan Cloud Score+. Pada komposit ini, sebuah piksel dianggap lahan terbuka jika vegetasinya sangat rendah (NDVI &lt; 0,25), bukan air (MNDWI &lt; 0), dan menunjukkan ciri tanah terbuka (indeks tanah terbuka BSI &gt; 0). Bukaan tambang nikel di Morowali berupa tanah laterit berwarna merah kecokelatan, sehingga mudah dibedakan dari hutan di sekitarnya.</p>
+      <p>Agar tidak terkecoh oleh lahan yang terbuka sesaat, misalnya karena longsor kecil atau sisa awan, sebuah piksel baru dihitung sebagai bukaan pada tahun tertentu jika lahan itu tetap terbuka pada tahun berikutnya. Bukaan yang terjadi setelah 2019 lalu dicocokkan dengan tutupan hutan 2019, fungsi kawasan hutan, dan areal PPKH tambang.</p>
+
+      <h2>Hasil</h2>
+
+      <p>Pada 2019, luas lahan terbuka di Kabupaten Morowali sekitar 5.201 hektare. Pada 2026, luasnya menjadi 17.499 hektare, atau 3,4 kali lipat dalam tujuh tahun. Pertambahannya terjadi setiap tahun tanpa jeda, dengan rata-rata sekitar 1.750 hektare lahan baru dibuka per tahun. Lonjakan terbesar terjadi pada 2022–2023 dan 2025–2026, masing-masing lebih dari 2.000 hektare dalam setahun.</p>
+
+      <div class="stat-row">
+        <div><strong>3,4 kali</strong><span>Pertambahan lahan terbuka 2019–2026</span></div>
+        <div><strong>12.302 ha</strong><span>Lahan yang baru dibuka sejak 2019</span></div>
+        <div><strong>5.180 ha</strong><span>Bukaan baru yang sebelumnya berupa hutan</span></div>
+      </div>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/morowali-bukaan-grafik.png" target="_blank" rel="noopener">
+          <img src="assets/maps/morowali-bukaan-grafik.png" alt="Grafik luas lahan terbuka di Kabupaten Morowali per tahun dari 2019 sampai 2026">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Luas lahan terbuka di Kabupaten Morowali per tahun, 2019–2026</figcaption>
+      </figure>
+
+      <p>Peta di bawah memperlihatkan kapan setiap bagian lahan mulai dibuka. Warna kuning menunjukkan lahan yang sudah terbuka sejak 2019, sedangkan warna merah tua menunjukkan bukaan terbaru. Geser penanda waktu untuk melihat bagaimana bukaan menyebar dari tahun ke tahun, atau ganti citra latar untuk membandingkan kondisi 2019 dan 2026.</p>
+
+      <figure class="chart-figure">
+        <div id="moroMap" role="region" aria-label="Peta interaktif bukaan lahan di koridor tambang nikel Morowali 2019 sampai 2026"></div>
+        <div class="time-bar">
+          <button type="button" id="playBtn"><i class="fa-solid fa-play"></i> Putar</button>
+          <input type="range" id="yearSlider" min="2019" max="2026" value="2026" aria-label="Pilih tahun">
+          <div class="time-label" id="yearLabel">2026</div>
+        </div>
+        <p class="map-hint">Klik sebuah areal PPKH untuk melihat nama dan luasnya. Aktifkan lapisan "Perubahan kekeruhan pesisir" di panel kanan atas untuk melihat segmen pantai. Bukaan di luar garis putus-putus batas Kabupaten Morowali, misalnya tambang di Sulawesi Tenggara di sebelah selatan, tidak ikut dianalisis. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 2.</strong> Peta interaktif bukaan lahan di koridor tambang utama Morowali (Bahodopi sampai Bungku), 2019–2026</figcaption>
+      </figure>
+
+      <p>Bukaan berawal dari sekitar kawasan industri di pesisir Bahodopi, lalu terus bergerak ke arah pedalaman dan ke selatan. Pola ini terlihat jelas pada citra 2026, di mana bukaan tambang membentuk jalur-jalur panjang mengikuti jalan tambang yang menembus hutan di perbukitan. Dari 12.302 hektare lahan yang baru dibuka sejak 2019, sekitar 5.180 hektare atau 42% sebelumnya masih berupa hutan.</p>
+
+      <h3>Di dalam atau di luar areal yang diizinkan?</h3>
+
+      <p>Kegiatan tambang di dalam kawasan hutan wajib memiliki Persetujuan Penggunaan Kawasan Hutan (PPKH), sedangkan tambang di Areal Penggunaan Lain (APL) tidak memerlukannya. Karena itu, bukaan baru dipisahkan menurut fungsi kawasan hutan dan areal PPKH.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Lokasi bukaan baru (2020–2026)</th>
+              <th>Luas (ha)</th>
+              <th>Sebelumnya hutan (ha)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Areal Penggunaan Lain</td><td>6.519</td><td>2.284</td></tr>
+            <tr><td>Kawasan hutan, di dalam areal PPKH</td><td>2.767</td><td>1.597</td></tr>
+            <tr><td>Kawasan hutan, di luar areal PPKH</td><td>2.859</td><td>1.310</td></tr>
+            <tr><td style="padding-left:24px">Hutan produksi konversi</td><td>1.442</td><td>572</td></tr>
+            <tr><td style="padding-left:24px">Hutan produksi terbatas</td><td>1.349</td><td>698</td></tr>
+            <tr><td style="padding-left:24px">Hutan produksi tetap</td><td>52</td><td>37</td></tr>
+            <tr><td style="padding-left:24px">Hutan lindung</td><td>16</td><td>3</td></tr>
+            <tr><td>Tidak terpetakan dalam peta kawasan hutan</td><td>157</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">PPKH yang dipakai adalah data Januari 2026 untuk kegiatan tambang dan eksplorasi. Hutan pada 2019 didefinisikan sebagai tutupan pohon ≥ 30% yang belum hilang sebelum 2019 menurut Hansen/UMD.</p>
+
+      <p>Sekitar separuh bukaan baru berada di APL, sehingga tidak memerlukan PPKH. Separuh lainnya berada di kawasan hutan, dan dari bagian ini, hanya sekitar 49% yang tumpang tindih dengan areal PPKH. Sisanya, sekitar 2.859 hektare, berada di kawasan hutan tetapi di luar areal PPKH yang tercatat, termasuk 16 hektare di hutan lindung.</p>
+      <p>Angka ini belum tentu berarti pelanggaran, karena ada beberapa kemungkinan lain, misalnya persetujuan yang terbit setelah Januari 2026, kawasan hutan produksi konversi yang sudah dilepaskan tetapi belum tercermin di peta, pergeseran batas karena peta kawasan hutan berskala 1:250.000, atau bukaan yang bukan tambang, seperti jalan dan permukiman. Namun angka ini menunjukkan di mana pengawasan perlu difokuskan, terutama pada hampir 2.800 hektare bukaan di hutan produksi terbatas dan hutan produksi konversi.</p>
+
+      <h3>Apakah laut di depannya ikut keruh?</h3>
+
+      <p>Kajian 2023 menyebut limbah tambang terbawa ke pantai dan merusak terumbu karang. Dari satelit, hal ini bisa didekati dengan melihat warna air laut. Air yang membawa lumpur dan tanah memantulkan lebih banyak cahaya merah, sehingga reflektansi kanal merah Sentinel-2 bisa dipakai sebagai petunjuk kekeruhan. Garis pantai Morowali dibagi menjadi segmen sepanjang 5 km, lalu kekeruhan dihitung di jalur laut 0,3–1,5 km dari pantai pada setiap citra yang bebas awan sejak 2019. Setiap segmen dikelompokkan menurut luas lahan terbuka di darat dalam radius 5 km, yaitu dekat tambang (≥ 200 ha), sedikit bukaan (20–200 ha), dan pembanding (&lt; 20 ha).</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/morowali-kekeruhan.png" target="_blank" rel="noopener">
+          <img src="assets/maps/morowali-kekeruhan.png" alt="Grafik tren kekeruhan pesisir Morowali per tahun dan hubungan luas bukaan di darat dengan kekeruhan laut di depannya">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Kekeruhan pesisir per tahun menurut kelompok segmen (kiri) dan hubungan luas bukaan dengan kekeruhan 2025–2026 (kanan), dari 65 segmen pantai</figcaption>
+      </figure>
+
+      <p>Kekeruhan memang naik di semua kelompok sejak 2019, termasuk di pantai pembanding yang hampir tidak memiliki bukaan, sehingga sebagian kenaikan kemungkinan dipengaruhi faktor yang lebih luas seperti curah hujan. Namun kenaikan di pantai dekat tambang jauh lebih besar, sekitar 43%, hampir dua kali lipat kenaikan di pantai pembanding yang sekitar 25%. Pada 2026, pantai dekat tambang juga menjadi yang paling keruh di antara ketiga kelompok.</p>
+      <p>Hubungan ini terlihat lebih jelas di segmen dengan bukaan terluas. Delapan segmen pantai yang di belakangnya terdapat lebih dari 1.000 hektare lahan terbuka memiliki kekeruhan sekitar 28% lebih tinggi dibanding pantai pembanding pada 2025–2026. Secara keseluruhan, semakin luas bukaan di darat, semakin keruh laut di depannya, meskipun hubungannya tergolong sedang (korelasi Spearman 0,34). Artinya, tambang bukan satu-satunya penyebab, tetapi jelas ikut menambah beban sedimen di pesisir Morowali.</p>
+
+      <h3>Menjawab temuan kajian 2023</h3>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Temuan kajian 2023</th>
+              <th>Bukti dari satelit 2019–2026</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Bentang lahan berubah akibat pengupasan tanah</td><td>Lahan terbuka bertambah dari 5.201 ha menjadi 17.499 ha, sekitar 1.750 ha per tahun</td></tr>
+            <tr><td>Hilangnya habitat satwa liar</td><td>5.180 ha hutan berubah menjadi lahan terbuka sejak 2019</td></tr>
+            <tr><td>Limbah tambang terbawa ke pantai dan merusak ekosistem laut</td><td>Kekeruhan pantai dekat tambang naik sekitar 43% sejak 2019, hampir dua kali lipat pantai pembanding</td></tr>
+            <tr><td>Efektivitas kebijakan bergantung pada penegakan</td><td>2.859 ha bukaan baru berada di kawasan hutan di luar areal PPKH yang tercatat</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+      <p>Data satelit menguatkan kesimpulan kajian 2023 sekaligus memberinya ukuran. Tambang nikel di Morowali terus meluas setiap tahun, dari sekitar 5 ribu hektare pada 2019 menjadi hampir 17,5 ribu hektare pada 2026, dan lebih dari 40% lahan yang baru dibuka sebelumnya masih berupa hutan. Sebagian besar bukaan memang berada di APL atau di dalam areal PPKH, tetapi hampir 2.900 hektare berada di kawasan hutan di luar areal yang tercatat, sehingga perlu diverifikasi. Dampaknya juga terlihat sampai ke laut, karena pantai di depan kawasan tambang menjadi semakin keruh jauh lebih cepat dibanding pantai yang jauh dari tambang.</p>
+      <p>Metode lahan terbuka yang dipakai di sini tidak hanya menangkap lubang tambang, tetapi juga dasar sungai yang kering, jalan, dan kawasan industri. Komposit tahunan bisa terpengaruh awan yang tersisa, terutama di daerah pegunungan. Reflektansi merah hanyalah petunjuk kekeruhan, bukan pengukuran langsung kadar sedimen, dan di perairan dangkal nilainya bisa ikut dipengaruhi pasir atau terumbu di dasar laut. Data 2026 juga baru mencakup Januari sampai Oktober, dan hanya 65 dari 106 segmen pantai yang memiliki cukup citra bebas awan untuk dianalisis. Data PPKH hanya mencerminkan kondisi Januari 2026, dan izin usaha pertambangan di APL tidak tersedia secara terbuka sehingga tidak bisa dicek. Jadi, meluasnya tambang dan makin keruhnya pantai di Morowali sudah jelas terlihat dari satelit. Namun untuk memastikan apakah hampir 2.900 hektare bukaan di luar PPKH itu melanggar, hasil ini masih harus dicocokkan dengan wilayah izin usaha pertambangan, dokumen RKL-RPL perusahaan, dan citra resolusi tinggi.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var B = [[-3.35, 121.75], [-2.45, 122.55]];
+      var LUAS = { 2019: 5201, 2020: 6045, 2021: 7586, 2022: 9377, 2023: 11598, 2024: 12639, 2025: 14592, 2026: 17499 };
+      var box = document.getElementById('moroMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.25, maxBounds: [[-3.6, 121.5], [-2.2, 122.8]] });
+      map.fitBounds(B);
+      if (window.ResizeObserver) new ResizeObserver(function () { map.invalidateSize(); }).observe(box);
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      var bases = {
+        'Citra Sentinel-2 2026': L.imageOverlay('assets/maps/morowali-rgb-2026.jpg', B, { attribution: 'Sentinel-2 &copy; ESA Copernicus' }),
+        'Citra Sentinel-2 2019': L.imageOverlay('assets/maps/morowali-rgb-2019.jpg', B, { attribution: 'Sentinel-2 &copy; ESA Copernicus' }),
+        'Citra satelit (Esri)': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18, attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics' })
+      };
+      var activeBase = bases['Citra Sentinel-2 2026'].addTo(map);
+      var bukaLayer = L.imageOverlay('', B, { opacity: 0.9, interactive: false }).addTo(map);
+      var ppkhLayer = L.geoJSON(null, {
+        style: { color: '#00e5ff', weight: 1.5, fill: true, fillOpacity: 0.05 },
+        onEachFeature: function (f, l) {
+          var p = f.properties;
+          l.bindPopup('<table class="wm-popup"><tr><td colspan="2"><b>' + p.NAMA_PPKH + '</b></td></tr><tr><td>Jenis</td><td>' + p.JENIS_PPKH + '</td></tr><tr><td>Luas tercatat</td><td>' +
+            Math.round(p.LUAS_PPKH).toLocaleString('id-ID') + ' ha</td></tr><tr><td>Status</td><td>' + (p.STATUS || '-') + '</td></tr></table>');
+        }
+      });
+
+      // Peta tahun pertama dibuka digambar ulang di canvas sesuai tahun yang dipilih
+      var src = new Image(), canvas = document.createElement('canvas'), ctx = null, orig = null, WARNA = null;
+      var slider = document.getElementById('yearSlider'), label = document.getElementById('yearLabel'), playBtn = document.getElementById('playBtn'), timer = null;
+      function draw(y) {
+        slider.value = y;
+        label.innerHTML = y + '<span>' + LUAS[y].toLocaleString('id-ID') + ' ha lahan terbuka</span>';
+        if (!orig) return;
+        var out = ctx.createImageData(canvas.width, canvas.height), lim = WARNA ? WARNA[y] : null;
+        var keep = {}; Object.keys(WARNA).forEach(function (k) { if (+k <= y) keep[WARNA[k]] = 1; });
+        for (var i = 0; i < orig.data.length; i += 4) {
+          if (!orig.data[i + 3]) continue;
+          var key = orig.data[i] + ',' + orig.data[i + 1] + ',' + orig.data[i + 2];
+          if (keep[key]) { out.data[i] = orig.data[i]; out.data[i + 1] = orig.data[i + 1]; out.data[i + 2] = orig.data[i + 2]; out.data[i + 3] = orig.data[i + 3]; }
+        }
+        ctx.putImageData(out, 0, 0);
+        bukaLayer.setUrl(canvas.toDataURL());
+      }
+      fetch('assets/data/morowali-bukaan.json').then(function (r) { return r.json(); }).then(function (m) {
+        WARNA = {}; Object.keys(m.warna).forEach(function (k) { var h = m.warna[k]; WARNA[k] = parseInt(h.substr(1, 2), 16) + ',' + parseInt(h.substr(3, 2), 16) + ',' + parseInt(h.substr(5, 2), 16); });
+        legend(m.warna);
+        src.onload = function () {
+          canvas.width = src.width; canvas.height = src.height; ctx = canvas.getContext('2d', { willReadFrequently: true });
+          ctx.drawImage(src, 0, 0); orig = ctx.getImageData(0, 0, canvas.width, canvas.height); draw(2026);
+        };
+        src.src = 'assets/maps/morowali-bukaan-tampilan.png';           // versi 90 m agar bukaan kecil tetap terlihat saat diperkecil
+      });
+      fetch('assets/data/morowali-ppkh.geojson').then(function (r) { return r.json(); }).then(function (g) { ppkhLayer.addData(g); ppkhLayer.addTo(map); legend(); });
+      // Batas kabupaten: bukaan di luar garis ini (misalnya di Sulawesi Tenggara) tidak dianalisis
+      fetch('assets/data/morowali-batas.geojson').then(function (r) { return r.json(); }).then(function (g) {
+        L.geoJSON(g, { style: { color: '#ffffff', weight: 2, dashArray: '6 4', fill: false }, interactive: false }).addTo(map);
+      });
+      // Segmen pesisir, diwarnai menurut perubahan kekeruhan 2019-2020 ke 2025-2026
+      var KW = function (v) { return v >= 60 ? '#7f0000' : v >= 40 ? '#d32f2f' : v >= 20 ? '#ff8a65' : v >= 0 ? '#ffe0b2' : '#4fc3f7'; };
+      var pesisirLayer = L.geoJSON(null, {
+        style: function (f) { return { color: KW(f.properties.ubah_persen), weight: 0.5, fillColor: KW(f.properties.ubah_persen), fillOpacity: 0.85 }; },
+        onEachFeature: function (f, l) {
+          var p = f.properties;
+          l.bindPopup('<table class="wm-popup"><tr><td colspan="2"><b>Segmen pantai ' + p.seg + '</b></td></tr><tr><td>Kelompok</td><td>' + p.kelompok + '</td></tr><tr><td>Lahan terbuka 5 km</td><td>' +
+            Math.round(p.buka_ha).toLocaleString('id-ID') + ' ha</td></tr><tr><td>Kekeruhan 2019–2020</td><td>' + (p.awal * 100).toFixed(2).replace('.', ',') + '%</td></tr><tr><td>Kekeruhan 2025–2026</td><td>' +
+            (p.akhir * 100).toFixed(2).replace('.', ',') + '%</td></tr><tr><td>Perubahan</td><td><b>' + (p.ubah_persen > 0 ? '+' : '') + Math.round(p.ubah_persen) + '%</b></td></tr></table>');
+        }
+      });
+      fetch('assets/data/morowali-pesisir.geojson').then(function (r) { return r.json(); }).then(function (g) { pesisirLayer.addData(g); });
+
+      function stop() { if (timer) { clearInterval(timer); timer = null; } playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Putar'; }
+      playBtn.addEventListener('click', function () {
+        if (timer) { stop(); return; }
+        var y = +slider.value >= 2026 ? 2019 : +slider.value; draw(y);
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Jeda';
+        timer = setInterval(function () { if (+slider.value >= 2026) { stop(); return; } draw(+slider.value + 1); }, 1000);
+      });
+      slider.addEventListener('input', function () { stop(); draw(+slider.value); });
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
+          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
+            '<label><input type="checkbox" data-k="buka" checked>Bukaan lahan per tahun</label><label><input type="checkbox" data-k="ppkh" checked>Areal PPKH tambang</label>' +
+            '<label><input type="checkbox" data-k="pesisir">Perubahan kekeruhan pesisir</label><div class="wm-group">Citra latar</div>';
+          Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });
+          d.innerHTML = h + '</div>';
+          L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+          d.querySelector('header').addEventListener('click', function () { d.classList.toggle('collapsed'); });
+          d.querySelectorAll('input[data-k]').forEach(function (c) {
+            c.addEventListener('change', function () {
+              var l = { buka: bukaLayer, ppkh: ppkhLayer, pesisir: pesisirLayer }[c.dataset.k];
+              if (c.checked) l.addTo(map); else map.removeLayer(l);
+              legend(); });
+          });
+          d.querySelectorAll('input[name=base]').forEach(function (r) {
+            r.addEventListener('change', function () { map.removeLayer(activeBase); activeBase = bases[r.value].addTo(map); if (activeBase.bringToBack) activeBase.bringToBack(); });
+          });
+          return d;
+        }
+      });
+      new Panel().addTo(map);
+      var legDiv;
+      var Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd: function () { legDiv = L.DomUtil.create('div', 'wm-legend'); return legDiv; } });
+      new Legend().addTo(map);
+      var lastW = null;
+      function legend(w) {
+        w = w || lastW; lastW = w; if (!w) return;
+        var h = '';
+        if (map.hasLayer(bukaLayer)) h += '<b>Tahun mulai terbuka</b>' + Object.keys(w).map(function (k) { return '<div><i style="background:' + w[k] + '"></i>' + (k === '2019' ? '2019 atau sebelumnya' : k) + '</div>'; }).join('');
+        if (map.hasLayer(pesisirLayer)) h += '<b>Perubahan kekeruhan</b>' + [['#4fc3f7', 'Turun'], ['#ffe0b2', '0–20%'], ['#ff8a65', '20–40%'], ['#d32f2f', '40–60%'], ['#7f0000', '≥ 60%']].map(function (x) { return '<div><i style="background:' + x[0] + '"></i>' + x[1] + '</div>'; }).join('');
+        h += '<b>Batas</b>' + (map.hasLayer(ppkhLayer) ? '<div><i style="background:transparent;border:2px solid #00e5ff"></i>Areal PPKH tambang</div>' : '') +
+             '<div><i style="background:transparent;border:2px dashed #999"></i>Kabupaten Morowali</div>';
+        legDiv.innerHTML = h; legDiv.style.display = h ? '' : 'none';
+      }
+    })();
+  </script>
+</body>
+</html>
