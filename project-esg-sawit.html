@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventaris Emisi GRK dan Uji Klaim Keberlanjutan Perusahaan Sawit Fiktif</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; text-align: left; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .calc { border: 1px solid #8f978f; background: #fff; padding: 14px 16px 16px; }
+    .calc-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 26px; }
+    .status { font-size: .88rem; font-weight: 600; margin: 8px 0 0; padding-top: 8px; border-top: 2px solid #142720; }
+    .status.ok { color: #142720; }
+    .status.no { color: #8a5a12; }
+    .post-content p.calc-note { font-size: .76rem; color: #5f6b64; margin: 8px 0 0; line-height: 1.4; }
+    .calc svg { display: block; width: 100%; height: auto; }
+
+    /* Lembar kerja interaktif: garis tipis, tanpa kartu, slider datar */
+    .sheet-h { font-size: .86rem; font-weight: 600; color: #142720; padding-bottom: 5px; border-bottom: 2px solid #142720; margin: 0; }
+    .prm { padding: 9px 0 10px; border-bottom: 1px solid #e3e5df; }
+    .prm label { display: flex !important; justify-content: space-between; gap: 10px; font-size: .86rem; font-weight: 600; color: #142720; float: none !important; margin: 0 !important; }
+    .prm label span { float: none !important; font-weight: 600 !important; color: #142720 !important; font-variant-numeric: tabular-nums; }
+    .prm small { font-size: .76rem; color: #5f6b64; line-height: 1.45; margin-top: 3px; display: block; }
+    input[type=range].rg { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; background: transparent; margin: 4px 0 0 !important; cursor: pointer; }
+    input[type=range].rg::-webkit-slider-runnable-track { height: 2px; background: #9aa39c; }
+    input[type=range].rg::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 18px; margin-top: -8px; background: #142720; border: 0; border-radius: 0; }
+    input[type=range].rg::-moz-range-track { height: 2px; background: #9aa39c; }
+    input[type=range].rg::-moz-range-thumb { width: 10px; height: 18px; background: #142720; border: 0; border-radius: 0; }
+    input[type=range].rg:focus-visible { outline: 1px dotted #142720; outline-offset: 2px; }
+    .out-tab { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 0 0 12px; }
+    .out-tab th { text-align: left; font-weight: 400; color: #3b4540; padding: 7px 0; border-bottom: 1px solid #e3e5df; }
+    .out-tab td { text-align: right; padding: 7px 0 7px 10px; border-bottom: 1px solid #e3e5df; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .out-tab td.v { font-weight: 700; color: #142720; font-size: .95rem; }
+    .out-tab td.u { color: #5f6b64; font-size: .78rem; text-align: left; width: 1%; }
+    @media (max-width: 700px) { .calc-grid { grid-template-columns: 1fr; } }
+  </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">ESG Reporting</span>
+      <h1>Inventaris Emisi GRK dan Uji Klaim Keberlanjutan Perusahaan Sawit Fiktif</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <h2>Latar belakang</h2>
+      <p>Emiten, perusahaan publik, dan lembaga jasa keuangan di Indonesia wajib menyusun laporan keberlanjutan berdasarkan POJK Nomor 51/POJK.03/2017. Salah satu angka yang paling disorot dalam laporan ini adalah emisi gas rumah kaca (GRK). Namun angka emisi baru bermakna jika dihitung dengan cara yang konsisten, sehingga bisa dibandingkan dari tahun ke tahun dan antarperusahaan. Untuk itu, sebagian besar perusahaan mengacu pada GHG Protocol, standar penghitungan emisi yang paling luas digunakan di dunia.</p>
+      <p>Project ini mempraktikkan seluruh prosesnya pada PT Contoh Sawit Nusantara, sebuah perusahaan sawit terpadu fiktif di Riau. Nama, data aktivitas, skor materialitas, dan klaim perusahaan ini dibuat sendiri, tetapi metode dan faktor emisinya mengikuti standar resmi, sehingga cara hitungnya bisa dipakai untuk perusahaan sungguhan. Pertanyaannya, berapa emisi GRK perusahaan dalam setahun, dari mana sumber terbesarnya, langkah apa yang paling efektif untuk menurunkannya, dan bagaimana memeriksa apakah klaim keberlanjutan perusahaan sesuai dengan datanya.</p>
+
+      <h2>Profil perusahaan fiktif</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr><th>Komponen</th><th>2024</th><th>2025</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Kebun inti (dikelola perusahaan)</td><td>12.000 ha</td><td>12.000 ha</td></tr>
+            <tr><td>Kebun plasma (milik petani mitra)</td><td>8.000 ha</td><td>8.000 ha</td></tr>
+            <tr><td>Pabrik kelapa sawit</td><td>60 ton TBS/jam</td><td>60 ton TBS/jam</td></tr>
+            <tr><td>TBS diolah, dari kebun inti</td><td>228.000 ton</td><td>240.000 ton</td></tr>
+            <tr><td>TBS dibeli dari plasma</td><td>90.000 ton</td><td>96.000 ton</td></tr>
+            <tr><td>TBS dibeli dari pemasok pihak ketiga</td><td>48.000 ton</td><td>60.000 ton</td></tr>
+            <tr><td>Solar</td><td>1,15 juta liter</td><td>1,20 juta liter</td></tr>
+            <tr><td>Pupuk nitrogen (kebun inti)</td><td>1.150 ton N</td><td>1.200 ton N</td></tr>
+            <tr><td>Listrik PLN (kantor dan perumahan)</td><td>2.300 MWh</td><td>2.400 MWh</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">TBS adalah tandan buah segar. Rendemen minyak sawit mentah (CPO) diasumsikan 21% dan inti sawit 5% dari berat TBS. Seluruh kebun berada di tanah mineral, bukan gambut.</p>
+
+      <h2>Metode</h2>
+      <p>Langkah pertama adalah menentukan kegiatan mana saja yang emisinya dihitung sebagai emisi perusahaan. Dalam GHG Protocol, cara yang dipakai di sini disebut pendekatan kendali operasional. Artinya, semua kegiatan yang dikelola langsung oleh perusahaan, yaitu kebun inti, pabrik, kendaraan, dan kantor, dihitung sebagai emisi perusahaan. Kebun plasma dan pemasok pihak ketiga tidak dikelola langsung, sehingga emisinya masuk ke Scope 3.</p>
+      <ul>
+        <li><strong>Scope 1</strong> adalah emisi langsung dari kegiatan perusahaan, yaitu metana dari kolam limbah cair pabrik (POME), solar, N₂O dan CO₂ dari pupuk, serta CH₄ dan N₂O dari boiler biomassa.</li>
+        <li><strong>Scope 2</strong> adalah emisi dari listrik yang dibeli dari PLN.</li>
+        <li><strong>Scope 3</strong> adalah emisi di rantai nilai, yaitu TBS yang dibeli dari plasma dan pihak ketiga, produksi pupuk yang dibeli, serta angkutan TBS dan CPO.</li>
+      </ul>
+      <p>Selain ketiga scope di atas, ada satu jenis emisi yang dilaporkan terpisah, yaitu CO₂ dari boiler pabrik. Pabrik membangkitkan listriknya sendiri dengan membakar serat dan cangkang sawit, dan CO₂ dari pembakaran ini berasal dari tanaman yang menyerap CO₂ saat tumbuh. Karena itu, GHG Protocol meminta CO₂ ini dilaporkan sebagai CO₂ biogenik dan tidak dijumlahkan ke Scope 1. CH₄ dan N₂O dari pembakaran yang sama tetap masuk ke Scope 1.</p>
+      <p>Setelah semua sumber dihitung, setiap gas diubah menjadi setara CO₂ (CO₂e) agar bisa dijumlahkan. Pengubahannya memakai potensi pemanasan global 100 tahun dari IPCC AR5, yaitu 28 untuk CH₄ dan 265 untuk N₂O. Artinya, 1 ton metana dihitung sama dengan 28 ton CO₂. Cara hitung dan faktor emisi untuk setiap sumber bisa dilihat pada tabel berikut.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr><th>Sumber emisi</th><th>Cara hitung dan faktor emisi</th><th>Acuan</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Metana POME</td><td>0,65 m³ POME per ton TBS × 50 kg COD per m³ × 0,25 kg CH₄ per kg COD × 0,8 (kolam anaerobik dalam)</td><td>IPCC 2006, Vol. 5 Bab 6</td></tr>
+            <tr><td>Solar</td><td>2,68 kg CO₂e per liter</td><td>IPCC 2006, Vol. 2 Bab 3</td></tr>
+            <tr><td>N₂O pupuk</td><td>1% N pupuk menjadi N₂O-N secara langsung, ditambah emisi tidak langsung dari penguapan (10% × 1%) dan pencucian (30% × 0,75%)</td><td>IPCC 2006, Vol. 4 Bab 11</td></tr>
+            <tr><td>CO₂ urea</td><td>0,20 ton C per ton urea</td><td>IPCC 2006, Vol. 4 Bab 11</td></tr>
+            <tr><td>CH₄ dan N₂O boiler</td><td>0,19 ton serat dan cangkang per ton TBS × 15 GJ per ton; 30 kg CH₄ dan 4 kg N₂O per TJ</td><td>IPCC 2006, Vol. 2 Bab 2</td></tr>
+            <tr><td>Listrik PLN</td><td>0,80 ton CO₂ per MWh</td><td>Asumsi</td></tr>
+            <tr><td>TBS yang dibeli</td><td>0,15 ton CO₂e per ton TBS</td><td>Asumsi</td></tr>
+            <tr><td>Produksi pupuk</td><td>4,0 ton CO₂e per ton N, 1,0 per ton P₂O₅, 0,6 per ton K₂O</td><td>Asumsi</td></tr>
+            <tr><td>Angkutan</td><td>0,10 kg CO₂e per ton-km</td><td>Asumsi</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Faktor bertanda asumsi dipakai untuk penyederhanaan. Untuk laporan sungguhan, faktor emisi listrik sebaiknya memakai nilai jaringan terbaru dari Kementerian ESDM, dan emisi TBS yang dibeli dihitung dari data pemasok. Solar juga dihitung sebagai solar fosil murni, padahal solar di Indonesia sudah bercampur biodiesel.</p>
+
+      <p>Setelah emisi dihitung, isu keberlanjutan yang perlu diutamakan dalam laporan dipilih dengan cara yang disebut materialitas ganda. Setiap isu dinilai dari dua sisi. Sisi pertama adalah seberapa besar dampak kegiatan perusahaan terhadap lingkungan dan masyarakat, misalnya pencemaran sungai atau hilangnya hutan. Sisi kedua adalah seberapa besar isu itu bisa memengaruhi keuangan perusahaan, misalnya kehilangan pembeli atau terkena denda. Isu yang nilainya tinggi di kedua sisi menjadi prioritas.</p>
+      <p>Hasil inventaris emisi juga dipakai untuk dua hal lain. Pertama, untuk menghitung seberapa jauh emisi bisa diturunkan dengan beberapa langkah, yaitu mengolah limbah cair menjadi biogas, memasang PLTS atap, dan mengurangi pupuk nitrogen. Kedua, untuk memeriksa kebenaran klaim perusahaan. Dalam project ini dibuat tiga contoh klaim yang biasa muncul di siaran pers, misalnya "pabrik kami memakai 100% energi terbarukan". Setiap klaim lalu dicocokkan dengan angka emisi yang sudah dihitung, untuk melihat apakah klaim itu benar, berlebihan, atau belum bisa dibuktikan.</p>
+
+      <h2>Hasil</h2>
+
+      <div class="stat-row">
+        <div><strong>86.929 t</strong><span>Emisi Scope 1 dan 2 tahun 2025 (CO₂e)</span></div>
+        <div><strong>83%</strong><span>Di antaranya dari metana kolam limbah cair</span></div>
+        <div><strong>1,05 t</strong><span>CO₂e per ton CPO yang dihasilkan</span></div>
+      </div>
+
+      <p>Sepanjang 2025, PT Contoh Sawit Nusantara mengeluarkan sekitar 85.000 ton CO₂e dari kegiatannya sendiri (Scope 1), 1.900 ton dari listrik PLN (Scope 2), dan 32.900 ton dari rantai nilainya (Scope 3). Di luar angka itu, pembakaran serat dan cangkang di boiler melepas sekitar 112.900 ton CO₂ biogenik yang dilaporkan terpisah.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/esg-sumber.png" target="_blank" rel="noopener">
+          <img src="assets/maps/esg-sumber.png" alt="Grafik sumber emisi gas rumah kaca perusahaan sawit fiktif tahun 2025 menurut scope">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> Sumber emisi GRK PT Contoh Sawit Nusantara tahun 2025</figcaption>
+      </figure>
+
+      <p>Sumber emisi terbesar adalah metana dari kolam limbah cair pabrik. Setiap ton TBS yang diolah menghasilkan sekitar 0,65 m³ limbah cair yang kaya bahan organik. Di kolam terbuka, bahan organik ini diuraikan bakteri tanpa oksigen dan menghasilkan metana, gas yang dalam 100 tahun memerangkap panas 28 kali lebih kuat dari CO₂. Dari kolam limbah saja, emisinya mencapai sekitar 72.000 ton CO₂e, lebih dari dua puluh kali emisi solar seluruh kendaraan dan genset perusahaan. Di Scope 3, sumber terbesar berasal dari TBS yang dibeli dari petani plasma dan pemasok pihak ketiga.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr><th>Indikator</th><th>2024</th><th>2025</th><th>Perubahan</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Emisi Scope 1 dan 2 (t CO₂e)</td><td>80.778</td><td>86.929</td><td>naik 7,6%</td></tr>
+            <tr><td>Emisi Scope 3 (t CO₂e)</td><td>29.688</td><td>32.875</td><td>naik 10,7%</td></tr>
+            <tr><td>CPO yang dihasilkan (ton)</td><td>76.860</td><td>83.160</td><td>naik 8,2%</td></tr>
+            <tr><td>Intensitas Scope 1 dan 2 (t CO₂e per ton CPO)</td><td>1,051</td><td>1,045</td><td>turun 0,5%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Intensitas emisi adalah emisi dibagi produksi. Angka ini membantu membandingkan kinerja ketika produksi berubah, tetapi tetap perlu dilaporkan bersama emisi totalnya.</p>
+
+      <p>Emisi perusahaan naik 7,6% dari 2024 ke 2025, karena TBS yang diolah bertambah. Intensitasnya hampir tidak berubah, karena cara pengolahan limbahnya juga tidak berubah. Jadi, setiap kali produksi CPO bertambah, metana dari kolam limbah juga ikut bertambah.</p>
+
+      <h3>Isu yang paling penting</h3>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/esg-materialitas.png" target="_blank" rel="noopener">
+          <img src="assets/maps/esg-materialitas.png" alt="Matriks materialitas ganda isu keberlanjutan perusahaan sawit fiktif" style="max-width:640px">
+        </a>
+        <figcaption><strong>Gambar 2.</strong> Matriks materialitas ganda PT Contoh Sawit Nusantara</figcaption>
+      </figure>
+
+      <p class="table-note">Skor 1–5 untuk setiap isu juga fiktif. Dalam praktiknya, skor ini disusun dari wawancara dengan pemangku kepentingan, kajian risiko, dan data operasional.</p>
+
+      <p>Matriks ini dibaca dari dua arah. Semakin ke kanan, semakin besar pengaruh isu itu terhadap keuangan perusahaan. Semakin ke atas, semakin besar dampak perusahaan terhadap lingkungan dan masyarakat. Garis di nilai 3 membagi matriks menjadi empat kotak, dan isu di kotak kanan atas menjadi prioritas karena penting dari kedua sisi.</p>
+      <p>Ada enam isu di kotak prioritas. Deforestasi di rantai pasok berada paling kanan, karena pembeli dan pasar ekspor seperti Uni Eropa makin ketat mensyaratkan minyak sawit yang bebas deforestasi. Jika syarat ini tidak terpenuhi, perusahaan bisa kehilangan pembeli. Metana dari limbah cair berada paling atas, sejalan dengan hasil inventaris yang menunjukkan bahwa kolam limbah adalah sumber emisi terbesar. Pengaruhnya ke keuangan saat ini masih sedang karena pajak karbon belum berlaku, tetapi posisinya bisa bergeser ke kanan jika aturan itu mulai diterapkan. Kebakaran lahan juga tinggi di kedua sisi, karena selain merusak hutan dan menimbulkan kabut asap, perusahaan bisa terkena sanksi sampai pencabutan izin.</p>
+      <p>Tiga isu prioritas lainnya berkaitan dengan manusia. Hubungan dengan petani plasma penting karena plasma memasok sekitar 24% TBS yang diolah pabrik, sehingga konflik dengan petani bisa langsung mengganggu pasokan. Upah dan hak pekerja serta keselamatan kerja berdampak besar pada ribuan pekerja kebun dan pabrik, dan makin sering diperiksa dalam audit pembeli maupun sertifikasi.</p>
+      <p>Isu di luar kotak prioritas tetap perlu diperhatikan. Mutu air sungai dan keanekaragaman hayati berdampak cukup besar, tetapi pengaruhnya ke keuangan perusahaan dinilai masih kecil. Isu seperti ini mudah terlewat dalam laporan, padahal bisa cepat berubah menjadi masalah keuangan jika terjadi pencemaran besar atau aturan diperketat. Sebaliknya, antikorupsi dan perizinan dampaknya ke lingkungan tidak langsung, tetapi berpengaruh besar ke keuangan karena menyangkut izin usaha. Efisiensi energi kantor berada di kiri bawah karena dampak dan pengaruhnya sama-sama kecil. Karena itu, isu ini cukup dibahas singkat dalam laporan, dan tidak boleh sampai menutupi pembahasan tentang kolam limbah yang emisinya jauh lebih besar.</p>
+
+      <h3>Seberapa jauh emisi bisa diturunkan?</h3>
+      <p>Misalkan perusahaan menetapkan target menurunkan emisi Scope 1 dan 2 sebesar 30% pada 2030 dibanding 2025. Kalkulator di bawah memperlihatkan pengaruh tiga langkah pengurangan emisi, dengan asumsi jumlah TBS yang diolah tetap seperti 2025.</p>
+
+      <figure class="chart-figure">
+        <div class="calc">
+          <div class="calc-grid">
+            <div>
+              <p class="sheet-h">Langkah pengurangan</p>
+              <div class="prm">
+                <label for="cCap">Limbah cair diolah jadi biogas <span id="vCap"></span></label>
+                <input class="rg" type="range" id="cCap" min="0" max="100" step="5" value="0">
+              </div>
+              <div class="prm">
+                <label for="cPv">Listrik PLN diganti PLTS atap <span id="vPv"></span></label>
+                <input class="rg" type="range" id="cPv" min="0" max="100" step="5" value="0">
+              </div>
+              <div class="prm">
+                <label for="cN">Pupuk nitrogen dikurangi <span id="vN"></span></label>
+                <input class="rg" type="range" id="cN" min="0" max="30" step="5" value="0">
+              </div>
+              <p class="calc-note">Biogas diasumsikan menangkap 90% metana dari limbah yang diolah.</p>
+            </div>
+            <div>
+              <p class="sheet-h">Hasil</p>
+              <table class="out-tab">
+                <tr><th>Emisi Scope 1 dan 2</th><td class="v" id="oS12">–</td><td class="u">t CO₂e</td></tr>
+                <tr><th>Dibanding 2025</th><td class="v" id="oPct">–</td><td class="u"></td></tr>
+                <tr><th>Intensitas</th><td class="v" id="oInt">–</td><td class="u">t CO₂e/t CPO</td></tr>
+              </table>
+              <svg id="cSvg" viewBox="0 0 420 126" role="img" aria-label="Perbandingan emisi 2025, skenario, dan target 2030"></svg>
+              <p class="status" id="oStatus"></p>
+            </div>
+          </div>
+        </div>
+        <figcaption><strong>Gambar 3.</strong> Kalkulator target penurunan emisi Scope 1 dan 2</figcaption>
+      </figure>
+
+      <p>Cara paling ampuh untuk menurunkan emisi adalah menangkap metana dari limbah cair. Mengolah sekitar 45% limbah cair menjadi biogas sudah cukup untuk mencapai target 30%, sedangkan mengganti seluruh listrik PLN dengan PLTS atap hanya menurunkan emisi sekitar 2%. Pengurangan pupuk nitrogen sebesar 30% menurunkan emisi Scope 1 dan 2 sekitar 2,6% dan sedikit mengurangi Scope 3 dari produksi pupuk.</p>
+
+      <h3>Menguji klaim keberlanjutan</h3>
+      <p>Berikut tiga klaim dalam siaran pers fiktif PT Contoh Sawit Nusantara tahun 2025, beserta hasil pemeriksaannya dengan data inventaris.</p>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Klaim dalam siaran pers</th><th>Yang ditunjukkan data</th><th>Kesimpulan</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>"Pabrik kami ditenagai 100% energi terbarukan, menjadikan operasi kami rendah karbon."</td><td>Listrik pabrik memang berasal dari serat dan cangkang sawit, tetapi 83% emisi Scope 1 dan 2 berasal dari metana kolam limbah cair yang tidak disebut.</td><td>Berlebihan</td></tr>
+            <tr><td>"Intensitas emisi kami turun dibandingkan tahun lalu."</td><td>Intensitas hanya turun 0,5%, sedangkan emisi absolut naik 7,6%.</td><td>Benar, tetapi tidak menyebut kenaikan emisi</td></tr>
+            <tr><td>"Seluruh rantai pasok kami bebas deforestasi."</td><td>Sekitar 15% TBS, atau 60.000 ton, dibeli dari pemasok pihak ketiga yang lokasi kebunnya tidak tercatat.</td><td>Belum bisa dibuktikan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Klaim pertama hanya membahas sumber listrik pabrik. Listrik pabrik memang berasal dari serat dan cangkang sawit, tetapi listrik bukan penyumbang emisi terbesar perusahaan. Penyumbang terbesarnya adalah metana dari kolam limbah cair, dan hal ini tidak disebut sama sekali. Jadi, menyebut seluruh kegiatan perusahaan "rendah karbon" hanya karena listriknya terbarukan tidak menggambarkan kondisi yang sebenarnya.</p>
+      <p>Klaim kedua tidak salah, karena emisi per ton CPO memang turun. Namun penurunannya sangat kecil, hanya 0,5%, dan bukan hasil dari usaha mengurangi emisi. Penurunan ini terjadi karena produksi naik lebih cepat daripada pemakaian solar, pupuk, dan listrik. Di sisi lain, jumlah emisi perusahaan justru naik 7,6%. Agar pembaca tidak salah paham, kenaikan ini seharusnya ikut disebutkan.</p>
+      <p>Klaim ketiga belum bisa dibuktikan karena datanya tidak ada. Perusahaan membeli 60.000 ton TBS dari pemasok yang lokasi kebunnya tidak tercatat. Tanpa titik lokasi atau batas kebun, tidak bisa diketahui apakah TBS itu berasal dari lahan bekas hutan yang baru dibuka. Padahal, untuk menjual ke Uni Eropa, perusahaan wajib bisa menunjukkan lokasi kebun asal TBS-nya.</p>
+
+      <h3>Ke mana angka-angka ini dilaporkan?</h3>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr><th>Angka</th><th>Laporan keberlanjutan OJK</th><th>GRI</th><th>IFRS S2</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Emisi Scope 1</td><td rowspan="3">Kinerja lingkungan hidup, bagian emisi</td><td>GRI 305-1</td><td rowspan="3">Pengungkapan emisi GRK Scope 1, 2, dan 3</td></tr>
+            <tr><td>Emisi Scope 2</td><td>GRI 305-2</td></tr>
+            <tr><td>Emisi Scope 3</td><td>GRI 305-3</td></tr>
+            <tr><td>CO₂ biogenik</td><td>Kinerja lingkungan hidup, bagian emisi</td><td>GRI 305-1, dilaporkan terpisah</td><td>–</td></tr>
+            <tr><td>Intensitas emisi</td><td>Kinerja lingkungan hidup, bagian emisi</td><td>GRI 305-4</td><td>–</td></tr>
+            <tr><td>Target dan rencana penurunan</td><td>Strategi keberlanjutan</td><td>GRI 305-5</td><td>Target terkait iklim</td></tr>
+            <tr><td>Isu material</td><td>Penjelasan topik material</td><td>GRI 3-1 dan 3-2</td><td>Risiko dan peluang terkait iklim</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Kesimpulan</h2>
+      <p>PT Contoh Sawit Nusantara mengeluarkan sekitar 87.000 ton CO₂e dari kegiatannya sendiri dan listrik yang dibeli pada 2025, ditambah sekitar 33.000 ton dari rantai nilainya. Sebagian besar emisi itu berasal dari satu sumber, yaitu metana dari kolam limbah cair pabrik. Karena itu, langkah paling efektif untuk menurunkan emisi bukan mengganti listrik atau kendaraan, melainkan menangkap metana dari limbah cair menjadi biogas. Dengan mengolah kurang dari separuh limbah cair saja, target penurunan 30% pada 2030 sudah bisa tercapai.</p>
+      <p>Dengan inventaris emisi yang lengkap, klaim keberlanjutan perusahaan juga bisa diperiksa. Klaim yang hanya menonjolkan sumber energi terbarukan, hanya menyebut intensitas, atau menyatakan bebas deforestasi tanpa data lokasi kebun pemasok bisa langsung diperiksa dengan angka di laporan yang sama. Perusahaan dan datanya memang fiktif, tetapi pola emisinya mirip dengan banyak pabrik kelapa sawit yang belum menangkap metana dari limbah cairnya.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script>
+    (function () {
+      var D = null, el = function (id) { return document.getElementById(id); };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); };
+      var cap = el('cCap'), pv = el('cPv'), nn = el('cN');
+      function hitung() {
+        el('vCap').textContent = cap.value + '%'; el('vPv').textContent = pv.value + '%'; el('vN').textContent = nn.value + '%';
+        if (!D) return;
+        var r = D['2025'], s = r.sumber, c = +cap.value / 100, p = +pv.value / 100, n = +nn.value / 100;
+        var baru = r.s12
+          - s['Metana dari kolam limbah cair (POME)'].t * c * 0.9
+          - s['Listrik PLN'].t * p
+          - (s['N₂O dari pupuk nitrogen'].t + s['CO₂ dari urea'].t) * n;
+        var target = r.s12 * 0.7, pct = (baru / r.s12 - 1) * 100;
+        el('oS12').textContent = fmt(Math.round(baru));
+        el('oPct').textContent = (pct <= -0.05 ? 'turun ' + fmt(-pct, 1) : '0') + '%';
+        el('oInt').textContent = fmt(baru / r.cpo, 2);
+        var st = el('oStatus'), ok = baru <= target + 0.5;
+        st.className = 'status ' + (ok ? 'ok' : 'no');
+        st.textContent = ok ? 'Target 2030 tercapai' : 'Kurang ' + fmt(Math.round(baru - target)) + ' t CO₂e dari target 2030';
+        var W = 420, l = 92, rr = 60, mx = r.s12 * 1.05, X = function (v) { return l + v / mx * (W - l - rr); };
+        var bar = function (y, v, col, lab) {
+          return '<text x="' + (l - 8) + '" y="' + (y + 15) + '" font-size="11" fill="#374151" text-anchor="end">' + lab + '</text>' +
+            '<rect x="' + l + '" y="' + y + '" width="' + (X(v) - l) + '" height="22" fill="' + col + '"/>' +
+            '<text x="' + (X(v) + 6) + '" y="' + (y + 15) + '" font-size="11" fill="#374151">' + fmt(Math.round(v)) + '</text>';
+        };
+        el('cSvg').innerHTML = bar(22, r.s12, '#b9bfb7', '2025') + bar(62, baru, ok ? '#142720' : '#C08A2E', 'Skenario') +
+          '<line x1="' + X(target) + '" x2="' + X(target) + '" y1="12" y2="100" stroke="#111827" stroke-dasharray="4 3"/>' +
+          '<text x="' + X(target) + '" y="118" font-size="11" fill="#111827" text-anchor="middle">Target 2030 (−30%)</text>';
+      }
+      [cap, pv, nn].forEach(function (i) { i.addEventListener('input', hitung); });
+      hitung();
+      fetch('assets/data/esg-dummy.json').then(function (r) { return r.json(); }).then(function (d) { D = d; hitung(); });
+    })();
+  </script>
+</body>
+</html>

@@ -18,12 +18,15 @@
     .flow strong { display: block; font-size: 0.95rem; margin: 4px 0; }
     .flow span { font-size: 0.82rem; color: #6b7280; line-height: 1.45; display: block; }
     .app-frame { width: 100%; height: 720px; border: 1px solid var(--line); border-radius: 12px; display: block; background: #f5f6f4; }
-    .open-app { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 4px; padding: 10px 18px; background: #163a2e; color: #fff !important; border-radius: 8px; text-decoration: none; font-weight: 600; }
-    .open-app:hover { background: #1f4d3d; }
+    .open-app { color: var(--ochre) !important; font-weight: 500; text-decoration: none; }
+    .open-app:hover { text-decoration: underline; }
     .cat-dot { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
     .formula { font-family: ui-monospace, Consolas, monospace; background: #f3f4f6; border-radius: 8px; padding: 10px 14px; overflow-x: auto; font-size: 0.9rem; }
     @media (max-width: 600px) { .app-frame { height: 640px; } }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -47,11 +50,6 @@
       <h2>Latar belakang</h2>
       <p>Setiap musim kemarau, langit Jakarta dan kota-kota di sekitarnya kerap tampak keruh, dan kualitas udaranya ramai dibicarakan. Banyak orang lalu membuka aplikasi kualitas udara di ponsel. Masalahnya, sebagian besar aplikasi tersebut memakai Air Quality Index (AQI) versi Amerika Serikat, yang ambang batas dan kategorinya berbeda dengan standar yang berlaku di Indonesia. Akibatnya, angka dan warna yang dilihat masyarakat belum tentu sama dengan yang dipakai pemerintah.</p>
       <p>Indonesia punya ukurannya sendiri, yaitu Indeks Standar Pencemar Udara (ISPU), yang diatur dalam Peraturan Menteri Lingkungan Hidup dan Kehutanan No. P.14/2020. Project ini membangun aplikasi web sederhana yang menampilkan kualitas udara di 13 kabupaten/kota Jabodetabek dalam satuan ISPU, lengkap dengan prakiraan sampai lima hari ke depan dan anjuran kesehatan sesuai peraturan tersebut. Berbeda dengan project lain di portofolio ini yang berupa analisis, project ini adalah aplikasi yang bisa langsung dipakai.</p>
-
-      <p><a class="open-app" href="app-udara.html" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Buka aplikasi Udara Jabodetabek</a></p>
-
-      <iframe class="app-frame" src="app-udara.html" title="Aplikasi Udara Jabodetabek" loading="lazy"></iframe>
-      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Klik sebuah wilayah, geser waktu untuk melihat prakiraan, atau tekan "Lokasi saya" untuk melihat kondisi di tempatmu.</p>
 
       <h2>Data yang digunakan</h2>
 
@@ -138,6 +136,13 @@
       <h2>Keterbatasan</h2>
       <p>Angka di aplikasi ini adalah hasil model atmosfer, bukan pengukuran langsung dari alat di lapangan. Model CAMS global memiliki resolusi sekitar 40 km, sehingga seluruh Jabodetabek hanya tercakup oleh beberapa sel model. Karena itu, beberapa kabupaten/kota yang bersebelahan bisa menunjukkan nilai yang persis sama, dan perbedaan kecil antar kecamatan tidak akan terlihat. Model seperti ini cocok untuk melihat pola umum dan kecenderungan beberapa hari ke depan, tetapi bisa meleset di jam-jam tertentu, misalnya saat lalu lintas sangat padat atau ada kebakaran di dekat lokasi.</p>
       <p>Data dari stasiun pemantau resmi sebenarnya lebih akurat untuk lokasi stasiun itu sendiri, tetapi jumlah stasiunnya terbatas dan datanya belum tersedia dalam bentuk yang bisa diambil langsung secara terbuka. Pengembangan berikutnya adalah menggabungkan data model ini dengan data stasiun, sehingga aplikasi bisa menampilkan angka terukur di dekat stasiun dan angka model di tempat lain.</p>
+
+      <h2>Mencoba websitenya</h2>
+
+      <p><a class="open-app" href="app-udara.html" target="_blank" rel="noopener">Buka website Udara Jabodetabek →</a></p>
+
+      <iframe class="app-frame" src="app-udara.html" title="Aplikasi Udara Jabodetabek" loading="lazy"></iframe>
+      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Klik sebuah wilayah, geser waktu untuk melihat prakiraan, atau tekan "Lokasi saya" untuk melihat kondisi di tempatmu.</p>
 
       <h2>Kesimpulan</h2>
       <p>Aplikasi ini menunjukkan bahwa informasi kualitas udara dalam standar Indonesia bisa disajikan secara langsung, gratis, dan mudah dipahami, cukup dengan data terbuka dan halaman web statis. Dengan memakai ISPU, kategori dan anjuran kesehatan yang ditampilkan sama dengan yang dipakai pemerintah, sehingga masyarakat tidak perlu menerjemahkan angka dari standar negara lain.</p>

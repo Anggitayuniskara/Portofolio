@@ -5,112 +5,142 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Udara Jabodetabek</title>
   <meta name="description" content="Kualitas udara per jam dan prakiraan 5 hari untuk 13 kabupaten/kota di Jabodetabek, dalam Indeks Standar Pencemar Udara (ISPU).">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <style>
-    :root {
-      --bg: #f5f6f4; --panel: #ffffff; --ink: #14201c; --muted: #6b7280; --line: #e3e6e1; --accent: #163a2e;
-      --baik: #2e9e48; --sedang: #1f6fd1; --tidak: #f2c200; --sangat: #d62828; --bahaya: #1b1b1b;
-    }
+    :root { --paper: #F5F6F1; --ink: #142720; --muted: #5b6964; --line: #D8DBCF; --papan: #111816; --papan2: #1c2622; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; }
-    body { background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; }
-    header.top { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--accent); color: #fff; flex-wrap: wrap; }
-    header.top h1 { font-size: 1.1rem; margin: 0; letter-spacing: .01em; }
-    header.top p { margin: 0; font-size: .8rem; opacity: .8; }
-    header.top .grow { flex: 1; min-width: 180px; }
-    header.top a, header.top button { color: #fff; font: inherit; font-size: .85rem; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 6px 12px; cursor: pointer; text-decoration: none; white-space: nowrap; }
-    header.top a:hover, header.top button:hover { background: rgba(255,255,255,.22); }
+    html, body { margin: 0; }
+    body { background: var(--paper); color: var(--ink); font: 14px/1.5 "Segoe UI", Arial, sans-serif; }
+    .kepala { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; padding: 12px 18px 10px; border-bottom: 2px solid var(--ink); }
+    .kepala h1 { margin: 0; font-size: 1.25rem; }
+    .kepala span { color: var(--muted); font-size: .85rem; }
+    .kepala .kanan { margin-left: auto; display: flex; gap: 16px; font-size: .88rem; }
+    .kepala a, .kepala button { color: #8a6420; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; text-decoration: none; }
+    .kepala a:hover, .kepala button:hover { text-decoration: underline; }
+    .status { padding: 6px 18px; font-size: .82rem; background: #f3ead3; display: none; }
 
-    .bar { display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; }
-    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-    .chips button { font: inherit; font-size: .8rem; padding: 4px 10px; border: 1px solid var(--line); background: #fff; border-radius: 999px; cursor: pointer; color: var(--ink); }
-    .chips button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
-    .timebox { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 260px; }
-    .timebox input { flex: 1; min-width: 120px; accent-color: var(--accent); }
-    .timebox .tlabel { font-weight: 600; min-width: 170px; font-size: .85rem; }
-    .timebox button { font: inherit; font-size: .8rem; padding: 4px 10px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; }
+    body { display: flex; flex-direction: column; height: 100vh; }
+    .tata { flex: 1; min-height: 0; display: grid; grid-template-columns: 340px 1fr; }
+    .kiri { background: var(--papan); color: #e8ece9; padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 9px; overflow-y: auto; min-height: 0; }
+    .papan-judul { font-size: .72rem; letter-spacing: .14em; color: #9fb0a8; border-bottom: 1px solid #2c3833; padding-bottom: 6px; }
+    .lokasi { font-size: 1.05rem; font-weight: 700; color: #fff; line-height: 1.3; }
+    .waktu { font-size: .74rem; color: #9fb0a8; }
+    .angka { text-align: center; font: 700 4rem/1 "Consolas", "Courier New", monospace; letter-spacing: -.02em; margin: 4px 0 0; }
+    .kat { display: block; text-align: center; font-weight: 700; font-size: 1rem; padding: 4px; margin-top: 4px; }
+    .krit { font-size: .76rem; color: #b8c6bf; text-align: center; }
+    .skala { position: relative; margin-top: 4px; }
+    .skala .seg { display: flex; height: 10px; }
+    .skala .seg i { display: block; height: 100%; }
+    .skala .tanda { position: absolute; top: -7px; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 7px solid #fff; transform: translateX(-6px); }
+    .skala .lab { display: flex; justify-content: space-between; font-size: .68rem; color: #8fa199; margin-top: 3px; font-family: "Consolas", monospace; }
+    table.par { width: 100%; border-collapse: collapse; font-size: .8rem; font-variant-numeric: tabular-nums; }
+    table.par td { padding: 3px 4px; border-bottom: 1px solid #2c3833; }
+    table.par td:nth-child(2), table.par td:nth-child(3) { text-align: right; font-family: "Consolas", monospace; }
+    table.par tr.kr td { color: #fff; font-weight: 700; }
+    table.par .kot { display: inline-block; width: 9px; height: 9px; margin-right: 7px; }
+    .anjuran { font-size: .76rem; line-height: 1.45; color: #c9d3ce; }
+    .anjuran b { color: #fff; display: block; margin-top: 4px; font-size: .8rem; }
 
-    main { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: 0; }
-    #map { width: 100%; height: 100%; min-height: 300px; background: #e8ecef; }
-    aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 14px 16px 24px; }
-    aside h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 8px; }
-    aside h2:first-child { margin-top: 0; }
+    .kanan-isi { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .tengah { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 300px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .peringkat { display: flex; flex-direction: column; min-height: 0; padding: 10px 14px; border-left: 1px solid var(--line); background: var(--paper); }
+    .peringkat h2 { font-size: .92rem; margin: 0 0 6px; }
+    .rank-wrap { flex: 1; min-height: 0; overflow-y: auto; }
+    .cara { margin-top: 8px; }
+    .cara summary { cursor: pointer; color: #8a6420; font-size: .84rem; font-weight: 600; }
+    .tab { display: flex; gap: 2px 18px; flex-wrap: wrap; align-items: baseline; padding: 10px 18px 0; font-size: .9rem; }
+    .tab > span { color: var(--muted); font-size: .82rem; }
+    .tab button { background: none; border: 0; padding: 4px 0 6px; font: inherit; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; }
+    .tab button.on { color: var(--ink); font-weight: 700; border-bottom-color: var(--ink); }
+    .catatan { font-size: .8rem; color: var(--muted); padding: 2px 18px 8px; min-height: 1.2em; }
+    #map { min-height: 0; background: #e5e8e4; }
+    .waktu-wrap { padding: 8px 18px 10px; }
+    .waktu-wrap .baris span { font-weight: 600; }
+    .waktu-wrap .baris { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: .85rem; }
+    .waktu-wrap .baris b { font-size: .95rem; }
+    .waktu-wrap button { background: none; border: 0; color: #8a6420; font: inherit; font-weight: 700; cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+    .pita { display: grid; grid-auto-flow: column; gap: 1px; margin-top: 6px; overflow-x: auto; padding-bottom: 2px; }
+    .pita .hari { font-size: .72rem; color: var(--muted); white-space: nowrap; }
+    .pita .sel { height: 26px; min-width: 6px; cursor: pointer; }
+    .pita .sel.pilih { outline: 2px solid var(--ink); outline-offset: 1px; position: relative; z-index: 1; }
+    .pita .sel.jam0 { margin-left: 3px; }
+    .bawah { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 10px 18px 24px; }
+    .bawah h2 { font-size: .95rem; margin: 0 0 6px; }
+    table.rank { width: 100%; border-collapse: collapse; font-size: .86rem; }
+    table.rank td { padding: 3px 6px; border-bottom: 1px solid var(--line); cursor: pointer; font-size: .84rem; }
+    table.rank tr:hover td, table.rank tr.on td { background: #e9ebe3; }
+    table.rank td.n { color: var(--muted); width: 26px; text-align: right; }
+    table.rank td.v { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; width: 110px; }
+    table.rank .kot { display: inline-block; width: 10px; height: 10px; margin-left: 8px; vertical-align: -1px; }
+    .ket { font-size: .8rem; color: var(--muted); line-height: 1.6; margin: 0; }
+    .lbl { font: 700 11px/1 "Segoe UI", Arial, sans-serif; padding: 2px 4px; border: 1px solid rgba(0,0,0,.3); white-space: nowrap; }
+    .legenda { background: #fff; border: 1px solid #c9ccc2; padding: 6px 8px; font: 11px/1.3 "Segoe UI", Arial, sans-serif; }
+    .legenda .s { display: flex; }
+    .legenda .s div { text-align: center; padding: 0 3px; }
+    .legenda .s i { display: block; height: 8px; margin-bottom: 3px; }
 
-    .card { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-    .card .place { font-weight: 700; font-size: 1.05rem; }
-    .card .sub { color: var(--muted); font-size: .8rem; }
-    .big { display: flex; align-items: center; gap: 14px; margin: 12px 0 8px; }
-    .big .num { font-size: 2.4rem; font-weight: 800; line-height: 1; padding: 10px 14px; border-radius: 10px; min-width: 88px; text-align: center; }
-    .big .cat { font-weight: 700; font-size: 1.05rem; }
-    .big .crit { color: var(--muted); font-size: .8rem; }
-    table.pol { width: 100%; border-collapse: collapse; font-size: .8rem; margin-top: 8px; }
-    table.pol td { padding: 4px 2px; border-top: 1px solid var(--line); }
-    table.pol tr.on td { background: #f1f5f0; font-weight: 700; }
-    .parnote { width: 100%; font-size: .78rem; color: var(--muted); }
-    .parnote:empty { display: none; }
-    table.pol td:nth-child(2), table.pol td:nth-child(3) { text-align: right; }
-    table.pol i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
-    .advice { margin-top: 12px; font-size: .82rem; }
-    .advice b { display: block; margin-top: 6px; }
-    canvas#trend { width: 100%; height: 150px; display: block; margin-top: 8px; }
-
-    ol.rank { list-style: none; margin: 0; padding: 0; }
-    ol.rank li { display: flex; align-items: center; gap: 10px; padding: 6px 4px; border-bottom: 1px solid var(--line); cursor: pointer; font-size: .85rem; }
-    ol.rank li:hover, ol.rank li.sel { background: #f3f5f2; }
-    ol.rank .badge { min-width: 42px; text-align: center; font-weight: 700; border-radius: 6px; padding: 2px 6px; font-size: .8rem; }
-    ol.rank .n { color: var(--muted); width: 18px; text-align: right; }
-    ol.rank .nm { flex: 1; }
-
-    .legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font-size: 12px; line-height: 1.6; }
-    .legend b { display: block; margin-bottom: 2px; }
-    .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
-    .lbl { font: 700 11px/1 system-ui, sans-serif; padding: 3px 5px; border-radius: 4px; border: 1px solid rgba(0,0,0,.25); white-space: nowrap; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
-    .note { font-size: .75rem; color: var(--muted); margin-top: 18px; line-height: 1.5; }
-    .status { padding: 6px 16px; font-size: .8rem; background: #fff7e6; border-bottom: 1px solid #f6d58d; display: none; }
-
-    @media (max-width: 860px) {
-      main { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
-      aside { border-left: 0; border-top: 1px solid var(--line); }
-      body { height: auto; }
-      .timebox .tlabel { min-width: 0; width: 100%; order: -1; }
-      .legend { font-size: 10px; padding: 6px 8px; }
-      .legend span { display: none; }
+    @media (max-width: 900px) {
+      body { display: block; height: auto; }
+      .tata { grid-template-columns: 1fr; }
+      .tengah { grid-template-columns: 1fr; }
+      #map { height: 50vh; }
+      .peringkat { border-left: 0; border-top: 1px solid var(--line); }
+      .angka { font-size: 4.2rem; }
     }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
-  <header class="top">
-    <div class="grow">
-      <h1><i class="fa-solid fa-wind"></i> Udara Jabodetabek</h1>
-      <p>Indeks Standar Pencemar Udara (ISPU) per jam dan prakiraan 5 hari</p>
+  <header class="kepala">
+    <h1>Udara Jabodetabek</h1>
+    <span>Indeks Standar Pencemar Udara per jam dan prakiraan 5 hari</span>
+    <div class="kanan">
+      <button type="button" id="locBtn">Lokasi saya</button>
+      <a href="project-aqi-jabodetabek.html">Tentang data ini</a>
     </div>
-    <button type="button" id="locBtn"><i class="fa-solid fa-location-crosshairs"></i> Lokasi saya</button>
-    <a href="project-aqi-jabodetabek.html"><i class="fa-solid fa-circle-info"></i> Tentang</a>
   </header>
   <div class="status" id="status"></div>
 
-  <div class="bar">
-    <div class="chips" id="chips" role="group" aria-label="Pilih parameter"></div>
-    <div class="timebox">
-      <button type="button" id="nowBtn">Sekarang</button>
-      <input type="range" id="slider" min="0" max="0" value="0" aria-label="Pilih jam">
-      <div class="tlabel" id="tlabel">Memuat data…</div>
-    </div>
-    <div class="parnote" id="parnote"></div>
-  </div>
+  <div class="tata">
+    <section class="kiri" aria-live="polite">
+      <div class="papan-judul">INDEKS STANDAR PENCEMAR UDARA</div>
+      <div>
+        <div class="lokasi" id="pLok">Memuat data…</div>
+        <div class="waktu" id="pWaktu"></div>
+      </div>
+      <div>
+        <div class="angka" id="pAngka">–</div>
+        <span class="kat" id="pKat" style="background:#2c3833">–</span>
+        <div class="krit" id="pKrit" style="margin-top:6px"></div>
+      </div>
+      <div class="skala" id="pSkala"></div>
+      <table class="par" id="pPar"></table>
+      <div class="anjuran" id="pAnj"></div>
+    </section>
 
-  <main>
-    <div id="map" role="region" aria-label="Peta kualitas udara Jabodetabek"></div>
-    <aside>
-      <h2>Lokasi terpilih</h2>
-      <div class="card" id="detail"><span class="sub">Klik sebuah kota atau kabupaten di peta, atau titik mana saja di sekitarnya.</span></div>
-      <h2>Peringkat kabupaten/kota</h2>
-      <ol class="rank" id="rank"></ol>
-      <p class="note">ISPU dihitung dari rata-rata 24 jam terakhir setiap parameter, sesuai PermenLHK No. P.14/2020, lalu diambil nilai tertinggi. Data berasal dari model atmosfer CAMS (Copernicus) melalui Open-Meteo dengan resolusi sekitar 40 km, jadi ini adalah perkiraan model, bukan hasil pengukuran stasiun. Wilayah yang bersebelahan bisa memiliki nilai yang sama karena berada di sel model yang sama.</p>
-    </aside>
-  </main>
+    <section class="kanan-isi">
+      <div class="tab" id="chips" role="group" aria-label="Pilih parameter"><span>Tampilkan</span></div>
+      <div class="catatan" id="parnote"></div>
+      <div class="tengah">
+        <div id="map" role="region" aria-label="Peta kualitas udara Jabodetabek"></div>
+        <aside class="peringkat">
+          <h2>Peringkat kabupaten/kota</h2>
+          <div class="rank-wrap"><table class="rank" id="rank"></table></div>
+          <details class="cara"><summary>Cara membaca dan sumber data</summary>
+            <p class="ket">Klik kabupaten/kota di peta atau di tabel ini untuk melihatnya di papan kiri, atau klik titik mana saja di peta. Kotak warna di bawah peta menunjukkan kategori udara di lokasi terpilih setiap jam sampai lima hari ke depan.</p>
+            <p class="ket" style="margin-top:6px">ISPU dihitung dari rata-rata 24 jam terakhir setiap parameter sesuai PermenLHK No. P.14/2020, lalu diambil nilai tertinggi. Data dari model atmosfer CAMS (Copernicus) melalui Open-Meteo dengan resolusi sekitar 40 km, jadi angkanya perkiraan model, bukan pengukuran stasiun.</p>
+          </details>
+        </aside>
+      </div>
+      <div class="waktu-wrap">
+        <div class="baris"><b id="tlabel">Memuat data…</b><span>Klik kotak untuk memilih jam, atau <button type="button" id="nowBtn">kembali ke sekarang</button></span></div>
+        <div class="pita" id="pita" aria-label="Pilihan jam"></div>
+      </div>
+    </section>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script>
@@ -136,6 +166,8 @@
       var BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
       var catOf = function (v) { for (var i = 0; i < CAT.length; i++) if (v <= CAT[i].max) return CAT[i]; return CAT[CAT.length - 1]; };
+      // Warna angka di papan gelap: kategori Berbahaya memakai merah tua agar tetap terbaca
+      var warnaAngka = function (c) { return c.nama === 'Berbahaya' ? '#ff6b6b' : c.warna; };
       function ispu(par, c) {
         if (c === null || c === undefined || isNaN(c)) return null;
         var b = [0].concat(BP[par]);
@@ -170,8 +202,9 @@
           .then(function (d) { return (Array.isArray(d) ? d : [d]).map(function (x) { return process(x.hourly); }); });
       }
 
-      var state = { par: 'ispu', t: 0, times: [], start: 0, kab: [], sel: null, point: null };
+      var state = { par: 'ispu', t: 0, times: [], start: 0, kab: [], sel: null };
       var valueAt = function (o, i) { return state.par === 'ispu' ? o.ispu[i] : o.sub[state.par][i]; };
+      var el = function (id) { return document.getElementById(id); };
 
       // Peta
       var map = L.map('map', { zoomSnap: 0.25 }).setView([-6.35, 106.82], 10);
@@ -181,20 +214,19 @@
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16, pane: 'shadowPane' }).addTo(map);
       L.control.scale({ imperial: false }).addTo(map);
       var polyLayer = L.layerGroup().addTo(map), labelLayer = L.layerGroup().addTo(map), pointLayer = L.layerGroup().addTo(map);
-
       var Legend = L.Control.extend({
-        options: { position: 'bottomright' },
+        options: { position: 'bottomleft' },
         onAdd: function () {
-          var d = L.DomUtil.create('div', 'legend');
-          d.innerHTML = '<b>Kategori ISPU</b>' + CAT.map(function (c, i) {
-            return '<div><i style="background:' + c.warna + '"></i>' + c.nama + ' <span style="color:#888">(' + (i ? CAT[i - 1].max + 1 : 0) + (c.max < 1e9 ? '–' + c.max : '+') + ')</span></div>';
-          }).join('');
+          var d = L.DomUtil.create('div', 'legenda');
+          d.innerHTML = '<div class="s">' + CAT.map(function (c, i) {
+            return '<div><i style="background:' + c.warna + '"></i>' + c.nama + '<br><span style="color:#777">' + (i ? CAT[i - 1].max + 1 : 0) + (c.max < 1e9 ? '–' + c.max : '+') + '</span></div>';
+          }).join('') + '</div>';
           return d;
         }
       });
       new Legend().addTo(map);
 
-      var chips = document.getElementById('chips');
+      var chips = el('chips');
       Object.keys(NAMA).forEach(function (k) {
         var b = document.createElement('button'); b.type = 'button'; b.textContent = NAMA[k]; b.dataset.k = k;
         if (k === 'ispu') b.className = 'on';
@@ -204,30 +236,28 @@
         chips.appendChild(b);
       });
 
-      var slider = document.getElementById('slider'), tlabel = document.getElementById('tlabel');
+      var tlabel = el('tlabel');
       function timeText(s) {
         var d = new Date(s + ':00'), now = state.times[state.start];
-        return HARI[d.getDay()] + ', ' + d.getDate() + ' ' + BLN[d.getMonth()] + ' · ' + String(d.getHours()).padStart(2, '0') + '.00 WIB' + (s === now ? ' (sekarang)' : '');
+        return HARI[d.getDay()] + ', ' + d.getDate() + ' ' + BLN[d.getMonth()] + ', pukul ' + String(d.getHours()).padStart(2, '0') + '.00 WIB' + (s === now ? ' (sekarang)' : '');
       }
-      slider.addEventListener('input', function () { state.t = state.start + parseInt(slider.value, 10); render(); });
-      document.getElementById('nowBtn').addEventListener('click', function () { slider.value = 0; state.t = state.start; render(); });
+      el('nowBtn').addEventListener('click', function () { state.t = state.start; render(); });
 
-      // Saat satu parameter dipilih, angka di peta dan peringkat berupa konsentrasi rata-rata 24 jam, bukan ISPU
       function fmtConc(a) { return a === null ? '–' : a.toLocaleString('id-ID', { maximumFractionDigits: a < 10 ? 1 : 0 }); }
       function labelOf(o, i) {
         if (state.par === 'ispu') { var v = o.ispu[i]; return v === null ? '–' : String(v); }
         var a = o.avg[state.par][i]; return a === null ? '–' : fmtConc(a) + ' µg/m³';
       }
       function parNote(t) {
-        var el = document.getElementById('parnote');
+        var e = el('parnote');
         if (state.par !== 'ispu') {
-          el.textContent = 'Angka di peta adalah konsentrasi rata-rata 24 jam ' + NAMA[state.par] + '. Warnanya mengikuti kategori ISPU untuk ' + NAMA[state.par] + ' saja.';
+          e.textContent = 'Angka di peta adalah konsentrasi rata-rata 24 jam ' + NAMA[state.par] + ', dengan warna kategori ISPU untuk ' + NAMA[state.par] + ' saja.';
           return;
         }
         var n = {};
         state.kab.forEach(function (k) { var p = k.data.kritis[t]; if (p) n[p] = (n[p] || 0) + 1; });
         var parts = Object.keys(n).sort(function (a, b) { return n[b] - n[a]; }).map(function (p) { return NAMA[p] + ' di ' + n[p] + ' wilayah'; });
-        el.textContent = 'ISPU gabungan memakai nilai tertinggi dari keenam parameter. Pada jam ini parameter kritisnya ' +
+        e.textContent = 'ISPU memakai nilai tertinggi dari enam parameter. Pada jam ini parameter kritisnya ' +
           (parts.length > 1 ? parts.slice(0, -1).join(', ') + ' dan ' + parts[parts.length - 1] : parts[0] || '–') + '.';
       }
 
@@ -237,7 +267,7 @@
         parNote(t);
         polyLayer.eachLayer(function (l) {
           var v = valueAt(l.data, t), c = v === null ? null : catOf(v);
-          l.setStyle({ fillColor: c ? c.warna : '#ccc', fillOpacity: 0.55, color: '#fff', weight: state.sel === l.kab ? 3 : 1.2 });
+          l.setStyle({ fillColor: c ? c.warna : '#ccc', fillOpacity: 0.55, color: state.sel === l.kab ? '#142720' : '#fff', weight: state.sel === l.kab ? 3 : 1.2 });
         });
         labelLayer.clearLayers();
         state.kab.forEach(function (k) {
@@ -246,72 +276,59 @@
             html: '<span class="lbl" style="background:' + (c ? c.warna : '#ccc') + ';color:' + (c ? c.teks : '#111') + '">' + labelOf(k.data, t) + '</span>' }) }).addTo(labelLayer);
         });
         var rank = state.kab.slice().sort(function (a, b) { return (valueAt(b.data, t) || 0) - (valueAt(a.data, t) || 0); });
-        document.getElementById('rank').innerHTML = rank.map(function (k, i) {
+        el('rank').innerHTML = rank.map(function (k, i) {
           var v = valueAt(k.data, t), c = v === null ? null : catOf(v);
-          return '<li data-i="' + state.kab.indexOf(k) + '"' + (state.sel === k ? ' class="sel"' : '') + '><span class="n">' + (i + 1) + '</span><span class="nm">' + k.nama +
-            '</span><span class="badge" style="background:' + (c ? c.warna : '#ccc') + ';color:' + (c ? c.teks : '#111') + '">' + labelOf(k.data, t) + '</span></li>';
+          return '<tr data-i="' + state.kab.indexOf(k) + '"' + (state.sel === k ? ' class="on"' : '') + '><td class="n">' + (i + 1) + '</td><td>' + k.nama + '</td><td class="v">' +
+            labelOf(k.data, t) + '<span class="kot" style="background:' + (c ? c.warna : '#ccc') + '"></span></td></tr>';
         }).join('');
-        document.querySelectorAll('#rank li').forEach(function (li) {
-          li.addEventListener('click', function () { select(state.kab[parseInt(li.dataset.i, 10)]); });
+        document.querySelectorAll('#rank tr').forEach(function (tr) {
+          tr.addEventListener('click', function () { select(state.kab[parseInt(tr.dataset.i, 10)]); });
         });
-        if (state.sel) showDetail(state.sel);
+        if (state.sel) { papan(state.sel); pita(state.sel.data); }
       }
 
-      function showDetail(s) {
+      function papan(s) {
         var t = state.t, o = s.data, v = o.ispu[t], c = v === null ? null : catOf(v);
-        var html = '<div class="place">' + s.nama + '</div><div class="sub">' + s.sub + '</div>';
-        if (v === null) { document.getElementById('detail').innerHTML = html + '<p class="sub">Data belum lengkap untuk jam ini.</p>'; return; }
-        // Angka besar mengikuti parameter yang dipilih; anjuran kesehatan tetap memakai ISPU gabungan
+        el('pLok').textContent = s.nama; el('pWaktu').textContent = s.sub + ', ' + timeText(state.times[t]);
+        if (v === null) { el('pAngka').textContent = '–'; el('pKat').textContent = 'Data belum lengkap'; el('pKat').style.background = '#2c3833'; el('pPar').innerHTML = ''; el('pAnj').innerHTML = ''; el('pSkala').innerHTML = ''; return; }
         var pv = valueAt(o, t), pc = pv === null ? c : catOf(pv);
-        var info = state.par === 'ispu'
-          ? '<div class="crit">ISPU gabungan, parameter kritis ' + NAMA[o.kritis[t]] + '</div>'
-          : '<div class="crit">ISPU ' + NAMA[state.par] + ', rata-rata 24 jam ' + fmtConc(o.avg[state.par][t]) + ' µg/m³</div><div class="crit">ISPU gabungan ' + v + ' (' + c.nama + '), parameter kritis ' + NAMA[o.kritis[t]] + '</div>';
-        html += '<div class="big"><div class="num" style="background:' + pc.warna + ';color:' + pc.teks + '">' + (pv === null ? '–' : pv) + '</div><div><div class="cat">' + pc.nama +
-          '</div>' + info + '<div class="crit">' + timeText(state.times[t]) + '</div></div></div>';
-        html += '<table class="pol">' + VARS.map(function (p) {
-          var a = o.avg[p][t], x = o.sub[p][t], cc = x === null ? null : catOf(x);
-          return '<tr' + (p === state.par ? ' class="on"' : '') + '><td><i style="background:' + (cc ? cc.warna : '#ccc') + '"></i>' + NAMA[p] + '</td><td>' + (a === null ? '–' : a.toLocaleString('id-ID', { maximumFractionDigits: a < 100 ? 1 : 0 }) + ' µg/m³') +
-            '</td><td>ISPU ' + (x === null ? '–' : x) + '</td></tr>';
-        }).join('') + '</table>';
-        html += '<div class="advice"><b>Kelompok sensitif</b>' + c.sens + '<b>Setiap orang</b>' + c.semua + '</div>';
-        html += '<canvas id="trend" aria-label="Grafik ISPU per jam"></canvas><div class="sub">' + (state.par === 'ispu' ? 'ISPU gabungan' : 'ISPU ' + NAMA[state.par]) +
-          ' per jam dari sekarang sampai 5 hari ke depan. Garis tegak menandai jam yang dipilih. Anjuran kesehatan di atas mengikuti ISPU gabungan.</div>';
-        document.getElementById('detail').innerHTML = html;
-        drawTrend(o);
+        el('pAngka').textContent = pv === null ? '–' : pv; el('pAngka').style.color = warnaAngka(pc);
+        el('pKat').textContent = pc.nama; el('pKat').style.background = pc.warna; el('pKat').style.color = pc.teks;
+        el('pKrit').textContent = state.par === 'ispu' ? 'Parameter kritis ' + NAMA[o.kritis[t]]
+          : 'ISPU ' + NAMA[state.par] + ' (rata-rata 24 jam ' + fmtConc(o.avg[state.par][t]) + ' µg/m³). ISPU gabungan ' + v + ', ' + c.nama + '.';
+        // Skala lima kategori dengan lebar sama, penanda ditempatkan menurut nilai di dalam kategorinya
+        var batas = [0, 50, 100, 200, 300, 500], x = pv === null ? 0 : Math.min(pv, 500), seg = 0;
+        while (seg < 4 && x > batas[seg + 1]) seg++;
+        var pos = (seg + (x - batas[seg]) / (batas[seg + 1] - batas[seg])) / 5 * 100;
+        el('pSkala').innerHTML = '<div class="seg">' + CAT.map(function (k) { return '<i style="width:20%;background:' + k.warna + '"></i>'; }).join('') + '</div>' +
+          '<div class="tanda" style="left:' + pos + '%"></div><div class="lab"><span>0</span><span>50</span><span>100</span><span>200</span><span>300</span><span>500</span></div>';
+        el('pPar').innerHTML = '<tr><td style="color:#8fa199">Parameter</td><td style="color:#8fa199">µg/m³</td><td style="color:#8fa199">ISPU</td></tr>' + VARS.map(function (p) {
+          var a = o.avg[p][t], xx = o.sub[p][t], cc = xx === null ? null : catOf(xx);
+          return '<tr' + (p === o.kritis[t] ? ' class="kr"' : '') + '><td><span class="kot" style="background:' + (cc ? cc.warna : '#555') + '"></span>' + NAMA[p] + '</td><td>' +
+            (a === null ? '–' : a.toLocaleString('id-ID', { maximumFractionDigits: a < 100 ? 1 : 0 })) + '</td><td>' + (xx === null ? '–' : xx) + '</td></tr>';
+        }).join('');
+        el('pAnj').innerHTML = '<b>Kelompok sensitif</b>' + c.sens + '<b>Setiap orang</b>' + c.semua;
       }
 
-      function drawTrend(o) {
-        var cv = document.getElementById('trend'); if (!cv) return;
-        var dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
-        cv.width = W * dpr; cv.height = H * dpr;
-        var g = cv.getContext('2d'); g.scale(dpr, dpr);
-        var a = state.start, b = state.times.length - 1, vals = (state.par === 'ispu' ? o.ispu : o.sub[state.par]).slice(a, b + 1);
-        var max = Math.max(110, Math.ceil(Math.max.apply(null, vals.filter(function (x) { return x !== null; })) / 50) * 50 + 10);
-        var pad = { l: 28, r: 4, t: 6, b: 18 }, cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
-        var xOf = function (i) { return pad.l + i / (vals.length - 1) * cw; }, yOf = function (v) { return pad.t + ch - Math.min(v, max) / max * ch; };
-        var lo = 0;
-        CAT.forEach(function (c) {                           // pita warna kategori di latar
-          var hi = Math.min(c.max, max); if (lo >= max) return;
-          g.fillStyle = c.warna; g.globalAlpha = 0.12; g.fillRect(pad.l, yOf(hi), cw, yOf(lo) - yOf(hi)); g.globalAlpha = 1; lo = hi;
-        });
-        g.font = '10px system-ui, sans-serif'; g.fillStyle = '#6b7280'; g.textAlign = 'right';
-        [0, 50, 100, 200, 300].forEach(function (v) { if (v <= max) g.fillText(v, pad.l - 4, yOf(v) + 3); });
-        g.textAlign = 'center';
-        state.times.slice(a, b + 1).forEach(function (s, i) {
-          if (s.slice(11, 13) === '00') { g.fillStyle = '#d1d5db'; g.fillRect(xOf(i), pad.t, 1, ch); g.fillStyle = '#6b7280'; g.fillText(HARI[new Date(s + ':00').getDay()].slice(0, 3), xOf(i) + 14, H - 4); }
-        });
-        g.strokeStyle = '#14201c'; g.lineWidth = 1.8; g.beginPath();
-        var started = false;
-        vals.forEach(function (v, i) { if (v === null) return; if (started) g.lineTo(xOf(i), yOf(v)); else { g.moveTo(xOf(i), yOf(v)); started = true; } });
-        g.stroke();
-        var si = state.t - a; g.strokeStyle = '#d62828'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(xOf(si), pad.t); g.lineTo(xOf(si), pad.t + ch); g.stroke();
+      // Pita waktu: satu kotak per jam dari sekarang sampai akhir prakiraan, berwarna kategori di lokasi terpilih
+      function pita(o) {
+        var vals = state.par === 'ispu' ? o.ispu : o.sub[state.par], h = '', a = state.start, b = state.times.length - 1, kol = 1;
+        for (var i = a; i <= b; i++) {
+          var s = state.times[i], d = new Date(s + ':00'), v = vals[i], c = v === null ? null : catOf(v), jam = d.getHours();
+          if (i === a || jam === 0) h += '<div class="hari" style="grid-row:1;grid-column:' + kol + ' / span ' + Math.min(24 - (i === a ? jam : 0), b - i + 1) + '">' + HARI[d.getDay()] + ' ' + d.getDate() + ' ' + BLN[d.getMonth()] + '</div>';
+          h += '<div class="sel' + (i === state.t ? ' pilih' : '') + (jam === 0 && i !== a ? ' jam0' : '') + '" style="grid-row:2;grid-column:' + kol + ';background:' + (c ? c.warna : '#ccc') + '" data-i="' + i + '" title="' +
+            HARI[d.getDay()] + ' ' + String(jam).padStart(2, '0') + '.00, ' + (v === null ? '–' : (state.par === 'ispu' ? 'ISPU ' : 'ISPU ' + NAMA[state.par] + ' ') + v + ' (' + c.nama + ')') + '"></div>';
+          kol++;
+        }
+        var p = el('pita'); p.style.gridTemplateColumns = 'repeat(' + (kol - 1) + ', minmax(6px, 1fr))'; p.innerHTML = h;
+        p.querySelectorAll('.sel').forEach(function (n) { n.addEventListener('click', function () { state.t = +n.dataset.i; render(); }); });
       }
 
       function select(k) {
         state.sel = k; pointLayer.clearLayers();
         if (k.marker) k.marker.addTo(pointLayer);
         render();
-        if (window.innerWidth <= 860) document.getElementById('detail').scrollIntoView({ behavior: 'smooth' });
+        if (window.innerWidth <= 900) window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       // Titik bebas: klik di luar wilayah atau tombol lokasi saya
@@ -319,12 +336,12 @@
         setStatus('Mengambil data untuk titik yang dipilih…');
         fetchPoints([[lat.toFixed(3), lon.toFixed(3)]]).then(function (r) {
           setStatus('');
-          var m = L.circleMarker([lat, lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#14201c', fillOpacity: 1 });
-          select({ nama: label, sub: Math.abs(lat).toFixed(3) + (lat < 0 ? '° LS, ' : '° LU, ') + lon.toFixed(3) + '° BT', data: r[0], marker: m });
+          var m = L.circleMarker([lat, lon], { radius: 7, color: '#fff', weight: 2, fillColor: '#142720', fillOpacity: 1 });
+          select({ nama: label, sub: (Math.abs(lat).toFixed(3) + (lat < 0 ? '° LS, ' : '° LU, ') + lon.toFixed(3) + '° BT').replace(/\./g, ','), data: r[0], marker: m });
         }).catch(function () { setStatus('Gagal mengambil data untuk titik ini. Coba lagi beberapa saat lagi.'); });
       }
       map.on('click', function (e) { queryPoint(e.latlng.lat, e.latlng.lng, 'Titik pilihan'); });
-      document.getElementById('locBtn').addEventListener('click', function () {
+      el('locBtn').addEventListener('click', function () {
         if (!navigator.geolocation) { setStatus('Browser ini tidak mendukung fitur lokasi.'); return; }
         setStatus('Mencari lokasimu…');
         navigator.geolocation.getCurrentPosition(function (p) {
@@ -332,14 +349,14 @@
           queryPoint(p.coords.latitude, p.coords.longitude, 'Lokasi saya');
         }, function () { setStatus('Izin lokasi ditolak atau lokasi tidak ditemukan.'); }, { timeout: 10000 });
       });
-      function setStatus(s) { var el = document.getElementById('status'); el.textContent = s; el.style.display = s ? 'block' : 'none'; }
+      function setStatus(s) { var e = el('status'); e.textContent = s; e.style.display = s ? 'block' : 'none'; }
 
       // Muat batas wilayah, lalu ambil data udara untuk 13 kabupaten/kota sekaligus
       fetch('assets/data/udara-jabodetabek.geojson').then(function (r) { return r.json(); }).then(function (gj) {
         var feats = gj.features;
         return fetchPoints(feats.map(function (f) { return [f.properties.lat, f.properties.lon]; })).then(function (res) {
           feats.forEach(function (f, i) {
-            var k = { nama: f.properties.nama, sub: f.properties.provinsi + ' · nilai di titik tengah wilayah', lat: f.properties.lat, lon: f.properties.lon, data: res[i] };
+            var k = { nama: f.properties.nama, sub: f.properties.provinsi, lat: f.properties.lat, lon: f.properties.lon, data: res[i] };
             state.kab.push(k);
             var poly = L.geoJSON(f, { style: { color: '#fff', weight: 1.2, fillOpacity: 0.55 } });
             poly.eachLayer(function (l) {
@@ -350,20 +367,18 @@
             });
           });
           state.times = res[0].time;
-          var now = new Date(), pad2 = function (n) { return String(n).padStart(2, '0'); };
+          var now = new Date();
           var key = now.toLocaleString('sv-SE', { timeZone: 'Asia/Jakarta' }).slice(0, 13).replace(' ', 'T') + ':00';
           state.start = Math.max(0, state.times.indexOf(key));
           var last = state.times.length - 1;
           while (last > state.start && res[0].ispu[last] === null) last--;
           state.times = state.times.slice(0, last + 1);
-          slider.max = last - state.start; slider.value = 0; state.t = state.start;
+          state.t = state.start;
           map.fitBounds(polyLayer.getLayers().length ? L.featureGroup(polyLayer.getLayers()).getBounds() : map.getBounds(), { padding: [10, 10] });
           var worst = state.kab.slice().sort(function (a, b) { return (b.data.ispu[state.t] || 0) - (a.data.ispu[state.t] || 0); })[0];
           select(worst);
         });
-      }).catch(function () { setStatus('Data kualitas udara gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.'); tlabel.textContent = 'Data tidak tersedia'; });
-
-      window.addEventListener('resize', function () { if (state.sel) drawTrend(state.sel.data); });
+      }).catch(function () { setStatus('Data kualitas udara gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.'); tlabel.textContent = 'Data tidak tersedia'; el('pLok').textContent = 'Data tidak tersedia'; });
     })();
   </script>
 </body>

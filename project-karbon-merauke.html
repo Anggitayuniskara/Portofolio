@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karbon Hutan yang Hilang dari Pembukaan Lahan Food Estate Merauke, 2023–2026</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .data-table.table-mid th,
+    .data-table.table-mid td { text-align: center !important; }
+    .data-table.table-mid th:first-child,
+    .data-table.table-mid td:first-child { text-align: left !important; }
+    .table-note, .post-content p.table-note { font-size: 0.85rem; line-height: 1.55; color: #6b7280; margin-top: 8px; text-align: left; }
+    .map-hint, .post-content p.map-hint { font-size: 0.8rem; line-height: 1.5; color: #6b7280; text-align: left; margin-top: 6px; }
+    .chart-figure img { display: block; width: 100%; margin: 0 auto; }
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+    .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .stat-row strong { display: block; font-size: 1.35rem; }
+    .stat-row span { font-size: 0.85rem; color: #6b7280; }
+    .lanjutan, .post-content p.lanjutan { font-style: italic; color: #4b5563; margin: 0 0 24px; }
+    #kbMap { position: relative; width: 100%; height: 620px; border-radius: 12px; border: 1px solid var(--line); background: #0b1726; }
+    .post-content #kbMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
+    .leaflet-image-layer.pix { image-rendering: pixelated; }
+    .swipe-line { position: absolute; top: 0; bottom: 0; width: 0; border-left: 3px solid #fff; z-index: 800; pointer-events: none; box-shadow: 0 0 6px rgba(0,0,0,.4); }
+    .swipe-handle { position: absolute; top: 50%; left: -19px; width: 36px; height: 36px; margin-top: -18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.4);
+                    display: flex; align-items: center; justify-content: center; gap: 2px; color: #374151; font-size: 12px; cursor: ew-resize; pointer-events: auto; touch-action: none; }
+    .swipe-tag { position: absolute; top: 10px; z-index: 790; background: rgba(17,24,39,.78); color: #fff; font: 600 12px/1.3 system-ui, sans-serif; padding: 5px 9px; border-radius: 6px; pointer-events: none; }
+    .swipe-tag.kiri { left: 54px; } .swipe-tag.kanan { right: 10px; top: auto; bottom: 30px; }
+    .jump-bar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .jump-bar button { font: inherit; font-size: 0.82rem; padding: 5px 11px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; }
+    .jump-bar button:hover { border-color: #163a2e; }
+    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 190px; }
+    .wm-panel header { display: flex; justify-content: space-between; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
+    .wm-panel .wm-body { padding: 6px 10px 8px; }
+    .wm-panel.collapsed .wm-body { display: none; }
+    .wm-panel.collapsed header { border-bottom: 0; }
+    .wm-panel label { display: flex; gap: 6px; align-items: center; margin: 3px 0; cursor: pointer; }
+    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 2px; }
+    .wm-legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font: 11.5px/1.55 system-ui, sans-serif; color: #222; }
+    .wm-legend b { display: block; margin-top: 4px; }
+    .wm-legend b:first-child { margin-top: 0; }
+    .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .wm-popup td { padding: 1px 8px 1px 0; vertical-align: top; }
+    .wm-popup td:first-child { color: #666; }
+    @media (max-width: 600px) {
+      #kbMap { height: 480px; }
+      .wm-legend { font-size: 10px; }
+      .swipe-tag { font-size: 11px; }
+    }
+
+    /* Kontrol peta bergaya kartografi: kotak datar bergaris tipis, tanpa bayangan dan sudut bulat */
+    .wm-panel, .wm-legend, .legenda { border-radius: 0 !important; box-shadow: none !important; border: 1px solid #8f978f !important; font-family: "Segoe UI", Arial, sans-serif !important; }
+    .wm-panel header { font-weight: 600; font-size: 12px; padding: 6px 9px !important; border-bottom: 1px solid #d5d8d2 !important; }
+    .wm-panel header .caret { font-size: 10px; color: #555; margin-left: 10px; }
+    .wm-group { text-transform: none !important; letter-spacing: 0 !important; font-size: 11.5px !important; font-weight: 600; color: #3b4540 !important; margin: 8px 0 3px !important; padding-top: 6px; border-top: 1px solid #e3e5df; }
+    .wm-body > .wm-group:first-child { border-top: 0; padding-top: 0; margin-top: 0 !important; }
+    .wm-legend i { border-radius: 0 !important; }
+    .wm-legend b, .wm-legend h4 { font-weight: 600; }
+    .leaflet-popup-content-wrapper { border-radius: 2px !important; box-shadow: 0 1px 3px rgba(0,0,0,.35) !important; }
+    .leaflet-popup-tip { box-shadow: none !important; }
+    .leaflet-bar, .leaflet-bar a { border-radius: 0 !important; }
+    .leaflet-touch .leaflet-bar { border: 1px solid #8f978f !important; box-shadow: none !important; }
+    .time-bar button, .jump-bar button, .preset button, .seg button { border-radius: 2px !important; border: 1px solid #142720 !important; background: #fff; color: #142720; font-weight: 600; }
+    .time-bar button:hover, .jump-bar button:hover, .preset button:hover { background: #e9ebe3 !important; }
+    .seg { border-radius: 2px !important; border: 0 !important; gap: 0; }
+    .seg button + button { border-left: 0 !important; }
+    .seg button.on { background: #142720 !important; color: #fff !important; }
+    .app { border-radius: 0 !important; background: #fff !important; }
+    .out-row div, .hg { border-radius: 0 !important; }
+    .swipe-handle { border-radius: 2px !important; box-shadow: 0 0 0 1px #142720 !important; }
+    .swipe-tag { border-radius: 0 !important; }
+  </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="post">
+
+    <header class="post-header">
+      <span class="project-tag">Carbon Accounting</span>
+      <h1>Karbon Hutan yang Hilang dari Pembukaan Lahan Food Estate Merauke, 2023–2026</h1>
+      <p class="post-meta">November 2026</p>
+    </header>
+
+    <article class="post-content">
+
+      <p class="lanjutan">Project ini melanjutkan project <a href="project-merauke.html">Pemantauan Pembukaan Lahan Food Estate Merauke</a>, yang memetakan sekitar 45.800 hektare lahan yang dibuka sejak 2023.</p>
+
+      <h2>Latar belakang</h2>
+      <p>Pemetaan pembukaan lahan di Merauke memperlihatkan bahwa hampir 9 dari 10 hektare lahan yang dibuka untuk food estate sebelumnya berupa hutan. Hutan menyimpan karbon di batang, cabang, daun, dan akar pohonnya. Ketika hutan ditebang dan dibersihkan, sebagian besar karbon itu terlepas ke atmosfer sebagai CO₂ dan ikut memperparah perubahan iklim. Namun jumlah karbon di setiap hutan tidak sama. Hutan rapat dengan pohon setinggi 25 meter menyimpan karbon jauh lebih banyak daripada savana dengan pohon yang jarang. Karena itu, dampak pembukaan lahan terhadap iklim tidak cukup dilihat dari luasnya saja, tetapi juga dari seberapa banyak karbon yang tersimpan di lahan itu sebelum dibuka.</p>
+      <p>Project ini menghitung berapa banyak biomassa dan karbon yang tersimpan di hutan sebelum dibuka, berapa CO₂ yang dilepas ketika hutan itu hilang, dan di wilayah mana kehilangan terbesarnya terjadi. Pengukurannya memakai GEDI, sebuah instrumen LiDAR di Stasiun Luar Angkasa Internasional yang menembakkan sinar laser ke permukaan bumi untuk mengukur tinggi dan struktur hutan.</p>
+
+      <h2>Data yang digunakan</h2>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Format Data</th>
+              <th>Jenis Data</th>
+              <th>Sumber</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>GEDI L4A, biomassa di atas permukaan per titik (diameter ± 25 m), April 2019–Desember 2022</td><td>Raster</td><td>Sekunder</td><td>NASA dan University of Maryland, melalui Google Earth Engine</td></tr>
+            <tr><td>GEDI L2A, tinggi tajuk per titik, April 2019–Desember 2022</td><td>Raster</td><td>Sekunder</td><td>NASA dan University of Maryland, melalui Google Earth Engine</td></tr>
+            <tr><td>GEDI L4B, rata-rata biomassa grid 1 km</td><td>Raster</td><td>Sekunder</td><td>NASA ORNL DAAC, melalui Google Earth Engine</td></tr>
+            <tr><td>Citra Sentinel-2 Level-2A dan Sentinel-1 GRD, Juli–Oktober 2022</td><td>Raster</td><td>Sekunder</td><td>ESA Copernicus, melalui Google Earth Engine</td></tr>
+            <tr><td>Copernicus DEM GLO-30</td><td>Raster</td><td>Sekunder</td><td>ESA Copernicus</td></tr>
+            <tr><td>Peta pembukaan lahan Merauke per triwulan, 2023–2026</td><td>Raster</td><td>Primer</td><td>Project <a href="project-merauke.html">Food Estate Merauke</a></td></tr>
+            <tr><td>Kawasan hutan, areal pelepasan, dan PPKH</td><td>Vektor</td><td>Sekunder</td><td>Geoportal Kementerian Kehutanan</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Metode</h2>
+
+      <p>GEDI tidak memotret seluruh permukaan seperti citra satelit biasa. Instrumen ini merekam titik-titik pengukuran berdiameter sekitar 25 meter yang tersusun berjajar di sepanjang lintasan orbitnya. Di setiap titik, pantulan laser dari puncak pohon sampai ke tanah diubah menjadi tinggi tajuk dan perkiraan biomassa di atas permukaan, dalam satuan megagram atau ton per hektare. Hanya titik dengan kualitas baik yang dipakai, yaitu titik yang lolos penanda kualitas GEDI dan memiliki sensitivitas paling sedikit 0,95, agar laser benar-benar menembus tajuk sampai ke tanah.</p>
+      <p>Semua pembukaan lahan di Merauke terjadi sejak 2023, sehingga titik GEDI yang direkam pada 2019–2022 di lahan yang kemudian dibuka merekam kondisi hutan sebelum ditebang. Titik-titik ini menjadi sampel langsung dari hutan yang hilang.</p>
+      <p>Karena titik GEDI tersebar dan tidak menutupi seluruh lahan, celah di antaranya diisi dengan model Random Forest. Model ini mempelajari hubungan antara biomassa di titik GEDI dengan warna dan indeks vegetasi Sentinel-2, pantulan radar Sentinel-1, serta elevasi dan kemiringan lereng pada musim kemarau 2022. Pelatihan memakai titik GEDI di sekitar seluruh klaster pembukaan, dan 20% titik disisihkan untuk menguji model. Hasilnya adalah peta biomassa 30 m untuk kondisi sebelum lahan dibuka.</p>
+      <p>Biomassa di setiap piksel yang dibuka lalu dijumlahkan. Karbon dihitung sebagai 47% dari biomassa kering, dan setiap ton karbon setara dengan 3,67 ton CO₂ ketika terlepas ke atmosfer. Biomassa akar dihitung terpisah dengan rasio akar terhadap tajuk 0,20–0,37 dari IPCC, karena nilainya tidak diukur langsung oleh GEDI. Masker pembukaan, waktu pembukaan, klaster, dan status kawasan mengikuti project Food Estate Merauke, sehingga luas dan angkanya bisa dibandingkan langsung.</p>
+      <p>Sebagai pembanding, CO₂ juga dihitung dengan dua cara lain. Cara pertama memakai rata-rata langsung semua titik GEDI di lahan yang dibuka, tanpa model. Cara kedua memakai GEDI L4B, yaitu rata-rata biomassa dalam grid 1 km yang diterbitkan NASA.</p>
+
+      <h2>Hasil</h2>
+
+      <div class="stat-row">
+        <div><strong>11,8 juta ton</strong><span>CO₂ dari biomassa di atas permukaan yang hilang sejak 2023</span></div>
+        <div><strong>150 Mg/ha</strong><span>Rata-rata biomassa lahan sebelum dibuka</span></div>
+        <div><strong>8.577</strong><span>Titik GEDI di lahan yang kemudian dibuka</span></div>
+      </div>
+
+      <p>Sebelum dibuka, lahan seluas sekitar 45.800 hektare itu menyimpan sekitar 6,9 juta ton biomassa di atas permukaan, atau rata-rata 150 ton per hektare. Jumlah ini setara dengan 3,2 juta ton karbon, yang menjadi 11,8 juta ton CO₂ ketika terlepas ke atmosfer. Jika biomassa akar ikut dihitung, totalnya bertambah 2,4–4,4 juta ton CO₂. Angka 11,8 juta ton kira-kira sama dengan emisi tahunan 2,6 juta mobil penumpang.</p>
+      <p>Titik GEDI juga memperlihatkan seperti apa hutan yang hilang. Tinggi tajuk di lahan yang kemudian dibuka rata-rata sekitar 21 meter, dan seperempat titiknya memiliki tajuk lebih dari 26 meter. Hutan seperti ini jauh dari gambaran savana terbuka yang sering dipakai untuk menggambarkan Merauke.</p>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/karbon-grafik.png" target="_blank" rel="noopener">
+          <img src="assets/maps/karbon-grafik.png" alt="Grafik CO2 dari biomassa yang hilang per tahun dan per wilayah di Merauke">
+        </a>
+        <figcaption><strong>Gambar 1.</strong> CO₂ dari biomassa di atas permukaan yang hilang per tahun (kiri) dan per wilayah (kanan)</figcaption>
+      </figure>
+
+      <p class="table-note">Tahun pembukaan mengikuti triwulan pertama lahan terlihat terbuka. Angka 2026 baru mencakup Januari–Oktober.</p>
+
+      <p>Kehilangan karbon melonjak seiring cepatnya pembukaan lahan. Pada 2023 dan 2024 jumlahnya masih di bawah 0,4 juta ton CO₂ per tahun, lalu naik menjadi 3,8 juta ton pada 2025. Dalam sepuluh bulan pertama 2026, CO₂ yang dilepas sudah mencapai 7,6 juta ton, dua kali lipat tahun sebelumnya. Pembukaan pada 2023 hanya melepas sedikit CO₂ karena sebagian besar berada di lahan dengan biomassa rendah, sekitar 10 ton per hektare.</p>
+      <p>Wilayah sekitar Blandin Kakayo, di utara Jagebob, menyumbang CO₂ terbesar, yaitu 5,7 juta ton, walaupun luas pembukaannya lebih kecil daripada Jagebob dan Ngguti Bob. Hutan di wilayah ini paling rapat, dengan biomassa rata-rata sekitar 212 ton per hektare. Sebaliknya, pembukaan di Jagebob dan Ngguti Bob lebih banyak mengenai hutan yang lebih terbuka, sehingga 23.800 hektare pembukaan di sana melepas sekitar 5,0 juta ton CO₂.</p>
+
+      <p>Peta di bawah membandingkan kondisi sebelum dan sesudah pembukaan. Sisi kiri memperlihatkan citra Sentinel-2 tahun 2022 dengan biomassa hutan hasil model, sedangkan sisi kanan memperlihatkan citra tahun 2026 dengan CO₂ yang dilepas di setiap blok yang dibuka. Geser garis putih di tengah peta untuk membandingkan keduanya.</p>
+
+      <figure class="chart-figure">
+        <div id="kbMap" role="region" aria-label="Peta geser biomassa hutan 2022 dan CO2 yang dilepas dari pembukaan lahan 2026 di Merauke">
+          <div class="swipe-tag kiri">2022 · Biomassa sebelum dibuka</div>
+          <div class="swipe-tag kanan">2026 · CO₂ yang dilepas</div>
+        </div>
+        <div class="jump-bar" role="group" aria-label="Lompat ke wilayah">
+          <button type="button" data-b="-8.05,140.45,-7.70,140.86">Blandin Kakayo</button>
+          <button type="button" data-b="-8.42,140.35,-8.12,140.78">Jagebob–Ngguti Bob</button>
+          <button type="button" data-b="-7.56,139.03,-7.40,139.50">Wanam</button>
+          <button type="button" data-b="-9.12,137.64,-6.618,141.019">Seluruh kabupaten</button>
+        </div>
+        <p class="map-hint">Biomassa dan CO₂ ditampilkan dalam sel sekitar 120 m. Biomassa hanya dihitung di sekitar klaster pembukaan. Nyalakan lapisan titik GEDI lalu klik salah satu titik untuk melihat tinggi tajuk dan biomassanya. Setelah peta diklik, gulir untuk memperbesar atau memperkecil.</p>
+        <figcaption><strong>Gambar 2.</strong> Peta geser biomassa hutan sebelum dibuka (2022) dan CO₂ yang dilepas dari pembukaan lahan (2026)</figcaption>
+      </figure>
+
+      <h3>Ekosistem dan status kawasan</h3>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Tutupan lahan sebelum dibuka</th>
+              <th>Luas (ha)</th>
+              <th>Biomassa rata-rata (Mg/ha)</th>
+              <th>CO₂ (juta ton)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Hutan dan pepohonan</td><td>40.464</td><td>167</td><td>11,65</td></tr>
+            <tr><td>Savana dan padang rumput</td><td>2.270</td><td>22</td><td>0,09</td></tr>
+            <tr><td>Rawa dan lahan basah</td><td>2.483</td><td>14</td><td>0,06</td></tr>
+            <tr><td>Mangrove</td><td>51</td><td>111</td><td>0,01</td></tr>
+            <tr><td>Lahan pertanian lama</td><td>534</td><td>8</td><td>0,01</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">Tutupan lahan sebelum dibuka diambil dari ESA WorldCover 2021, sama dengan project Food Estate Merauke. CO₂ hanya dari biomassa di atas permukaan.</p>
+
+      <p>Hampir seluruh CO₂, sekitar 99%, berasal dari hutan. Savana, rawa, dan lahan pertanian lama yang ikut dibuka hanya menyimpan 8–22 ton biomassa per hektare, sehingga sumbangannya sangat kecil.</p>
+
+      <div class="table-wrap">
+        <table class="data-table table-mid">
+          <thead>
+            <tr>
+              <th>Status kawasan</th>
+              <th>Luas (ha)</th>
+              <th>Biomassa rata-rata (Mg/ha)</th>
+              <th>CO₂ (juta ton)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>APL hasil pelepasan kawasan hutan</td><td>26.229</td><td>170</td><td>7,68</td></tr>
+            <tr><td>APL lainnya</td><td>16.325</td><td>139</td><td>3,91</td></tr>
+            <tr><td>Hutan produksi yang dapat dikonversi</td><td>975</td><td>80</td><td>0,14</td></tr>
+            <tr><td>Hutan produksi tetap dan terbatas</td><td>367</td><td>117</td><td>0,07</td></tr>
+            <tr><td>Kawasan konservasi</td><td>1.551</td><td>7</td><td>0,02</td></tr>
+            <tr><td>Hutan lindung</td><td>368</td><td>7</td><td>&lt; 0,01</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note">APL adalah Areal Penggunaan Lain, yaitu lahan di luar kawasan hutan. Fungsi kawasan hutan memakai peta Juni 2026 berskala 1:250.000.</p>
+
+      <p>Sekitar dua pertiga CO₂ berasal dari APL hasil pelepasan kawasan hutan. Biomassa di areal ini paling tinggi, sekitar 170 ton per hektare, artinya kawasan yang dilepaskan untuk food estate sebagian besar masih berupa hutan rapat. Pembukaan di kawasan konservasi dan hutan lindung hanya melepas sedikit CO₂ karena biomassanya sekitar 7 ton per hektare. Angka ini menguatkan temuan project Food Estate Merauke, bahwa perubahan di dua kawasan itu lebih banyak berupa rawa yang mengering atau terbakar, bukan hutan yang ditebang.</p>
+
+      <h3>Seberapa bisa dipercaya angka ini?</h3>
+
+      <figure class="chart-figure">
+        <a href="assets/maps/karbon-uji.png" target="_blank" rel="noopener">
+          <img src="assets/maps/karbon-uji.png" alt="Grafik uji model Random Forest terhadap titik GEDI dan perbandingan tiga cara memperkirakan CO2">
+        </a>
+        <figcaption><strong>Gambar 3.</strong> Biomassa hasil model dibandingkan biomassa terukur GEDI pada titik uji (kiri), dan perbandingan tiga cara memperkirakan CO₂ yang dilepas (kanan)</figcaption>
+      </figure>
+
+      <p>Untuk menguji ketepatannya, hasil model dibandingkan dengan 5.938 titik GEDI yang sengaja tidak dipakai saat melatih model. Di satu titik tertentu, perkiraan model memang bisa meleset cukup jauh, rata-rata sekitar 93 ton per hektare. Hal ini wajar, karena satu titik GEDI hanya mengukur lingkaran selebar 25 meter, sedangkan model menebak biomassa dari warna dan pantulan citra satelit. Model juga cenderung memberi angka terlalu rendah untuk hutan yang sangat rapat dan terlalu tinggi untuk lahan yang pohonnya jarang. Namun ketika semua titik dijumlahkan, perkiraan yang terlalu tinggi dan terlalu rendah saling menutupi, sehingga selisih rata-ratanya kurang dari 1 ton per hektare. Artinya, model ini cukup bisa dipercaya untuk menghitung total biomassa di seluruh lahan yang dibuka.</p>
+      <p>Hasil ini juga dicek dengan dua cara lain. Jika langsung memakai rata-rata 8.577 titik GEDI di lahan yang dibuka, tanpa model, CO₂ yang dilepas sekitar 12,6 juta ton. Jika memakai peta biomassa GEDI L4B dari NASA, hasilnya sekitar 11,1 juta ton. Ketiga cara memberi angka yang tidak jauh berbeda, sehingga CO₂ dari biomassa pohon yang hilang kemungkinan besar berada di kisaran 11–13 juta ton.</p>
+
+      <h2>Kesimpulan</h2>
+      <p>Pembukaan lahan food estate di Merauke sejak 2023 telah menghilangkan sekitar 6,9 juta ton biomassa hutan dan melepas sekitar 11–13 juta ton CO₂ dari biomassa di atas permukaan. Jika akar ikut dihitung, jumlahnya menjadi sekitar 14–16 juta ton. Kehilangan ini tidak tersebar merata. Hampir semuanya berasal dari hutan, sebagian besar di areal yang sudah dilepaskan dari kawasan hutan, dan wilayah sekitar Blandin Kakayo menjadi penyumbang terbesar karena hutannya paling rapat.</p>
+      <p>Perkiraan ini baru mencakup biomassa pohon. Emisi dari tanah, gambut dangkal, kayu mati, dan kebakaran saat lahan dibersihkan belum dihitung, begitu pula karbon yang mungkin kembali tersimpan di tanaman tebu atau padi. Titik GEDI sebelum 2023 juga tidak merata, sehingga biomassa di beberapa blok kecil sepenuhnya bergantung pada model. Dengan laju pembukaan yang masih terus naik pada 2026, angka kehilangan karbon ini kemungkinan besar akan bertambah, dan perhitungan yang sama bisa diperbarui setiap kali peta pembukaan lahan diperbarui.</p>
+
+      <a class="post-back" href="index.html#proyek">← View other projects</a>
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2026 Anggita Yuniskara Dewi</p>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Kembali ke atas">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
+  <script>
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 400);
+    });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    (function () {
+      var KAB = [[-9.12, 137.64], [-6.618, 141.019]];
+      var KB = [['1–50', '#f1f4d8'], ['50–100', '#c7e29b'], ['100–150', '#8cc163'], ['150–200', '#4f9a3c'], ['200–250', '#25732b'], ['Lebih dari 250', '#0b4d1e']];
+      var KC = [['Kurang dari 50', '#fde0c5'], ['50–150', '#f9a66c'], ['150–250', '#ef6a3a'], ['250–350', '#c9302c'], ['Lebih dari 350', '#7f0b1e']];
+      var box = document.getElementById('kbMap');
+      var map = L.map(box, { scrollWheelZoom: false, zoomSnap: 0.25, maxBounds: [[-9.6, 137.2], [-6.2, 141.5]] });
+      map.fitBounds([[-8.05, 140.45], [-7.70, 140.86]]);
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      map.on('mouseout', function () { map.scrollWheelZoom.disable(); });
+      L.control.scale({ imperial: false }).addTo(map);
+
+      // Dua sisi peta di pane terpisah; sisi kanan dipotong mengikuti garis geser
+      map.createPane('kiri').style.zIndex = 390;
+      map.createPane('kanan').style.zIndex = 391;
+      map.createPane('titik').style.zIndex = 395;
+      var paneKanan = map.getPane('kanan'), paneTitik = map.getPane('titik');
+      L.imageOverlay('assets/maps/merauke-rgb-2022.jpg', KAB, { pane: 'kiri', attribution: 'Sentinel-2 &copy; ESA Copernicus' }).addTo(map);
+      L.imageOverlay('assets/maps/merauke-rgb-2026.jpg', KAB, { pane: 'kanan' }).addTo(map);
+      var bioLayer = null, co2Layer = null, gediLayer = null;
+      var ppkhLayer = L.geoJSON(null, {
+        style: { color: '#00e5ff', weight: 1.5, fill: true, fillOpacity: 0.03 },
+        onEachFeature: function (f, l) {
+          var p = f.properties;
+          l.bindPopup('<table class="wm-popup"><tr><td colspan="2"><b>' + p.NAMA_PPKH + '</b></td></tr><tr><td>Jenis</td><td>' + p.JENIS_PPKH + '</td></tr><tr><td>Luas tercatat</td><td>' +
+            Math.round(p.LUAS_PPKH).toLocaleString('id-ID') + ' ha</td></tr></table>');
+        }
+      });
+      var batasLayer = L.geoJSON(null, { style: { color: '#ffffff', weight: 2, dashArray: '6 4', fill: false }, interactive: false });
+
+      fetch('assets/data/karbon.json').then(function (r) { return r.json(); }).then(function (k) {
+        var b = k.bounds, bb = [[b[0], b[1]], [b[2], b[3]]];
+        bioLayer = L.imageOverlay('assets/maps/karbon-biomassa.png', bb, { pane: 'kiri', className: 'pix', interactive: false }).addTo(map);
+        co2Layer = L.imageOverlay('assets/maps/karbon-co2.png', bb, { pane: 'kanan', className: 'pix', interactive: false }).addTo(map);
+        legend();
+      });
+      fetch('assets/data/karbon-gedi.json').then(function (r) { return r.json(); }).then(function (pts) {
+        var rd = L.canvas({ pane: 'titik', padding: 0.2 });
+        gediLayer = L.layerGroup(pts.map(function (p) {
+          var c = p[2] >= 250 ? '#0b4d1e' : p[2] >= 150 ? '#4f9a3c' : p[2] >= 50 ? '#c7e29b' : '#f1f4d8';
+          return L.circleMarker([p[1], p[0]], { renderer: rd, radius: 3.5, weight: 1, color: '#111827', fillColor: c, fillOpacity: 1 })
+            .bindPopup('<table class="wm-popup"><tr><td colspan="2"><b>Titik GEDI, 2019–2022</b></td></tr><tr><td>Tinggi tajuk</td><td>' +
+              p[3].toLocaleString('id-ID') + ' m</td></tr><tr><td>Biomassa</td><td>' + p[2].toLocaleString('id-ID') + ' Mg/ha</td></tr></table>');
+        }));
+      });
+      fetch('assets/data/merauke-ppkh.geojson').then(function (r) { return r.json(); }).then(function (g) { ppkhLayer.addData(g); });
+      fetch('assets/data/merauke-batas.geojson').then(function (r) { return r.json(); }).then(function (g) { batasLayer.addData(g).addTo(map); });
+
+      // Garis geser
+      var pos = 0.5, line = document.createElement('div'), handle = document.createElement('div');
+      line.className = 'swipe-line'; handle.className = 'swipe-handle';
+      handle.innerHTML = '<i class="fa-solid fa-caret-left"></i><i class="fa-solid fa-caret-right"></i>';
+      handle.setAttribute('role', 'slider'); handle.setAttribute('aria-label', 'Geser pembanding sebelum dan sesudah'); handle.tabIndex = 0;
+      line.appendChild(handle); box.appendChild(line);
+      L.DomEvent.disableClickPropagation(line);
+      function clip() {
+        var sz = map.getSize(), nw = map.containerPointToLayerPoint([0, 0]), se = map.containerPointToLayerPoint(sz), x = nw.x + sz.x * pos;
+        paneKanan.style.clip = 'rect(' + nw.y + 'px,' + se.x + 'px,' + se.y + 'px,' + x + 'px)';
+        paneTitik.style.clip = 'rect(' + nw.y + 'px,' + x + 'px,' + se.y + 'px,' + nw.x + 'px)';
+        line.style.left = (pos * 100) + '%';
+        handle.setAttribute('aria-valuenow', Math.round(pos * 100));
+      }
+      map.on('move zoom resize', clip); clip();
+      if (window.ResizeObserver) new ResizeObserver(function () { map.invalidateSize(); clip(); }).observe(box);
+      var drag = false;
+      function geser(e) {
+        if (!drag) return;
+        var rc = box.getBoundingClientRect(); pos = Math.min(0.98, Math.max(0.02, (e.clientX - rc.left) / rc.width)); clip();
+      }
+      handle.addEventListener('pointerdown', function (e) { drag = true; map.dragging.disable(); handle.setPointerCapture(e.pointerId); e.preventDefault(); });
+      handle.addEventListener('pointermove', geser);
+      handle.addEventListener('pointerup', function () { drag = false; map.dragging.enable(); });
+      handle.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { pos = Math.min(0.98, Math.max(0.02, pos + (e.key === 'ArrowLeft' ? -0.05 : 0.05))); clip(); e.preventDefault(); }
+      });
+
+      document.querySelectorAll('.jump-bar button').forEach(function (b) {
+        b.addEventListener('click', function () { var v = b.dataset.b.split(',').map(Number); map.flyToBounds([[v[0], v[1]], [v[2], v[3]]], { duration: 0.8 }); });
+      });
+
+      var Panel = L.Control.extend({
+        options: { position: 'topright' },
+        onAdd: function () {
+          var d = L.DomUtil.create('div', 'wm-panel collapsed');
+          d.innerHTML = '<header>Lapisan peta <span class="caret">▼</span></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
+            '<label><input type="checkbox" data-k="bio" checked>Biomassa 2022 (kiri)</label><label><input type="checkbox" data-k="co2" checked>CO₂ yang dilepas (kanan)</label>' +
+            '<label><input type="checkbox" data-k="gedi">Titik GEDI (kiri)</label><label><input type="checkbox" data-k="ppkh">Areal PPKH</label>' +
+            '<label><input type="checkbox" data-k="batas" checked>Batas kabupaten</label></div>';
+          L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+          d.querySelector('header').addEventListener('click', function () { d.classList.toggle('collapsed'); });
+          d.querySelectorAll('input[data-k]').forEach(function (c) {
+            c.addEventListener('change', function () {
+              var l = { bio: bioLayer, co2: co2Layer, gedi: gediLayer, ppkh: ppkhLayer, batas: batasLayer }[c.dataset.k];
+              if (!l) return;
+              if (c.checked) l.addTo(map); else map.removeLayer(l);
+              legend();
+            });
+          });
+          return d;
+        }
+      });
+      new Panel().addTo(map);
+      var legDiv;
+      var Legend = L.Control.extend({ options: { position: 'bottomleft' }, onAdd: function () { legDiv = L.DomUtil.create('div', 'wm-legend'); return legDiv; } });
+      new Legend().addTo(map);
+      function legend() {
+        var h = '';
+        if (bioLayer && map.hasLayer(bioLayer)) h += '<b>Biomassa 2022 (Mg/ha)</b>' + KB.map(function (k) { return '<div><i style="background:' + k[1] + '"></i>' + k[0] + '</div>'; }).join('');
+        if (co2Layer && map.hasLayer(co2Layer)) h += '<b>CO₂ dilepas (ton/ha)</b>' + KC.map(function (k) { return '<div><i style="background:' + k[1] + '"></i>' + k[0] + '</div>'; }).join('');
+        if (map.hasLayer(ppkhLayer)) h += '<div><i style="background:transparent;border:2px solid #00e5ff"></i>Areal PPKH</div>';
+        legDiv.innerHTML = h;
+      }
+      legend();
+    })();
+  </script>
+</body>
+</html>

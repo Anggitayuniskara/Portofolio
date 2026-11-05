@@ -19,9 +19,25 @@
     #terrain3d canvas { display: block; width: 100%; height: 100%; border-radius: 6px; }
     .terrain3d-tools { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: center; margin-top: 10px; font-size: .85rem; color: #444; }
     .terrain3d-tools button { font: inherit; padding: 4px 12px; border: 1px solid #bbb; background: #fff; border-radius: 4px; cursor: pointer; }
-    .terrain3d-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-top: 10px; font-size: .8rem; color: #444; }
-    .terrain3d-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
+    .terrain3d-legend { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; gap: 2px; padding: 7px 10px; background: rgba(255,255,255,.92); border: 1px solid #8f978f; font: 11.5px/1.5 "Segoe UI", Arial, sans-serif; color: #222; pointer-events: none; }
+    .terrain3d-legend b { font-weight: 600; margin-bottom: 2px; }
+    .terrain3d-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; }
+    @media (max-width: 600px) { .terrain3d-legend { font-size: 10.5px; padding: 5px 7px; } }
+    .nav3d { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; user-select: none; }
+    .nav3d-ring { position: relative; width: 84px; height: 84px; }
+    .nav3d-ring svg { display: block; width: 84px; height: 84px; cursor: grab; touch-action: none; }
+    .nav3d-ring svg:active { cursor: grabbing; }
+    .nav3d-ring button { position: absolute; left: 50%; width: 22px; height: 18px; margin-left: -11px; padding: 0; font-size: 9px; line-height: 1; color: #142720; background: #fff; border: 1px solid #8f978f; cursor: pointer; }
+    .nav3d-ring button:hover, .nav3d-zoom button:hover { background: #e9ebe3; }
+    .nav3d-ring .tu { top: 27px; } .nav3d-ring .td { top: 45px; }
+    .nav3d-zoom { display: flex; flex-direction: column; border: 1px solid #8f978f; background: #fff; }
+    .nav3d-zoom button { width: 26px; height: 24px; padding: 0; font: 600 15px/1 "Segoe UI", Arial, sans-serif; color: #142720; background: #fff; border: 0; cursor: pointer; }
+    .nav3d-zoom button + button { border-top: 1px solid #d5d8d2; }
+    @media (max-width: 600px) { .nav3d { transform: scale(.85); transform-origin: top right; } }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -49,7 +65,7 @@
 
       <h2>Latar belakang</h2>
       <p>Kemiringan lereng memengaruhi aliran permukaan, erosi, kerawanan longsor, dan kesesuaian lahan untuk berbagai penggunaan. Kabupaten Sleman di Daerah Istimewa Yogyakarta memiliki relief yang beragam, dari lereng atas Gunung Merapi di utara hingga dataran di selatan, sehingga cocok untuk menggambarkan sebaran kemiringan lereng dari model elevasi digital.</p>
-      <p>Proyek ini mengolah DEMNAS menjadi peta kemiringan lereng yang diklasifikasikan dan peta hillshade, dengan alur kerja yang disusun di ModelBuilder ArcGIS Pro agar dapat diulang.</p>
+      <p>Project ini mengolah DEMNAS menjadi peta kemiringan lereng yang diklasifikasikan dan peta hillshade, dengan alur kerja yang disusun di ModelBuilder ArcGIS Pro agar dapat diulang.</p>
 
       <h2>Data yang digunakan</h2>
 
@@ -147,18 +163,38 @@
       <figure class="map-terrain-figure terrain3d-fig">
         <div class="terrain3d-wrap">
           <div id="terrain3d" role="img" aria-label="Model 3D kelas kemiringan lereng Kabupaten Sleman. Seret untuk memutar, gulir untuk memperbesar."></div>
+          <div class="nav3d">
+            <div class="nav3d-ring">
+              <svg id="ring3d" viewBox="0 0 84 84" aria-label="Seret lingkaran untuk memutar arah, klik dua kali untuk kembali menghadap utara">
+                <circle cx="42" cy="42" r="38" fill="rgba(255,255,255,.92)" stroke="#8f978f"/>
+                <circle cx="42" cy="42" r="26" fill="none" stroke="#d5d8d2"/>
+                <g id="ringRot">
+                  <line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(30 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(60 42 42)"/><line x1="42" y1="7" x2="42" y2="12" stroke="#3b4540" stroke-width="1.4" transform="rotate(90 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(120 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(150 42 42)"/><line x1="42" y1="7" x2="42" y2="12" stroke="#3b4540" stroke-width="1.4" transform="rotate(180 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(210 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(240 42 42)"/><line x1="42" y1="7" x2="42" y2="12" stroke="#3b4540" stroke-width="1.4" transform="rotate(270 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(300 42 42)"/><line x1="42" y1="7" x2="42" y2="10" stroke="#3b4540" stroke-width="0.8" transform="rotate(330 42 42)"/>
+                  <path d="M42 3 L46.5 11 H37.5 Z" fill="#C08A2E"/>
+                  <text x="42" y="22" text-anchor="middle" font-size="10" font-weight="700" fill="#142720" font-family="Segoe UI, Arial, sans-serif">U</text>
+                </g>
+              </svg>
+              <button type="button" class="tu" id="tiltUp" title="Lihat lebih dari atas">▲</button>
+              <button type="button" class="td" id="tiltDn" title="Miringkan pandangan">▼</button>
+            </div>
+            <div class="nav3d-zoom">
+              <button type="button" id="zIn" title="Perbesar">+</button>
+              <button type="button" id="zOut" title="Perkecil">−</button>
+            </div>
+          </div>
+          <div class="terrain3d-legend">
+            <b>Kelas lereng</b>
+            <span><i style="background:#1a9850"></i>Datar/hampir datar</span>
+            <span><i style="background:#91cf60"></i>Bergelombang landai</span>
+            <span><i style="background:#d9ef8b"></i>Bergelombang miring</span>
+            <span><i style="background:#fee08b"></i>Berbukit bergelombang</span>
+            <span><i style="background:#fc8d59"></i>Berbukit terjal</span>
+            <span><i style="background:#d73027"></i>Pegunungan sangat terjal</span>
+          </div>
         </div>
         <div class="terrain3d-tools">
           <label>Pembesaran vertikal <input type="range" id="exag" min="1" max="5" step="0.5" value="2"> <span id="exagVal">2×</span></label>
           <button type="button" id="resetView">Atur ulang tampilan</button>
-        </div>
-        <div class="terrain3d-legend">
-          <span><i style="background:#1a9850"></i>Datar/hampir datar</span>
-          <span><i style="background:#91cf60"></i>Bergelombang landai</span>
-          <span><i style="background:#d9ef8b"></i>Bergelombang miring</span>
-          <span><i style="background:#fee08b"></i>Berbukit bergelombang</span>
-          <span><i style="background:#fc8d59"></i>Berbukit terjal</span>
-          <span><i style="background:#d73027"></i>Pegunungan sangat terjal</span>
         </div>
         <figcaption><strong>Gambar 4.</strong> Model 3D kelas kemiringan lereng Kabupaten Sleman. Seret untuk memutar dan gulir untuk memperbesar</figcaption>
       </figure>
@@ -265,6 +301,39 @@
         function render() { renderer.render(scene, camera); }
         controls.addEventListener('change', render);
         (function loop() { requestAnimationFrame(loop); controls.update(); })();
+
+
+        // Kompas putar: seret lingkaran untuk memutar, klik dua kali untuk menghadap utara
+        var ringRot = document.getElementById('ringRot'), ring = document.getElementById('ring3d');
+        var sph = new THREE.Spherical(), off = new THREE.Vector3();
+        function atur(dTheta, dPhi, kali) {
+          off.copy(camera.position).sub(controls.target); sph.setFromVector3(off);
+          if (dTheta !== null) sph.theta += dTheta;
+          sph.phi = Math.min(controls.maxPolarAngle, Math.max(0.05, sph.phi + (dPhi || 0)));
+          if (kali) sph.radius = Math.min(controls.maxDistance, Math.max(controls.minDistance, sph.radius * kali));
+          off.setFromSpherical(sph); camera.position.copy(controls.target).add(off); controls.update(); render();
+        }
+        function sudut(e) {
+          var r = ring.getBoundingClientRect();
+          return Math.atan2(e.clientX - (r.left + r.width / 2), -(e.clientY - (r.top + r.height / 2)));
+        }
+        var tarik = null;
+        ring.addEventListener('pointerdown', function (e) { tarik = sudut(e); ring.setPointerCapture(e.pointerId); e.preventDefault(); });
+        ring.addEventListener('pointermove', function (e) {
+          if (tarik === null) return;
+          var a = sudut(e), d = a - tarik; tarik = a;
+          if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI;
+          atur(d, 0);
+        });
+        ring.addEventListener('pointerup', function () { tarik = null; });
+        ring.addEventListener('pointercancel', function () { tarik = null; });
+        ring.addEventListener('dblclick', function () { atur(-controls.getAzimuthalAngle(), 0); });
+        document.getElementById('tiltUp').addEventListener('click', function () { atur(null, -0.15); });
+        document.getElementById('tiltDn').addEventListener('click', function () { atur(null, 0.15); });
+        document.getElementById('zIn').addEventListener('click', function () { atur(null, 0, 0.8); });
+        document.getElementById('zOut').addEventListener('click', function () { atur(null, 0, 1.25); });
+        function putarKompas() { ringRot.setAttribute('transform', 'rotate(' + (controls.getAzimuthalAngle() * 180 / Math.PI) + ' 42 42)'); }
+        controls.addEventListener('change', putarKompas); putarKompas();
 
         var sl = document.getElementById('exag'), lab = document.getElementById('exagVal');
         sl.addEventListener('input', function () {

@@ -19,26 +19,24 @@
     .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
     .stat-row strong { display: block; font-size: 1.35rem; }
     .stat-row span { font-size: 0.85rem; color: #6b7280; }
-    .app { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fafafa; }
-    .app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px; }
-    .ctrl { display: grid; gap: 12px; align-content: start; }
+    .app { border: 1px solid #8f978f; padding: 14px 16px 16px; background: #fff; }
+    .app-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 22px; }
+    .ctrl { display: block; }
     .ctrl label { display: block; font-size: 0.88rem; font-weight: 600; }
     .ctrl label span { float: right; font-weight: 400; color: #374151; }
     .ctrl small { display: block; font-size: 0.76rem; color: #6b7280; line-height: 1.4; margin-top: 2px; }
-    .ctrl input[type=range] { width: 100%; margin: 4px 0 0; }
-    .preset { display: flex; flex-wrap: wrap; gap: 6px; }
-    .preset button { font: inherit; font-size: 0.8rem; padding: 5px 10px; border: 1px solid var(--line); background: #fff; border-radius: 6px; cursor: pointer; }
-    .preset button:hover { border-color: #1f5f99; }
-    .out-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .out-row div { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
-    .out-row strong { display: block; font-size: 1.15rem; }
-    .out-row span { font-size: 0.74rem; color: #6b7280; }
-    .warn { display: none; font-size: 0.8rem; color: #92400e; background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; padding: 6px 10px; }
-    .hg { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 6px 2px; }
-    .hg-title { font-size: 0.78rem; color: #374151; font-weight: 600; margin: 2px 4px; }
+    .preset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 0 0 4px; }
+    .preset button { font: inherit; font-size: 0.78rem; padding: 4px 9px; background: #fff; cursor: pointer; margin: 0 -1px -1px 0; text-align: center; }
+    .post-content p.pre-h { font-size: .78rem; color: #5f6b64; margin: 0 0 5px; line-height: 1.3; }
+    .ctrl .prm { padding: 6px 0 7px; }
+    .ctrl input[type=range].rg { margin-top: 1px !important; }
+    .app-grid > div:last-child { display: flex; }
+    .warn { display: none; font-size: 0.78rem; font-style: italic; color: #8a5a12; margin: -6px 0 10px; }
+    .hg { position: relative; }
+    .hg-title { font-size: .86rem; color: #142720; font-weight: 600; padding-bottom: 5px; border-bottom: 2px solid #142720; margin: 0 0 6px; }
     .hg svg { display: block; width: 100%; height: auto; }
-    .hg-tip { position: absolute; pointer-events: none; background: #111827; color: #fff; font-size: 0.74rem; padding: 3px 7px; border-radius: 5px; white-space: nowrap; display: none; }
-    #cwMap { width: 100%; height: 680px; border-radius: 10px; border: 1px solid var(--line); background: #0b1726; }
+    .hg-tip { position: absolute; pointer-events: none; background: #111827; color: #fff; font-size: 0.74rem; padding: 3px 7px; border-radius: 0; white-space: nowrap; display: none; }
+    #cwMap { width: 100%; height: auto; min-height: 600px; flex: 1; border: 1px solid #8f978f; background: #0b1726; }
     .post-content #cwMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
     .leaflet-image-layer.pix { image-rendering: pixelated; }
     .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; color: #222; min-width: 190px; }
@@ -54,10 +52,52 @@
     .wm-legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border-radius: 2px; }
     @media (max-width: 760px) {
       .app-grid { grid-template-columns: 1fr; }
-      #cwMap { height: 520px; }
-      .out-row strong { font-size: 1rem; }
+      #cwMap { min-height: 520px; }
     }
+
+    /* Kontrol peta bergaya kartografi: kotak datar bergaris tipis, tanpa bayangan dan sudut bulat */
+    .wm-panel, .wm-legend, .legenda { border-radius: 0 !important; box-shadow: none !important; border: 1px solid #8f978f !important; font-family: "Segoe UI", Arial, sans-serif !important; }
+    .wm-panel header { font-weight: 600; font-size: 12px; padding: 6px 9px !important; border-bottom: 1px solid #d5d8d2 !important; }
+    .wm-panel header .caret { font-size: 10px; color: #555; margin-left: 10px; }
+    .wm-group { text-transform: none !important; letter-spacing: 0 !important; font-size: 11.5px !important; font-weight: 600; color: #3b4540 !important; margin: 8px 0 3px !important; padding-top: 6px; border-top: 1px solid #e3e5df; }
+    .wm-body > .wm-group:first-child { border-top: 0; padding-top: 0; margin-top: 0 !important; }
+    .wm-legend i { border-radius: 0 !important; }
+    .wm-legend b, .wm-legend h4 { font-weight: 600; }
+    .leaflet-popup-content-wrapper { border-radius: 2px !important; box-shadow: 0 1px 3px rgba(0,0,0,.35) !important; }
+    .leaflet-popup-tip { box-shadow: none !important; }
+    .leaflet-bar, .leaflet-bar a { border-radius: 0 !important; }
+    .leaflet-touch .leaflet-bar { border: 1px solid #8f978f !important; box-shadow: none !important; }
+    .time-bar button, .jump-bar button, .preset button, .seg button { border-radius: 2px !important; border: 1px solid #142720 !important; background: #fff; color: #142720; font-weight: 600; }
+    .time-bar button:hover, .jump-bar button:hover, .preset button:hover { background: #e9ebe3 !important; }
+    .seg { border-radius: 2px !important; border: 0 !important; gap: 0; }
+    .seg button + button { border-left: 0 !important; }
+    .seg button.on { background: #142720 !important; color: #fff !important; }
+    .app { border-radius: 0 !important; background: #fff !important; }
+    .out-row div, .hg { border-radius: 0 !important; }
+    .swipe-handle { border-radius: 2px !important; box-shadow: 0 0 0 1px #142720 !important; }
+    .swipe-tag { border-radius: 0 !important; }
+
+    /* Lembar kerja interaktif: garis tipis, tanpa kartu, slider datar */
+    .sheet-h { font-size: .86rem; font-weight: 600; color: #142720; padding-bottom: 5px; border-bottom: 2px solid #142720; margin: 0; }
+    .prm { padding: 9px 0 10px; border-bottom: 1px solid #e3e5df; }
+    .prm label { display: flex !important; justify-content: space-between; gap: 10px; font-size: .86rem; font-weight: 600; color: #142720; float: none !important; margin: 0 !important; }
+    .prm label span { float: none !important; font-weight: 600 !important; color: #142720 !important; font-variant-numeric: tabular-nums; }
+    .prm small { font-size: .76rem; color: #5f6b64; line-height: 1.45; margin-top: 3px; display: block; }
+    input[type=range].rg { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; background: transparent; margin: 4px 0 0 !important; cursor: pointer; }
+    input[type=range].rg::-webkit-slider-runnable-track { height: 2px; background: #9aa39c; }
+    input[type=range].rg::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 18px; margin-top: -8px; background: #142720; border: 0; border-radius: 0; }
+    input[type=range].rg::-moz-range-track { height: 2px; background: #9aa39c; }
+    input[type=range].rg::-moz-range-thumb { width: 10px; height: 18px; background: #142720; border: 0; border-radius: 0; }
+    input[type=range].rg:focus-visible { outline: 1px dotted #142720; outline-offset: 2px; }
+    .out-tab { width: 100%; border-collapse: collapse; font-size: .86rem; margin: 0 0 12px; }
+    .out-tab th { text-align: left; font-weight: 400; color: #3b4540; padding: 7px 0; border-bottom: 1px solid #e3e5df; }
+    .out-tab td { text-align: right; padding: 7px 0 7px 10px; border-bottom: 1px solid #e3e5df; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .out-tab td.v { font-weight: 700; color: #142720; font-size: .95rem; }
+    .out-tab td.u { color: #5f6b64; font-size: .78rem; text-align: left; width: 1%; }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -212,22 +252,27 @@
         <div class="app">
           <div class="app-grid">
             <div class="ctrl">
-              <div class="preset" role="group" aria-label="Contoh skenario hujan">
-                <button type="button" data-p="50,6,0.4,1,1.5">Hujan biasa</button>
-                <button type="button" data-p="120,12,0.4,1,2">Hujan lebat</button>
-                <button type="button" data-p="150,6,0.35,1.6,2.5">Hujan deras di Bogor</button>
-                <button type="button" data-p="210,20,0.5,1.2,3">Hujan ekstrem</button>
+              <p class="sheet-h">Skenario hujan</p>
+              <div class="prm">
+                <p class="pre-h">Contoh cepat</p>
+                <div class="preset" role="group" aria-label="Contoh skenario hujan">
+                  <button type="button" data-p="50,6,0.4,1,1.5">Hujan biasa</button>
+                  <button type="button" data-p="120,12,0.4,1,2">Hujan lebat</button>
+                  <button type="button" data-p="150,6,0.35,1.6,2.5">Hujan deras di Bogor</button>
+                  <button type="button" data-p="210,20,0.5,1.2,3">Hujan ekstrem</button>
+                </div>
               </div>
-              <div><label for="sTotal">Total hujan rata-rata DAS <span id="vTotal"></span></label><input type="range" id="sTotal" min="40" max="220" step="5" value="120"></div>
-              <div><label for="sDur">Lama hujan <span id="vDur"></span></label><input type="range" id="sDur" min="3" max="24" step="0.5" value="12"></div>
-              <div><label for="sPk">Posisi puncak hujan <span id="vPk"></span></label><input type="range" id="sPk" min="0.2" max="0.8" step="0.05" value="0.4"></div>
-              <div><label for="sHulu">Hujan di hulu Katulampa <span id="vHulu"></span></label><input type="range" id="sHulu" min="0.6" max="1.6" step="0.05" value="1"><small>Dibanding rata-rata DAS. Nilai di atas 1 berarti hujan lebih banyak turun di Bogor.</small></div>
-              <div><label for="sAmc">Kondisi tanah sebelum hujan <span id="vAmc"></span></label><input type="range" id="sAmc" min="1" max="3" step="0.1" value="2"></div>
-              <div class="out-row">
-                <div><strong id="oQp">–</strong><span>Debit puncak di Condet</span></div>
-                <div><strong id="oLuas">–</strong><span>Luas genangan di luar alur</span></div>
-                <div><strong id="oMs">–</strong><span>Waktu hitung emulator</span></div>
-              </div>
+              <div class="prm"><label for="sTotal">Total hujan rata-rata DAS <span id="vTotal"></span></label><input class="rg" type="range" id="sTotal" min="40" max="220" step="5" value="120"></div>
+              <div class="prm"><label for="sDur">Lama hujan <span id="vDur"></span></label><input class="rg" type="range" id="sDur" min="3" max="24" step="0.5" value="12"></div>
+              <div class="prm"><label for="sPk">Posisi puncak hujan <span id="vPk"></span></label><input class="rg" type="range" id="sPk" min="0.2" max="0.8" step="0.05" value="0.4"></div>
+              <div class="prm"><label for="sHulu">Hujan di hulu Katulampa <span id="vHulu"></span></label><input class="rg" type="range" id="sHulu" min="0.6" max="1.6" step="0.05" value="1"><small>Dibanding rata-rata DAS. Nilai di atas 1 berarti hujan lebih banyak turun di Bogor.</small></div>
+              <div class="prm" style="margin-bottom:16px"><label for="sAmc">Kondisi tanah sebelum hujan <span id="vAmc"></span></label><input class="rg" type="range" id="sAmc" min="1" max="3" step="0.1" value="2"></div>
+              <p class="sheet-h">Hasil emulator</p>
+              <table class="out-tab">
+                <tr><th>Debit puncak di Condet</th><td class="v" id="oQp">–</td></tr>
+                <tr><th>Luas genangan di luar alur</th><td class="v" id="oLuas">–</td></tr>
+                <tr><th>Waktu hitung emulator</th><td class="v" id="oMs">–</td></tr>
+              </table>
               <div class="warn" id="warn">Debit puncak berada di luar rentang 80 skenario latih (42–1.413 m³/s), sehingga hasil emulator kurang bisa diandalkan.</div>
               <div class="hg">
                 <div class="hg-title">Hidrograf debit di Condet</div>
@@ -377,11 +422,11 @@
         var tstep = tmax > 30 ? 12 : 6;
         for (var h = 0; h <= tmax; h += tstep) s += '<text x="' + X(h) + '" y="' + (Hv - b + 14) + '" font-size="10" fill="#6b7280" text-anchor="middle">' + h + '</text>';
         s += '<text x="' + (Wv - r) + '" y="' + (Hv - 2) + '" font-size="10" fill="#6b7280" text-anchor="end">jam sejak hujan mulai</text>';
-        s += '<text x="4" y="' + (t + 2) + '" font-size="10" fill="#6b7280">m³/s</text>';
+        s += '<text x="' + (l + 4) + '" y="' + (t + 10) + '" font-size="10" fill="#6b7280">m³/s</text>';
         var d = '';
         for (i = 0; i < n; i++) d += (i ? 'L' : 'M') + X(i * dt).toFixed(1) + ',' + Y(q[i]).toFixed(1);
-        s += '<path d="' + d + '" fill="none" stroke="#1f5f99" stroke-width="2" stroke-linejoin="round"/>';
-        s += '<line id="hgX" y1="' + t + '" y2="' + (Hv - b) + '" stroke="#9ca3af" stroke-dasharray="3 3" visibility="hidden"/><circle id="hgDot" r="4" fill="#1f5f99" stroke="#fff" stroke-width="2" visibility="hidden"/>';
+        s += '<path d="' + d + '" fill="none" stroke="#3B5A6B" stroke-width="2" stroke-linejoin="round"/>';
+        s += '<line id="hgX" y1="' + t + '" y2="' + (Hv - b) + '" stroke="#9ca3af" stroke-dasharray="3 3" visibility="hidden"/><circle id="hgDot" r="4" fill="#3B5A6B" stroke="#fff" stroke-width="2" visibility="hidden"/>';
         svg.innerHTML = s;
         Qnow = { q: q, X: X, Y: Y, dt: dt, l: l, r: r, Wv: Wv };
       }
@@ -484,7 +529,7 @@
         options: { position: 'topright' },
         onAdd: function () {
           var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
-          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
+          var h = '<header>Lapisan peta <span class="caret">▼</span></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
             '<label><input type="checkbox" data-k="banjir" checked>Kedalaman banjir</label><label><input type="checkbox" data-k="area" checked>Batas area model</label>' +
             '<label><input type="checkbox" data-k="sungai">Alur utama model</label><div class="wm-group">Peta latar</div>';
           Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });

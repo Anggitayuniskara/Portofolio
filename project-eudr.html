@@ -18,11 +18,14 @@
     .stat-row strong { display: block; font-size: 1.35rem; }
     .stat-row span { font-size: 0.85rem; color: #6b7280; }
     .app-frame { width: 100%; height: 760px; border: 1px solid var(--line); border-radius: 12px; display: block; background: #f5f6f4; }
-    .open-app { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 4px; padding: 10px 18px; background: #163a2e; color: #fff !important; border-radius: 8px; text-decoration: none; font-weight: 600; }
-    .open-app:hover { background: #1f4d3d; }
+    .open-app { color: var(--ochre) !important; font-weight: 500; text-decoration: none; }
+    .open-app:hover { text-decoration: underline; }
     .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
     @media (max-width: 600px) { .app-frame { height: 680px; } }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -47,11 +50,6 @@
       <p>Uni Eropa menerbitkan Regulasi Bebas Deforestasi (EU Deforestation Regulation atau EUDR) yang mewajibkan tujuh komoditas, termasuk minyak sawit, terbukti tidak berasal dari lahan yang mengalami deforestasi setelah 31 Desember 2020. Produk tersebut juga harus diproduksi secara legal menurut hukum negara asalnya. Untuk membuktikannya, setiap kebun harus disertai lokasi yang jelas, berupa poligon batas kebun untuk kebun lebih dari 4 hektare atau titik koordinat untuk kebun yang lebih kecil.</p>
       <p>Bagi Indonesia, aturan ini sangat penting karena Uni Eropa adalah salah satu pasar utama minyak sawit. Eksportir, perusahaan perkebunan, dan koperasi petani kini perlu mengecek ribuan kebun satu per satu terhadap peta hutan dan peta kawasan hutan. Riau adalah provinsi dengan kebun sawit terluas di Indonesia, sehingga menjadi tempat yang tepat untuk melihat seberapa besar tantangan ini sebenarnya.</p>
       <p>Project ini menjawab dua pertanyaan. Berapa banyak kebun sawit di Kabupaten Bengkalis yang berisiko tidak lolos syarat bebas deforestasi EUDR? Dan apakah deforestasi memang menjadi hambatan utama, atau justru ada masalah lain yang lebih besar? Hasilnya juga dikemas menjadi aplikasi yang bisa dipakai untuk mengecek kebun mana pun di Bengkalis.</p>
-
-      <p><a class="open-app" href="app-eudr.html" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Buka aplikasi Pengecek EUDR Sawit</a></p>
-
-      <iframe class="app-frame" src="app-eudr.html" title="Aplikasi Pengecek EUDR Sawit" loading="lazy"></iframe>
-      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Tekan "Contoh kebun" untuk memuat 13 kebun fiktif, atau unggah file GeoJSON, shapefile (.zip), atau CSV berisi koordinat kebun. Hasilnya bisa diunduh sebagai tabel CSV.</p>
 
       <h2>Data yang digunakan</h2>
 
@@ -148,6 +146,13 @@
       <p class="table-note">Persentase dihitung terhadap seluruh kebun sawit 2024 di Kabupaten Bengkalis. Sebagian kecil kebun berada di tubuh air atau di luar peta kawasan hutan, sehingga jumlahnya tidak tepat 100%.</p>
 
       <p>Kebun-kebun ini memang bebas dari deforestasi setelah 2020, karena hutannya sudah dibuka jauh sebelumnya. Namun, EUDR juga mensyaratkan legalitas. Kebun di dalam kawasan hutan yang belum memiliki pelepasan kawasan atau penyelesaian status lahan akan sulit membuktikan bahwa sawitnya diproduksi secara legal. Pemerintah memang sedang menertibkan dan menyelesaikan status kebun sawit di kawasan hutan, tetapi selama prosesnya belum tuntas, kebun-kebun ini tetap menjadi titik lemah dalam rantai pasok ke Uni Eropa.</p>
+
+      <h2>Mencoba websitenya</h2>
+
+      <p><a class="open-app" href="app-eudr.html" target="_blank" rel="noopener">Buka website Pengecek EUDR Sawit →</a></p>
+
+      <iframe class="app-frame" src="app-eudr.html" title="Aplikasi Pengecek EUDR Sawit" loading="lazy"></iframe>
+      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Tekan "Contoh kebun" untuk memuat 13 kebun fiktif, atau unggah file GeoJSON, shapefile (.zip), atau CSV berisi koordinat kebun. Hasilnya bisa diunduh sebagai tabel CSV.</p>
 
       <h2>Kesimpulan</h2>
       <p>Di Kabupaten Bengkalis, syarat bebas deforestasi EUDR ternyata bukan hambatan terbesar. Hampir semua kebun sawit sudah ada sebelum 2020, dan hanya sekitar 0,12% yang berdiri di atas hutan yang hilang setelah tanggal batas. Tantangan sebenarnya ada pada legalitas, karena separuh kebun sawit berada di dalam kawasan hutan, termasuk lebih dari 19 ribu hektare di kawasan konservasi.</p>

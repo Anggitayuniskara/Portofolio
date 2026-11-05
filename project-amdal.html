@@ -18,11 +18,14 @@
     .flow strong { display: block; font-size: 0.95rem; margin: 4px 0; }
     .flow span { font-size: 0.82rem; color: #6b7280; line-height: 1.45; display: block; }
     .app-frame { width: 100%; height: 760px; border: 1px solid var(--line); border-radius: 12px; display: block; background: #f5f6f4; }
-    .open-app { display: inline-flex; align-items: center; gap: 8px; margin: 6px 0 4px; padding: 10px 18px; background: #163a2e; color: #fff !important; border-radius: 8px; text-decoration: none; font-weight: 600; }
-    .open-app:hover { background: #1f4d3d; }
+    .open-app { color: var(--ochre) !important; font-weight: 500; text-decoration: none; }
+    .open-app:hover { text-decoration: underline; }
     .dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
     @media (max-width: 600px) { .app-frame { height: 680px; } }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -46,11 +49,6 @@
       <h2>Latar belakang</h2>
       <p>Kalimantan Timur adalah salah satu provinsi dengan aktivitas pembukaan lahan paling tinggi di Indonesia. Tambang batubara, perkebunan, dan pembangunan Ibu Kota Nusantara terus membutuhkan lahan baru, sementara sebagian besar wilayahnya masih berupa kawasan hutan. Sebelum sebuah kegiatan dibangun, pemrakarsa harus mengetahui dokumen lingkungan apa yang dibutuhkan, yaitu AMDAL, UKL-UPL, atau cukup SPPL. Penentunya bukan hanya jenis dan skala kegiatan, tetapi juga lokasinya. Kegiatan yang berada di dalam atau berbatasan langsung dengan kawasan lindung pada umumnya wajib AMDAL, meskipun skalanya kecil.</p>
       <p>Di konsultan lingkungan, langkah pertama ini disebut penapisan lokasi. Tapak rencana kegiatan ditumpangkan dengan berbagai peta, mulai dari kawasan hutan, moratorium izin, izin yang sudah ada, rawan bencana, sampai sempadan sungai. Pekerjaan ini biasanya dilakukan secara manual di perangkat lunak GIS dan memakan waktu. Project ini membangun aplikasi web yang melakukan penapisan tersebut secara otomatis. Pengguna cukup menggambar atau mengunggah batas tapak, lalu aplikasi menampilkan laporan dalam hitungan detik.</p>
-
-      <p><a class="open-app" href="app-amdal.html" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Buka aplikasi Penapisan Lokasi Kaltim</a></p>
-
-      <iframe class="app-frame" src="app-amdal.html" title="Aplikasi Penapisan Lokasi Kaltim" loading="lazy"></iframe>
-      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Tekan "Contoh tapak", gambar poligon sendiri, atau unggah file GeoJSON atau shapefile (.zip).</p>
 
       <h2>Data yang digunakan</h2>
 
@@ -146,6 +144,13 @@
 
       <h2>Keterbatasan</h2>
       <p>Aplikasi ini adalah alat bantu penapisan awal, bukan pengganti keputusan resmi. Semua peta yang dipakai bersifat indikatif, dan keputusan wajib AMDAL tetap ditetapkan oleh instansi lingkungan hidup. Analisis dilakukan pada grid sekitar 110 m, sehingga tapak yang sangat kecil atau batasan yang sangat sempit seperti sempadan sungai 50 m hanya terbaca secara kasar. Sungai dari OpenStreetMap juga belum tentu lengkap, terutama sungai-sungai kecil di pedalaman. Kesesuaian dengan Rencana Tata Ruang Wilayah (RTRW) dan izin usaha pertambangan di luar kawasan hutan juga belum diperiksa, karena datanya belum tersedia secara terbuka dan seragam untuk seluruh kabupaten. Kedua data ini menjadi pengembangan berikutnya yang paling penting.</p>
+
+      <h2>Mencoba websitenya</h2>
+
+      <p><a class="open-app" href="app-amdal.html" target="_blank" rel="noopener">Buka website Penapisan Lokasi Kaltim →</a></p>
+
+      <iframe class="app-frame" src="app-amdal.html" title="Aplikasi Penapisan Lokasi Kaltim" loading="lazy"></iframe>
+      <p class="table-note">Aplikasi di atas bisa langsung dicoba. Tekan "Contoh tapak", gambar poligon sendiri, atau unggah file GeoJSON atau shapefile (.zip).</p>
 
       <h2>Kesimpulan</h2>
       <p>Penapisan lokasi yang biasanya dikerjakan berjam-jam secara manual bisa diringkas menjadi beberapa detik dengan menggabungkan data terbuka dari berbagai instansi ke dalam satu grid. Hasilnya bukan keputusan akhir, tetapi cukup untuk memberi gambaran awal kepada pemrakarsa dan konsultan tentang kendala apa saja yang mungkin dihadapi sebuah tapak sebelum masuk ke penyusunan dokumen lingkungan.</p>

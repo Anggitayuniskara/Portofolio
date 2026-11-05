@@ -5,99 +5,223 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengecek EUDR Sawit</title>
   <meta name="description" content="Pengecekan awal kebun sawit di Kabupaten Bengkalis terhadap persyaratan bebas deforestasi EUDR dan status kawasan hutan.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css">
   <style>
-    :root { --bg: #f5f6f4; --panel: #fff; --ink: #14201c; --muted: #6b7280; --line: #e3e6e1; --accent: #163a2e;
-            --merah: #c62828; --kuning: #e6a700; --hijau: #2e7d32; }
+    :root { --ink: #142720; --ink2: #1f3a30; --muted: #5b6964; --grid: #d4d7cf; --head: #eceee8; --paper: #F5F6F1; --ochre: #C08A2E;
+            --merah: #f6d3cf; --kuning: #fbecc0; --hijau: #d7ead2; --abu: #e5e7e3; --m: #b42318; --k: #b7791f; --h: #2f6b3f; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; height: 100%; }
-    body { background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display: flex; flex-direction: column; }
-    header.top { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--accent); color: #fff; flex-wrap: wrap; }
-    header.top h1 { font-size: 1.1rem; margin: 0; }
-    header.top p { margin: 0; font-size: .8rem; opacity: .8; }
-    header.top .grow { flex: 1; min-width: 200px; }
-    header.top a { color: #fff; font-size: .85rem; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 6px 12px; text-decoration: none; white-space: nowrap; }
-    main { flex: 1; display: grid; grid-template-columns: 1fr 440px; min-height: 0; }
-    #map { width: 100%; height: 100%; min-height: 320px; background: #e8ecef; }
-    aside { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 14px 16px 28px; }
-    aside h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 18px 0 8px; }
-    aside h2:first-child { margin-top: 0; }
-    .btns { display: flex; gap: 8px; flex-wrap: wrap; }
-    .btns button, .btns label { font: inherit; font-size: .85rem; padding: 7px 12px; border: 1px solid var(--line); background: #fff; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-    .btns button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-    .btns input[type=file] { display: none; }
-    .hint { font-size: .78rem; color: var(--muted); margin: 8px 0 0; }
-    .card { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
-    .summary div { border-radius: 10px; padding: 8px 10px; color: #fff; }
-    .summary b { display: block; font-size: 1.3rem; line-height: 1.2; }
-    .summary span { font-size: .75rem; opacity: .9; }
-    table.plots { width: 100%; border-collapse: collapse; font-size: .8rem; }
-    table.plots th { text-align: left; font-weight: 600; color: var(--muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .03em; padding: 4px; }
-    table.plots td { padding: 6px 4px; border-top: 1px solid var(--line); vertical-align: top; }
-    table.plots tr { cursor: pointer; }
-    table.plots tr:hover td, table.plots tr.sel td { background: #f3f5f2; }
-    .badge { display: inline-block; padding: 1px 7px; border-radius: 999px; color: #fff; font-size: .72rem; font-weight: 600; white-space: nowrap; }
-    .detail { margin-top: 12px; font-size: .82rem; }
-    .detail ul { margin: 6px 0 0; padding-left: 18px; }
-    .detail li { margin: 2px 0; }
-    .note { font-size: .75rem; color: var(--muted); margin-top: 16px; line-height: 1.5; }
-    .status { padding: 6px 16px; font-size: .8rem; background: #fff7e6; border-bottom: 1px solid #f6d58d; display: none; }
-    .wm-panel { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); font: 12px/1.4 system-ui, sans-serif; min-width: 210px; }
-    .wm-panel header { display: flex; justify-content: space-between; padding: 8px 10px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #eee; }
-    .wm-panel .wm-body { padding: 6px 10px 8px; }
+    html, body { margin: 0; }
+    body { background: var(--paper); color: var(--ink); font: 13.5px/1.5 "Segoe UI", Arial, sans-serif; }
+    .kepala { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding: 12px 22px; background: var(--ink); color: #e9eee9; }
+    .kepala .logo { font-weight: 700; font-size: 1.08rem; color: #fff; }
+    .kepala .logo span { color: var(--ochre); }
+    .kepala .sub { font-size: .84rem; color: #b9c6bf; }
+    .kepala a { margin-left: auto; color: #e3c27e; text-decoration: none; font-size: .86rem; }
+    .kepala a:hover { text-decoration: underline; }
+    .status { padding: 6px 22px; font-size: 12.5px; background: #f3ead3; display: none; }
+    .tata { display: grid; grid-template-columns: minmax(560px, 56%) 1fr; height: calc(100vh - 47px); min-height: 560px; }
+    .kiri { overflow-y: auto; border-right: 1px solid var(--grid); background: var(--paper); }
+    .blok { padding: 18px 22px; border-bottom: 1px solid var(--grid); }
+    .blok h2 { font-size: 13px; margin: 0 0 10px; color: var(--ink); }
+    .blok h2 .no { display: inline-block; width: 20px; color: var(--ochre); }
+    .pilihan { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .pilihan .drop { font: inherit; width: 100%; height: 100%; }
+    .drop { display: block; border: 2px dashed #a9b0a8; background: #fff; padding: 16px 16px; text-align: center; cursor: pointer; transition: background .15s, border-color .15s; }
+    .drop:hover, .drop.over { background: #f1f4ee; border-color: var(--ink); }
+    .drop b { display: block; font-size: 15px; color: var(--ink); }
+    .drop span { color: var(--muted); font-size: 12.5px; }
+    .drop input { display: none; }
+    .atau { margin-top: 10px; font-size: 13px; color: var(--muted); }
+    .atau button { background: none; border: 0; padding: 0; font: inherit; color: #8a6420; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .dua { display: grid; grid-template-columns: 170px 1fr; gap: 16px; align-items: start; }
+    table.mini { border-collapse: collapse; font-size: 12.5px; width: 100%; }
+    table.mini th, table.mini td { border: 1px solid var(--grid); padding: 4px 8px; text-align: left; background: #fff; vertical-align: top; }
+    table.mini th { background: var(--head); }
+    table.mini td.hijau { background: var(--hijau); } table.mini td.kuning { background: var(--kuning); } table.mini td.merah { background: var(--merah); }
+    table.mini td:first-child { white-space: nowrap; font-weight: 600; }
+    .ket { color: var(--muted); font-size: 12px; line-height: 1.55; margin: 0; }
+    .barisaksi { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+    .barisaksi b { font-size: 14px; }
+    .barisaksi button, .barisaksi label { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; color: #8a6420; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .barisaksi .kanan { margin-left: auto; display: flex; gap: 14px; }
+    .saring { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 12.5px; color: var(--muted); }
+    .saring select { font: inherit; font-size: 12.5px; padding: 2px 4px; border: 1px solid #b9bdb5; background: #fff; }
+    .grid-wrap { max-height: 46vh; overflow: auto; background: #fff; border: 1px solid var(--grid); }
+    table.reg { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+    table.reg th, table.reg td { border: 1px solid var(--grid); padding: 5px 7px; vertical-align: top; }
+    table.reg td small { display: block; font-size: 11px; color: var(--muted); }
+    table.reg td.r { white-space: nowrap; width: 1%; text-align: right; }
+    table.reg th.r { width: 1%; text-align: right; min-width: 70px; }
+    table.reg td.id { white-space: nowrap; font-weight: 600; }
+    table.reg thead th { position: sticky; top: 0; background: var(--head); font-weight: 600; font-size: 12px; text-align: left; z-index: 1; vertical-align: bottom; line-height: 1.3; }
+    table.reg td.n { background: var(--head); color: var(--muted); text-align: right; width: 30px; }
+    table.reg tbody tr { cursor: pointer; }
+    table.reg tbody tr:hover td:not(.n) { outline: 1px solid #9aa19c; outline-offset: -1px; }
+    table.reg tbody tr.sel td { box-shadow: inset 0 2px 0 var(--ink), inset 0 -2px 0 var(--ink); }
+    td.merah { background: var(--merah); } td.kuning { background: var(--kuning); } td.hijau { background: var(--hijau); } td.abu { background: var(--abu); }
+    .kosong td { color: var(--muted); font-style: italic; text-align: center; padding: 20px; }
+    .ringkasan { font-size: 14px; line-height: 1.6; margin: 10px 0 0; }
+    .ringkasan b.hijau, .vonis.hijau { color: var(--h); } .ringkasan b.kuning, .vonis.kuning { color: var(--k); } .ringkasan b.merah, .vonis.merah { color: var(--m); }
+    .vonis { font-weight: 700; }
+    .catatan h2 { font-size: 15px; margin: 0; }
+    .catatan h2 small { font-weight: 400; font-size: 12.5px; color: var(--muted); margin-left: 6px; }
+    .catatan h3 { font-size: 13px; margin: 16px 0 6px; }
+    .catatan p { margin: 6px 0 0; }
+    table.kv { border-collapse: collapse; width: 100%; background: #fff; font-size: 12.5px; }
+    table.kv td { border: 1px solid var(--grid); padding: 5px 8px; vertical-align: top; }
+    table.kv td:first-child { width: 42%; color: var(--muted); }
+    table.kv tr.hasil td { font-weight: 600; }
+    table.kv td.merah { background: var(--merah); } table.kv td.kuning { background: var(--kuning); } table.kv td.hijau { background: var(--hijau); } table.kv td.abu { background: var(--abu); }
+    #map { height: 100%; min-height: 360px; background: #dfe3df; }
+    .wm-panel { background: #fff; border: 1px solid #9aa19c; font: 12px/1.4 "Segoe UI", Arial, sans-serif; min-width: 200px; }
+    .wm-panel header { display: flex; justify-content: space-between; padding: 6px 9px; font-weight: 600; cursor: pointer; border-bottom: 1px solid #d5d8d2; }
+    .wm-panel .wm-body { padding: 5px 9px 7px; }
     .wm-panel.collapsed .wm-body { display: none; }
     .wm-panel.collapsed header { border-bottom: 0; }
     .wm-panel label { display: flex; gap: 6px; align-items: center; margin: 3px 0; cursor: pointer; }
-    .wm-group { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin: 6px 0 2px; }
-    .legend { background: #fff; border-radius: 8px; box-shadow: 0 1px 6px rgba(0,0,0,.25); padding: 8px 10px; font-size: 11.5px; line-height: 1.55; max-width: 220px; }
+    .wm-group { font-size: 11px; color: #777; margin: 6px 0 2px; }
+    .legend { background: #fff; border: 1px solid #9aa19c; padding: 6px 9px; font-size: 11.5px; line-height: 1.55; }
     .legend b { display: block; }
-    .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+    .legend i { display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; }
     .legend:empty { display: none; }
-    .plot-label { background: rgba(20,32,28,.85); color: #fff; border: 0; border-radius: 4px; font: 600 10px system-ui, sans-serif; padding: 1px 5px; box-shadow: none; }
+    .plot-label { background: rgba(20,39,32,.85); color: #fff; border: 0; border-radius: 0; font: 600 10px "Segoe UI", Arial, sans-serif; padding: 1px 5px; box-shadow: none; }
     .plot-label::before { display: none; }
-    @media (max-width: 900px) {
-      main { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
-      aside { border-left: 0; border-top: 1px solid var(--line); }
-      body { height: auto; }
-    }
+    .vonis3 { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+    .vonis3 b { margin-right: 5px; }
+    .fakta { display: grid; grid-template-columns: repeat(3, 1fr); background: #fff; border: 1px solid var(--grid); }
+    .fakta div { padding: 10px 12px; }
+    .fakta div + div { border-left: 1px solid var(--grid); }
+    .fakta strong { display: block; font-size: 20px; line-height: 1.15; }
+    .fakta span { font-size: 12px; color: var(--muted); }
+    .batang { display: flex; height: 14px; margin-top: 12px; }
+    .batang i { display: block; height: 100%; }
+    .batang-ket { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font-size: 12px; color: var(--muted); }
+    .batang-ket i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; vertical-align: -1px; }
+    .format { margin-top: 10px; }
+    .format summary { cursor: pointer; color: #8a6420; font-size: 13px; }
+    .sumber summary { cursor: pointer; color: var(--muted); font-size: 12px; }
+    .sumber p { margin-top: 6px; }
+    .hitung { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 10px; font-size: 13.5px; }
+    .hitung b { font-size: 20px; margin-right: 5px; font-variant-numeric: tabular-nums; }
+    .hitung .hijau b { color: var(--h); } .hitung .kuning b { color: var(--k); } .hitung .merah b { color: var(--m); }
+    .besar { font-size: 19px; font-weight: 700; margin: 8px 0 12px; }
+    .besar.hijau { color: var(--h); } .besar.kuning { color: var(--k); } .besar.merah { color: var(--m); }
+    .syarat { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--grid); background: #fff; }
+    .syarat > div { padding: 10px 12px; }
+    .syarat > div + div { border-left: 1px solid var(--grid); }
+    .syarat .lbl { font-size: 12px; color: var(--muted); }
+    .syarat .hs { font-weight: 700; font-size: 14px; margin: 2px 0 4px; }
+    .syarat .hs.hijau { color: var(--h); } .syarat .hs.kuning, .syarat .hs.abu { color: var(--k); } .syarat .hs.merah { color: var(--m); }
+    .syarat .ang { font-size: 13px; }
+    .tl { margin: 12px 0 0; font-size: 13.5px; }
+    .rinci { margin-top: 12px; }
+    .rinci summary { cursor: pointer; color: #8a6420; font-size: 13px; }
+    .rinci table { margin-top: 8px; }
+    .kiri { display: flex; flex-direction: column; }
+    #mulai:not([hidden]) { flex: 1; display: flex; flex-direction: column; }
+    #mulai > .blok:first-child { flex: 1; display: flex; flex-direction: column; }
+    #mulai .pilihan { flex: 1; min-height: 150px; }
+    #mulai .drop { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px; }
+    #mulai .drop b { font-size: 17px; }
+    #mulai .drop span { max-width: 300px; }
+    [hidden] { display: none !important; }
+    @media (max-width: 1000px) { .tata { grid-template-columns: 1fr; height: auto; } .kiri { border-right: 0; } #map { height: 60vh; } }
+    @media (max-width: 560px) { .pilihan, .syarat, .fakta { grid-template-columns: 1fr; } .syarat > div + div, .fakta div + div { border-left: 0; border-top: 1px solid var(--grid); } .blok { padding: 14px; } .dua { grid-template-columns: 1fr; } }
+    #cetak { display: none; }
+    @page { size: A4 landscape; margin: 14mm 12mm; }
     @media print {
-      header.top a, .btns, #map, .status, .noprint { display: none !important; }
-      main { display: block; }
-      aside { border: 0; overflow: visible; }
+      body > *:not(#cetak) { display: none !important; }
+      body { background: #fff; }
+      #cetak { display: block; color: #000; font: 10.5pt/1.4 "Times New Roman", Georgia, serif; }
+      #cetak .kop { text-align: center; border-bottom: 3px double #000; padding-bottom: 6px; margin-bottom: 10px; }
+      #cetak .kop .t1 { font-weight: 700; font-size: 13pt; letter-spacing: .03em; }
+      #cetak .kop .t2 { font-size: 10pt; }
+      #cetak table { border-collapse: collapse; width: 100%; }
+      #cetak table.id td { padding: 1px 0; vertical-align: top; }
+      #cetak table.id td:first-child { width: 42mm; }
+      #cetak h3 { font-size: 11pt; margin: 12px 0 4px; }
+      #cetak table.f th, #cetak table.f td { border: 1px solid #000; padding: 3px 5px; vertical-align: top; text-align: left; font-size: 9.5pt; }
+      #cetak table.f th { background: #e6e6e6; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      #cetak table.f td.r { text-align: right; white-space: nowrap; }
+      #cetak table.f tr { page-break-inside: avoid; }
+      #cetak .ttd { margin-top: 18px; display: flex; justify-content: flex-end; }
+      #cetak .ttd div { width: 70mm; text-align: center; }
+      #cetak .ttd .garis { margin-top: 18mm; border-top: 1px solid #000; }
+      #cetak .kecil { font-size: 9pt; }
     }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
-  <header class="top">
-    <div class="grow">
-      <h1><i class="fa-solid fa-seedling"></i> Pengecek EUDR Sawit · Bengkalis</h1>
-      <p>Cek awal kebun sawit terhadap syarat bebas deforestasi setelah 31 Desember 2020 dan status kawasan hutan</p>
-    </div>
-    <a href="project-eudr.html"><i class="fa-solid fa-circle-info"></i> Tentang</a>
+  <header class="kepala">
+    <div class="logo">Pengecek EUDR Sawit Kabupaten Bengkalis</div>
+    <div class="sub">Uji tuntas kebun sawit terhadap syarat bebas deforestasi setelah 31 Desember 2020 dan status kawasan hutan</div>
+    <a href="project-eudr.html">Tentang alat ini</a>
   </header>
   <div class="status" id="status"></div>
 
-  <main>
-    <div id="map" role="region" aria-label="Peta kebun sawit Kabupaten Bengkalis"></div>
-    <aside>
-      <h2>1. Masukkan kebun</h2>
-      <div class="btns">
-        <label class="primary" style="background:#163a2e;color:#fff;border-color:#163a2e"><i class="fa-solid fa-upload"></i> Unggah kebun<input type="file" id="fileIn" accept=".geojson,.json,.zip,.csv"></label>
-        <button type="button" id="drawBtn"><i class="fa-solid fa-draw-polygon"></i> Gambar</button>
-        <button type="button" id="demoBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Contoh kebun</button>
+  <div class="tata">
+    <div class="kiri">
+
+      <div id="mulai">
+        <div class="blok">
+          <h2>Masukkan data kebun</h2>
+          <div class="pilihan">
+            <label class="drop" id="drop">
+              <b>Unggah file kebun</b>
+              <span>Tarik satu atau beberapa file ke sini, atau klik untuk memilih. GeoJSON, shapefile (.zip), atau CSV berkolom id, lat, lon, maksimal 500 kebun.</span>
+              <input type="file" id="fileIn" accept=".geojson,.json,.zip,.csv" multiple>
+            </label>
+            <button type="button" class="drop" id="drawBtn">
+              <b>Gambar kebun di peta</b>
+              <span>Klik titik-titik batas kebun langsung di peta. Gambar satu kebun, lalu lanjutkan ke kebun berikutnya sebanyak yang kamu mau.</span>
+            </button>
+          </div>
+          <div class="atau">Ingin mencoba dulu? <button type="button" id="demoBtn">Muat 13 contoh kebun</button> (data fiktif).</div>
+          <details class="format"><summary>Contoh format CSV</summary>
+            <table class="mini" style="width:auto;margin-top:8px"><tr><th>id</th><th>lat</th><th>lon</th></tr><tr><td>KBN-001</td><td>1,4521</td><td>101,6034</td></tr><tr><td>KBN-002</td><td>1,4607</td><td>101,6211</td></tr></table>
+            <p class="ket" style="margin-top:6px">Kebun berupa titik dicek dalam radius sekitar 56 m (setara 1 ha). Kebun lebih dari 4 ha sebaiknya berupa poligon.</p>
+          </details>
+        </div>
+        <div class="blok">
+          <h2>Cara kebun dinilai</h2>
+          <table class="mini">
+            <tr><th>Syarat EUDR</th><th>Terpenuhi jika</th></tr>
+            <tr><td>Bebas deforestasi</td><td>Tidak ada hutan 2020 yang hilang setelah 31 Desember 2020 menurut data Hansen, RADD, dan Kementerian Kehutanan</td></tr>
+            <tr><td>Legalitas kawasan</td><td>Kebun berada di Areal Penggunaan Lain, bukan di kawasan hutan</td></tr>
+          </table>
+          <p class="ket" style="margin-top:8px">Kebun memenuhi syarat jika kedua syarat terpenuhi, perlu dicek jika salah satunya belum pasti, dan tidak memenuhi syarat jika salah satunya dilanggar. Sebagai gambaran, 97% dari 284.918 ha kebun sawit di Bengkalis bebas deforestasi, tetapi separuhnya berada di kawasan hutan (<a href="project-eudr.html" style="color:#8a6420">lihat project</a>).</p>
+        </div>
       </div>
-      <p class="hint">Unggah GeoJSON, shapefile (.zip), atau CSV berkolom <code>id</code>, <code>lat</code>, <code>lon</code>. Kebun lebih dari 4 ha sebaiknya berupa poligon. Kebun berupa titik dicek dalam radius sekitar 56 m (setara 1 ha). Contoh kebun adalah data fiktif.</p>
 
-      <h2>2. Hasil pengecekan</h2>
-      <div id="report"><div class="card"><span class="hint" style="margin:0">Belum ada kebun. Unggah file, gambar poligon, atau coba contoh kebun.</span></div></div>
+      <div id="hasil" hidden>
+        <div class="blok">
+          <div class="barisaksi"><b>Hasil pengecekan</b><div class="kanan"><button type="button" id="tambahGambar">Gambar kebun lagi</button><label>Tambah dari file<input type="file" id="fileIn2" accept=".geojson,.json,.zip,.csv" multiple hidden></label><button type="button" id="resetBtn">Kembali ke awal</button><button type="button" id="csvBtn">Unduh register (CSV)</button><button type="button" id="printBtn">Cetak laporan (PDF)</button></div></div>
+          <p class="ringkasan" id="ringkas"></p>
+        </div>
+        <div class="blok" id="regBlok">
+          <div class="saring"><h2 style="margin:0 auto 0 0">Register kebun</h2><span id="saringWrap">Tampilkan <select id="fSaring"><option value="">semua kebun</option><option value="merah">tidak memenuhi syarat</option><option value="kuning">perlu dicek</option><option value="hijau">memenuhi syarat</option></select></span></div>
+          <div class="grid-wrap">
+            <table class="reg">
+              <thead><tr><th></th><th>Kebun</th><th class="r">Luas (ha)</th><th>Kesimpulan</th><th>Alasan</th></tr></thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
+          <p class="ket" style="margin-top:6px">Klik salah satu baris untuk melihat rincian kebun di bawah dan lokasinya di peta. Kebun di peta juga bisa diklik.</p>
+        </div>
+        <div class="blok catatan" id="detail"></div>
+      </div>
 
-      <p class="note">Hasil ini adalah pengecekan awal untuk uji tuntas (due diligence), bukan sertifikasi. Hutan 2020 dari peta JRC Uni Eropa (GFC2020 V4), sebaran sawit dari Forest Data Partnership, kehilangan tutupan pohon dari Hansen/UMD (2021–2025), peringatan radar RADD (sampai Oktober 2026), serta kawasan hutan dan deforestasi nasional dari Kementerian Kehutanan. Semua lapisan dianalisis pada grid sekitar 22 m.</p>
-    </aside>
-  </main>
+      <div class="blok" style="border-bottom:0"><details class="sumber"><summary>Pengecekan awal untuk uji tuntas, bukan sertifikasi. Lihat sumber data</summary><p class="ket">Hutan 2020 dari peta JRC Uni Eropa (GFC2020 V4), sebaran sawit dari Forest Data Partnership, kehilangan tutupan pohon dari Hansen/UMD (2021–2025), peringatan radar RADD (sampai Oktober 2026), serta kawasan hutan dan deforestasi nasional dari Kementerian Kehutanan. Analisis pada grid sekitar 22 m.</p></details></div>
+    </div>
+    <div id="map" role="region" aria-label="Peta kebun sawit Kabupaten Bengkalis"></div>
+  </div>
+
+  <div id="cetak"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
@@ -111,9 +235,9 @@
       var BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
       var ST = { merah: ['#c62828', 'Berisiko'], kuning: ['#e6a700', 'Perlu verifikasi'], hijau: ['#2e7d32', 'Bebas deforestasi'] };
       var LG = { merah: ['#c62828', 'Kawasan lindung'], kuning: ['#e6a700', 'Kawasan hutan'], hijau: ['#2e7d32', 'APL'], abu: ['#9ca3af', 'Tak terpetakan'] };
-      var meta = null, cache = {}, results = [];
+      var meta = null, cache = {}, results = [], saring = '', pilih = -1;
       var setStatus = function (s) { var el = document.getElementById('status'); el.textContent = s; el.style.display = s ? 'block' : 'none'; };
-      var fmt = function (v, d) { return v.toLocaleString('id-ID', { maximumFractionDigits: d === undefined ? 1 : d }); };
+      var fmt = function (v, d) { return v.toLocaleString('id-ID', { minimumFractionDigits: d === undefined ? 1 : d, maximumFractionDigits: d === undefined ? 1 : d }); };
 
       var map = L.map('map', { zoomSnap: 0.25 }).setView([1.5, 101.7], 9);
       var bases = {
@@ -133,10 +257,10 @@
       var Panel = L.Control.extend({
         options: { position: 'topright' },
         onAdd: function () {
-          var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 900 ? ' collapsed' : ''));
-          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>';
+          var d = L.DomUtil.create('div', 'wm-panel collapsed');
+          var h = '<header>Lapisan peta <span>▾</span></header><div class="wm-body">';
           Object.keys(overlays).forEach(function (k) { h += '<label><input type="checkbox" data-k="' + k + '"' + (map.hasLayer(overlays[k].layer) ? ' checked' : '') + '>' + overlays[k].name + '</label>'; });
-          h += '<div class="wm-group">Basemap</div>';
+          h += '<div class="wm-group">Peta dasar</div>';
           Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });
           d.innerHTML = h + '</div>';
           L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
@@ -160,27 +284,58 @@
       legend();
 
       // Input kebun
+      // Kumpulan kebun yang sedang dicek; file baru mengganti, gambar dan "tambah" menambahkan
+      var kumpulan = [], modeGambar = false, nGambar = 0, tanpaZoom = false;
+      function featuresOf(gj) {
+        if (Array.isArray(gj)) return [].concat.apply([], gj.map(featuresOf));
+        return gj.type === 'FeatureCollection' ? gj.features : [gj.type === 'Feature' ? gj : { type: 'Feature', properties: {}, geometry: gj }];
+      }
+      function pakai(feats, gabung) { kumpulan = gabung ? kumpulan.concat(feats) : feats; run({ type: 'FeatureCollection', features: kumpulan }); }
       var drawer = new L.Draw.Polygon(map, { allowIntersection: false, showArea: true, shapeOptions: { color: '#00e5ff', weight: 2.5, fillOpacity: 0.1 } });
-      document.getElementById('drawBtn').addEventListener('click', function () { drawer.enable(); setStatus('Klik di peta untuk menambah titik, lalu klik titik pertama untuk menutup poligon.'); });
-      map.on(L.Draw.Event.CREATED, function (e) { setStatus(''); var f = e.layer.toGeoJSON(); f.properties = { id_kebun: 'Kebun gambar' }; run({ type: 'FeatureCollection', features: [f] }); });
+      function infoGambar() {
+        var el = document.getElementById('status'); el.style.display = 'block';
+        el.innerHTML = (nGambar ? nGambar + ' kebun sudah digambar. ' : '') + 'Klik titik-titik batas kebun di peta, lalu klik titik pertama untuk menutupnya. Setelah itu kamu bisa langsung menggambar kebun berikutnya. <button type="button" id="selesaiGambar" style="font:inherit;margin-left:8px;padding:1px 8px;border:1px solid #b9bdb5;background:#fff;cursor:pointer">Selesai menggambar</button>';
+        document.getElementById('selesaiGambar').addEventListener('click', selesaiGambar);
+      }
+      function mulaiGambar(gabung) {
+        if (!gabung) { kumpulan = []; nGambar = 0; }
+        modeGambar = true; drawer.enable(); infoGambar();
+      }
+      function selesaiGambar() { modeGambar = false; drawer.disable(); setStatus(''); }
+      document.getElementById('drawBtn').addEventListener('click', function () { mulaiGambar(false); });
+      map.on(L.Draw.Event.CREATED, function (e) {
+        var f = e.layer.toGeoJSON(); nGambar++; f.properties = { id_kebun: 'Kebun gambar ' + nGambar };
+        tanpaZoom = true; pakai([f], true);
+        if (modeGambar) setTimeout(function () { if (modeGambar) { drawer.enable(); infoGambar(); } }, 200);
+      });
       document.getElementById('demoBtn').addEventListener('click', function () {
-        fetch('assets/data/eudr/contoh-kebun.geojson').then(function (r) { return r.json(); }).then(run);
+        selesaiGambar(); fetch('assets/data/eudr/contoh-kebun.geojson').then(function (r) { return r.json(); }).then(function (g) { nGambar = 0; pakai(featuresOf(g), false); });
       });
-      document.getElementById('fileIn').addEventListener('change', function (e) {
-        var f = e.target.files[0]; if (!f) return;
-        var rd = new FileReader();
-        if (/\.zip$/i.test(f.name)) {
-          rd.onload = function () { shp(rd.result).then(function (gj) { run(Array.isArray(gj) ? gj[0] : gj); }).catch(function () { setStatus('File shapefile tidak bisa dibaca. Pastikan .zip berisi .shp, .shx, .dbf, dan .prj.'); }); };
-          rd.readAsArrayBuffer(f);
-        } else if (/\.csv$/i.test(f.name)) {
-          rd.onload = function () { try { run(csvToGeo(rd.result)); } catch (err) { setStatus(err.message); } };
-          rd.readAsText(f);
-        } else {
-          rd.onload = function () { try { run(JSON.parse(rd.result)); } catch (err) { setStatus('File GeoJSON tidak valid.'); } };
-          rd.readAsText(f);
-        }
-        e.target.value = '';
-      });
+      function bacaSatu(f) {
+        return new Promise(function (ok, gagal) {
+          var rd = new FileReader();
+          if (/\.zip$/i.test(f.name)) {
+            rd.onload = function () { shp(rd.result).then(function (gj) { ok(featuresOf(gj)); }).catch(function () { gagal(new Error('File ' + f.name + ' tidak bisa dibaca. Pastikan .zip berisi .shp, .shx, .dbf, dan .prj.')); }); };
+            rd.readAsArrayBuffer(f);
+          } else if (/\.csv$/i.test(f.name)) {
+            rd.onload = function () { try { ok(featuresOf(csvToGeo(rd.result))); } catch (err) { gagal(err); } };
+            rd.readAsText(f);
+          } else {
+            rd.onload = function () { try { ok(featuresOf(JSON.parse(rd.result))); } catch (err) { gagal(new Error('File ' + f.name + ' bukan GeoJSON yang valid.')); } };
+            rd.readAsText(f);
+          }
+        });
+      }
+      function bacaFile(list, gabung) {
+        list = Array.prototype.slice.call(list || []); if (!list.length) return;
+        selesaiGambar();
+        Promise.all(list.map(bacaSatu)).then(function (hasil) { pakai([].concat.apply([], hasil), gabung); }).catch(function (err) { setStatus(err.message); });
+      }
+      document.getElementById('fileIn').addEventListener('change', function (e) { bacaFile(e.target.files, false); e.target.value = ''; });
+      var drop = document.getElementById('drop');
+      ['dragenter', 'dragover'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('over'); }); });
+      ['dragleave', 'drop'].forEach(function (ev) { drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('over'); }); });
+      drop.addEventListener('drop', function (e) { bacaFile(e.dataTransfer.files, false); });
       function csvToGeo(txt) {
         var rows = txt.trim().split(/\r?\n/).map(function (l) { return l.split(/[;,]/).map(function (s) { return s.trim().replace(/^"|"$/g, ''); }); });
         var h = rows[0].map(function (s) { return s.toLowerCase(); });
@@ -247,7 +402,7 @@
         Promise.all(keys.map(function (k) { var p = k.split('_'); return loadTile(+p[0], +p[1]).then(function (d) { return [k, d]; }); })).then(function (res) {
           var Tl = {}; res.forEach(function (x) { Tl[x[0]] = x[1]; });
           results = feats.map(function (f, i) { return check(f, boxes[i], Tl, i); });
-          setStatus('');
+          setStatus(''); pilih = -1; if (modeGambar) infoGambar();
           draw(); render();
         }).catch(function () { setStatus('Data gagal dimuat. Muat ulang halaman lalu coba lagi.'); });
       }
@@ -282,79 +437,153 @@
         S.status = S.luar > 0.5 * S.luas ? 'luar' : (S.defor >= 0.5 || S.defor / L0 >= 0.05) ? 'merah' : (S.defor > 0 || S.verif >= 0.5 || S.verif / L0 >= 0.1) ? 'kuning' : 'hijau';
         var lind = (S.kawasan[1] || 0) + (S.kawasan[2] || 0), kh = (S.kawasan[3] || 0) + (S.kawasan[4] || 0) + (S.kawasan[5] || 0);
         S.legal = lind >= 0.1 * L0 ? 'merah' : kh >= 0.1 * L0 ? 'kuning' : (S.kawasan[6] || 0) > 0 ? 'hijau' : 'abu';
+        var kwd = Object.keys(S.kawasan).sort(function (a2, b2) { return S.kawasan[b2] - S.kawasan[a2]; })[0];
+        S.kwd = kwd !== undefined ? KAWASAN[kwd] : '–';
+        S.bukti = [S.sumber.h ? 'H' : '', S.sumber.r ? 'R' : '', S.sumber.k ? 'K' : ''].filter(Boolean).join(', ') || '–';
+        // Kesimpulan EUDR: kebun harus bebas deforestasi DAN legal; hasil akhir mengikuti syarat yang paling buruk
+        var al = [];
+        if (S.status === 'merah') al.push(fmt(S.defor, 2) + ' ha hutan 2020 hilang setelah 2020');
+        if (S.status === 'kuning') al.push(S.defor ? 'kehilangan hutan ' + fmt(S.defor, 2) + ' ha baru terdeteksi satu sumber' : 'sinyal perubahan tutupan ' + fmt(S.verif, 2) + ' ha tidak konsisten');
+        if (S.legal === 'merah') al.push('berada di ' + ((S.kawasan[1] || 0) >= (S.kawasan[2] || 0) ? 'kawasan konservasi' : 'hutan lindung'));
+        if (S.legal === 'kuning') al.push('berada di kawasan hutan produksi');
+        if (S.legal === 'abu') al.push('status kawasan tidak terpetakan');
+        S.vonis = S.status === 'luar' ? 'abu' : (S.status === 'merah' || S.legal === 'merah') ? 'merah' : (S.status === 'kuning' || S.legal === 'kuning' || S.legal === 'abu') ? 'kuning' : 'hijau';
+        S.alasan = S.status === 'luar' ? 'sebagian besar kebun di luar Kabupaten Bengkalis' : al.length ? al.join(', ') : 'tidak ada deforestasi setelah 2020 dan berada di APL';
         return S;
       }
 
+      var VONIS = { hijau: ['#2f6b3f', 'Memenuhi syarat'], kuning: ['#b7791f', 'Perlu dicek'], merah: ['#b42318', 'Tidak memenuhi syarat'], abu: ['#8d958f', 'Di luar wilayah'] };
       function draw() {
         plotLayer.clearLayers();
         results.forEach(function (S, i) {
-          var col = S.status === 'luar' ? '#9ca3af' : ST[S.status][0];
+          var col = VONIS[S.vonis][0];
           var lyr = L.geoJSON({ type: 'MultiPolygon', coordinates: S.rings }, { style: { color: col, weight: 3, fillOpacity: 0.15, fillColor: col } })
-            .bindTooltip(S.id, { permanent: results.length <= 30, direction: 'top', className: 'plot-label' })
+            .bindTooltip(String(i + 1), { permanent: results.length <= 60, direction: 'center', className: 'plot-label' })
             .on('click', function () { select(i); });
           lyr.addTo(plotLayer); S.layer = lyr;
         });
-        map.fitBounds(plotLayer.getBounds(), { padding: [30, 30], maxZoom: 15 });
+        if (!tanpaZoom) map.fitBounds(plotLayer.getBounds(), { padding: [30, 30], maxZoom: 15 });
+        tanpaZoom = false;
       }
 
-      function badge(col, txt) { return '<span class="badge" style="background:' + col + '">' + txt + '</span>'; }
       function render() {
-        var c = { merah: 0, kuning: 0, hijau: 0 }, out = 0;
-        results.forEach(function (S) { if (S.status === 'luar') out++; else c[S.status]++; });
-        var h = '<div class="summary">' + ['hijau', 'kuning', 'merah'].map(function (k) { return '<div style="background:' + ST[k][0] + '"><b>' + c[k] + '</b><span>' + ST[k][1] + '</span></div>'; }).join('') + '</div>';
-        if (out) h += '<p class="hint" style="margin:0 0 8px">' + out + ' kebun berada di luar Kabupaten Bengkalis sehingga tidak dicek.</p>';
-        h += '<div class="card" style="padding:8px 10px"><table class="plots"><thead><tr><th>Kebun</th><th>Luas</th><th>Deforestasi</th><th>Kawasan</th></tr></thead><tbody>' + results.map(function (S, i) {
-          var dz = S.status === 'luar' ? badge('#9ca3af', 'Di luar wilayah') : badge(ST[S.status][0], ST[S.status][1]);
-          return '<tr data-i="' + i + '"><td><b>' + S.id + '</b>' + (S.titik ? ' <span class="hint">(titik)</span>' : '') + '</td><td>' + fmt(S.luas, 1) + ' ha</td><td>' + dz + '</td><td>' + badge(LG[S.legal][0], LG[S.legal][1]) + '</td></tr>';
-        }).join('') + '</tbody></table></div>';
-        h += '<div id="detail"></div>';
-        h += '<div class="btns noprint" style="margin-top:14px"><button type="button" id="csvBtn"><i class="fa-solid fa-file-csv"></i> Unduh hasil (CSV)</button><button type="button" id="printBtn"><i class="fa-solid fa-print"></i> Cetak</button></div>';
-        document.getElementById('report').innerHTML = h;
-        document.querySelectorAll('table.plots tbody tr').forEach(function (tr) { tr.addEventListener('click', function () { select(+tr.dataset.i); }); });
-        document.getElementById('csvBtn').addEventListener('click', csv);
-        document.getElementById('printBtn').addEventListener('click', function () { window.print(); });
+        var c = { hijau: 0, kuning: 0, merah: 0, abu: 0 };
+        results.forEach(function (S) { c[S.vonis]++; });
+        document.getElementById('mulai').hidden = true; document.getElementById('hasil').hidden = false;
+        var satu = results.length === 1;
+        document.getElementById('regBlok').hidden = satu;
+        document.getElementById('ringkas').innerHTML = satu ? '' : results.length + ' kebun dicek<div class="hitung">' +
+          [['hijau', c.hijau, 'memenuhi syarat'], ['kuning', c.kuning, 'perlu dicek'], ['merah', c.merah, 'tidak memenuhi syarat']].map(function (x) { return '<span class="' + x[0] + '"><b>' + x[1] + '</b>' + x[2] + '</span>'; }).join('') +
+          (c.abu ? '<span><b>' + c.abu + '</b>di luar wilayah</span>' : '') + '</div>';
+        document.getElementById('detail').innerHTML = ''; document.getElementById('detail').hidden = true;
+        if (results.length < 2) saring = '';
+        document.getElementById('saringWrap').hidden = results.length < 2;
+        document.getElementById('fSaring').value = saring;
+        isiTabel();
         if (results.length === 1) select(0);
+      }
+      document.getElementById('fSaring').addEventListener('change', function (e) { saring = e.target.value; isiTabel(); });
+      // Kembali ke tampilan awal: kosongkan register dan kebun di peta
+      document.getElementById('tambahGambar').addEventListener('click', function () { mulaiGambar(true); });
+      document.getElementById('fileIn2').addEventListener('change', function (e) { bacaFile(e.target.files, true); e.target.value = ''; });
+      document.getElementById('resetBtn').addEventListener('click', function () {
+        selesaiGambar(); kumpulan = []; nGambar = 0;
+        results = []; pilih = -1; saring = ''; plotLayer.clearLayers();
+        document.getElementById('hasil').hidden = true; document.getElementById('mulai').hidden = false;
+        if (kabLayer.getLayers().length) map.fitBounds(kabLayer.getBounds(), { padding: [10, 10] });
+      });
+      function isiTabel() {
+        var rows = results.map(function (S, i) { return [S, i]; }).filter(function (x) { return !saring || x[0].vonis === saring; });
+        document.getElementById('tbody').innerHTML = rows.length ? rows.map(function (x) {
+          var S = x[0], i = x[1];
+          return '<tr data-i="' + i + '"' + (i === pilih ? ' class="sel"' : '') + '><td class="n">' + (i + 1) + '</td><td class="id">' + S.id + '<small>' + (S.titik ? 'titik' : 'poligon') + '</small></td><td class="r">' + fmt(S.luas, 2) +
+            '</td><td class="' + S.vonis + '" style="white-space:nowrap;font-weight:600">' + VONIS[S.vonis][1] + '</td><td>' + S.alasan.charAt(0).toUpperCase() + S.alasan.slice(1) + '</td></tr>';
+        }).join('') : '<tr class="kosong"><td colspan="5">Tidak ada kebun dengan kesimpulan ini.</td></tr>';
+        document.querySelectorAll('#tbody tr[data-i]').forEach(function (tr) { tr.addEventListener('click', function () { select(+tr.dataset.i); }); });
       }
 
       function select(i) {
-        var S = results[i];
-        document.querySelectorAll('table.plots tbody tr').forEach(function (tr) { tr.classList.toggle('sel', +tr.dataset.i === i); });
-        map.fitBounds(S.layer.getBounds(), { padding: [60, 60], maxZoom: 16 });
-        var L0 = S.luas - S.luar || 1, items = [];
-        if (S.status === 'luar') { document.getElementById('detail').innerHTML = '<div class="card detail"><b>' + S.id + '</b><p class="hint">Sebagian besar kebun berada di luar Kabupaten Bengkalis.</p></div>'; return; }
-        items.push('Tutupan sawit 2024 sekitar ' + fmt(S.sawit / L0 * 100, 0) + '% dari luas kebun.');
-        items.push('Hutan pada 2020 menurut peta JRC: ' + fmt(S.hutan, 2) + ' ha.');
-        if (S.defor) {
-          items.push('<b>Hutan 2020 yang hilang setelah 31 Desember 2020: ' + fmt(S.defor, 2) + ' ha</b> (' + fmt(S.defor / L0 * 100, 1) + '% kebun).');
-          var hy = Object.keys(S.hansen).sort();
-          if (hy.length) items.push('Hansen/UMD mencatat kehilangan pada tahun ' + hy.map(function (y) { return y + ' (' + fmt(S.hansen[y], 2) + ' ha)'; }).join(', ') + '.');
-          var rk = Object.keys(S.radd).sort(function (a, b) { var p = a.split('-'), q = b.split('-'); return p[0] - q[0] || p[1] - q[1]; });
-          if (rk.length) items.push('Peringatan radar RADD keyakinan tinggi pertama kali muncul pada ' + BLN[+rk[0].split('-')[1]] + ' ' + rk[0].split('-')[0] + '.');
-          var kk = Object.keys(S.klhk);
-          if (kk.length) items.push('Kementerian Kehutanan mencatat deforestasi pada periode ' + kk.map(function (k) { return PERIODE[k]; }).join(', ') + '.');
-          var ns = (S.sumber.h > 0) + (S.sumber.r > 0) + (S.sumber.k > 0);
-          items.push(ns >= 2 ? 'Kehilangan hutan dikonfirmasi oleh ' + ns + ' sumber data berbeda.' : 'Kehilangan hutan hanya terdeteksi oleh satu sumber data, sehingga perlu dicek dengan citra resolusi tinggi.');
-        } else if (S.verif) items.push('Tidak ada hutan 2020 yang terdeteksi hilang, tetapi ' + fmt(S.verif, 2) + ' ha menunjukkan sinyal yang tidak konsisten antar sumber data, misalnya tercatat hutan pada 2020 padahal sudah berupa kebun, atau ada perubahan tutupan setelah 2020 di lahan yang bukan hutan.');
-        else items.push('Tidak ada kehilangan hutan setelah 31 Desember 2020 yang terdeteksi oleh sumber data mana pun.');
-        var kw = Object.keys(S.kawasan).filter(function (k) { return S.kawasan[k] / L0 >= 0.01; }).sort(function (a, b) { return S.kawasan[b] - S.kawasan[a]; }).map(function (k) { return KAWASAN[k] + ' ' + fmt(S.kawasan[k] / L0 * 100, 0) + '%'; });
-        items.push('Fungsi kawasan: ' + kw.join(', ') + '.');
-        if (S.legal === 'merah') items.push('<b>Kebun berada di kawasan konservasi atau hutan lindung.</b> Kebun sawit di kawasan ini tidak dapat memenuhi syarat legalitas EUDR.');
-        else if (S.legal === 'kuning') items.push('<b>Kebun berada di kawasan hutan produksi.</b> Perlu bukti pelepasan kawasan hutan atau penyelesaian status lahan agar memenuhi syarat legalitas EUDR.');
-        document.getElementById('detail').innerHTML = '<h2>Rincian ' + S.id + '</h2><div class="card detail"><div>' + badge(ST[S.status][0], ST[S.status][1]) + ' ' + badge(LG[S.legal][0], LG[S.legal][1]) +
-          '</div><ul>' + items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+        var S = results[i]; pilih = i; document.getElementById('detail').hidden = false;
+        document.querySelectorAll('#tbody tr[data-i]').forEach(function (tr) { tr.classList.toggle('sel', +tr.dataset.i === i); });
+        var row = document.querySelector('#tbody tr[data-i="' + i + '"]'); if (row) row.scrollIntoView({ block: 'nearest' });
+        if (!modeGambar) map.fitBounds(S.layer.getBounds(), { padding: [60, 60], maxZoom: 16 });
+        var L0 = S.luas - S.luar || 1;
+        var kepala = '<h2>' + S.id + '<small>' + fmt(S.luas, 2) + ' ha, ' + (S.titik ? 'titik' : 'poligon') + '</small></h2>';
+        if (S.status === 'luar') { document.getElementById('detail').innerHTML = kepala + '<p class="ket">Sebagian besar kebun berada di luar Kabupaten Bengkalis, sehingga tidak bisa dicek.</p>'; return; }
+        var nama = { h: 'Hansen', r: 'RADD', k: 'Kemenhut' }, src = Object.keys(nama).filter(function (k) { return S.sumber[k] > 0; }).map(function (k) { return nama[k]; });
+        var HS = { merah: 'Tidak memenuhi', kuning: 'Perlu dicek', hijau: 'Memenuhi', abu: 'Perlu dicek' };
+        var angDef = S.status === 'merah' ? fmt(S.defor, 2) + ' ha hutan 2020 hilang setelah 2020' + (src.length ? '<br><span class="ket">terdeteksi ' + src.join(', ') + '</span>' : '')
+          : S.status === 'kuning' ? (S.defor ? fmt(S.defor, 2) + ' ha hilang, baru satu sumber' : fmt(S.verif, 2) + ' ha sinyal belum konsisten') : 'Tidak ada hutan hilang setelah 2020';
+        var kw = Object.keys(S.kawasan).filter(function (k) { return S.kawasan[k] / L0 >= 0.01; }).sort(function (a, b2) { return S.kawasan[b2] - S.kawasan[a]; });
+        var angLeg = kw.slice(0, 2).map(function (k) { return fmt(S.kawasan[k] / L0 * 100, 0) + '% ' + KAWASAN[k].toLowerCase(); }).join(', ');
+        var tl = S.status === 'merah' ? 'Keluarkan kebun dari rantai pasok EUDR, kecuali bukti lapangan menunjukkan sebaliknya.'
+          : S.legal === 'merah' ? 'Kebun di kawasan konservasi atau hutan lindung tidak bisa dipakai untuk EUDR.'
+          : S.status === 'kuning' ? 'Cek perubahan tutupan dengan citra resolusi tinggi atau kunjungan lapangan.'
+          : S.legal === 'kuning' ? 'Siapkan bukti pelepasan kawasan hutan untuk bagian kebun di hutan produksi.'
+          : S.legal === 'abu' ? 'Pastikan status lahan dengan dokumen hak atas tanah.' : 'Simpan hasil ini sebagai bagian dokumen uji tuntas.';
+        var bukti = [];
+        var hy = Object.keys(S.hansen).sort();
+        if (hy.length) bukti.push('Hansen/UMD ' + hy.map(function (y) { return y + ' (' + fmt(S.hansen[y], 2) + ' ha)'; }).join(', '));
+        var rk = Object.keys(S.radd).sort(function (a, b2) { var p = a.split('-'), q = b2.split('-'); return p[0] - q[0] || p[1] - q[1]; });
+        if (rk.length) bukti.push('RADD, peringatan pertama ' + BLN[+rk[0].split('-')[1]] + ' ' + rk[0].split('-')[0]);
+        var kk = Object.keys(S.klhk);
+        if (kk.length) bukti.push('Kementerian Kehutanan, periode ' + kk.map(function (k) { return PERIODE[k]; }).join(' dan '));
+        var rinci = '<details class="rinci"><summary>Lihat rincian data</summary><table class="kv">' +
+          '<tr><td colspan="2" style="background:var(--head);color:var(--ink);font-weight:600">Data untuk syarat bebas deforestasi</td></tr>' +
+          '<tr><td>Bagian kebun yang sudah berupa sawit pada 2024</td><td>' + fmt(S.sawit / L0 * 100, 0) + '%</td></tr>' +
+          '<tr><td>Luas yang masih berupa hutan pada 2020 (peta JRC)</td><td>' + fmt(S.hutan, 2) + ' ha</td></tr>' +
+          '<tr><td>Luas hutan 2020 itu yang hilang setelah 31 Desember 2020</td><td>' + fmt(S.defor, 2) + ' ha</td></tr>' +
+          '<tr><td>Luas dengan tanda perubahan yang belum pasti (data satelit tidak sepakat)</td><td>' + fmt(S.verif, 2) + ' ha</td></tr>' +
+          '<tr><td>Data yang mencatat hilangnya hutan</td><td>' + (bukti.length ? bukti.join('<br>') : 'Tidak ada') + '</td></tr>' +
+          '<tr><td colspan="2" style="background:var(--head);color:var(--ink);font-weight:600">Data untuk syarat legalitas kawasan (porsi luas kebun)</td></tr>' +
+          kw.map(function (k) { return '<tr><td>' + KAWASAN[k] + '</td><td>' + fmt(S.kawasan[k] / L0 * 100, 0) + '%</td></tr>'; }).join('') + '</table></details>';
+        document.getElementById('detail').innerHTML = kepala + '<div class="besar ' + S.vonis + '">' + VONIS[S.vonis][1] + '</div>' +
+          '<div class="syarat"><div><div class="lbl">Bebas deforestasi</div><div class="hs ' + S.status + '">' + HS[S.status] + '</div><div class="ang">' + angDef + '</div></div>' +
+          '<div><div class="lbl">Legalitas kawasan</div><div class="hs ' + S.legal + '">' + HS[S.legal] + '</div><div class="ang">' + angLeg + '</div></div></div>' +
+          '<p class="tl">' + tl + '</p>' + rinci;
       }
 
       function csv() {
-        var head = ['id_kebun', 'jenis_geometri', 'luas_ha', 'status_deforestasi', 'hutan_2020_ha', 'hutan_hilang_setelah_2020_ha', 'perlu_verifikasi_ha', 'tahun_kehilangan_hansen', 'periode_deforestasi_kemenhut', 'fungsi_kawasan_dominan', 'status_kawasan'];
+        if (!results.length) { setStatus('Belum ada kebun di register.'); return; }
+        var head = ['id_kebun', 'jenis_geometri', 'luas_ha', 'kesimpulan_eudr', 'alasan', 'status_deforestasi', 'hutan_2020_ha', 'hutan_hilang_setelah_2020_ha', 'perlu_verifikasi_ha', 'tahun_kehilangan_hansen', 'periode_deforestasi_kemenhut', 'fungsi_kawasan_dominan', 'status_kawasan'];
         var rows = results.map(function (S) {
-          var kwd = Object.keys(S.kawasan).sort(function (a, b) { return S.kawasan[b] - S.kawasan[a]; })[0];
-          return [S.id, S.titik ? 'titik' : 'poligon', S.luas.toFixed(2), S.status === 'luar' ? 'di luar wilayah' : ST[S.status][1], S.hutan.toFixed(2), S.defor.toFixed(2), S.verif.toFixed(2),
-                  Object.keys(S.hansen).join(' '), Object.keys(S.klhk).map(function (k) { return PERIODE[k]; }).join(' '), kwd !== undefined ? KAWASAN[kwd] : '', LG[S.legal][1]];
+          return [S.id, S.titik ? 'titik' : 'poligon', S.luas.toFixed(2), VONIS[S.vonis][1], S.alasan, S.status === 'luar' ? 'di luar wilayah' : ST[S.status][1], S.hutan.toFixed(2), S.defor.toFixed(2), S.verif.toFixed(2),
+                  Object.keys(S.hansen).join(' '), Object.keys(S.klhk).map(function (k) { return PERIODE[k]; }).join(' '), S.kwd, LG[S.legal][1]];
         });
         var txt = [head].concat(rows).map(function (r) { return r.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
-        var a = document.createElement('a'); a.download = 'hasil-cek-eudr.csv';
+        var a = document.createElement('a'); a.download = 'register-cek-eudr.csv';
         a.href = URL.createObjectURL(new Blob(['﻿' + txt], { type: 'text/csv' })); a.click();
       }
+      document.getElementById('csvBtn').addEventListener('click', csv);
+      // Laporan cetak: dokumen hitam putih dengan kop, ringkasan, register lengkap, dan catatan
+      function buatCetak() {
+        var now = new Date(), p2 = function (v) { return String(v).padStart(2, '0'); };
+        var nomor = 'EUDR-BKS-' + now.getFullYear() + p2(now.getMonth() + 1) + p2(now.getDate()) + '-' + p2(now.getHours()) + p2(now.getMinutes());
+        var tgl = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        var c = { hijau: [0, 0], kuning: [0, 0], merah: [0, 0], abu: [0, 0] }, tot = 0;
+        results.forEach(function (S) { c[S.vonis][0]++; c[S.vonis][1] += S.luas; tot += S.luas; });
+        var DEF = { merah: 'Tidak memenuhi', kuning: 'Perlu dicek', hijau: 'Memenuhi', luar: 'Di luar wilayah' };
+        var h = '<div class="kop"><div class="t1">LAPORAN PENGECEKAN AWAL EUDR KEBUN SAWIT</div><div class="t2">Kabupaten Bengkalis, Provinsi Riau</div></div>';
+        h += '<table class="id"><tr><td>Nomor</td><td>: ' + nomor + '</td></tr><tr><td>Tanggal pengecekan</td><td>: ' + tgl + '</td></tr>' +
+             '<tr><td>Jumlah kebun</td><td>: ' + results.length + ' kebun, ' + fmt(tot, 2) + ' ha</td></tr>' +
+             '<tr><td>Tanggal batas EUDR</td><td>: 31 Desember 2020</td></tr></table>';
+        h += '<h3>A. Ringkasan</h3><table class="f" style="width:auto"><tr><th>Kesimpulan</th><th>Jumlah kebun</th><th>Luas (ha)</th></tr>' +
+             ['hijau', 'kuning', 'merah', 'abu'].filter(function (k) { return k !== 'abu' || c.abu[0]; }).map(function (k) {
+               return '<tr><td>' + VONIS[k][1] + '</td><td class="r">' + c[k][0] + '</td><td class="r">' + fmt(c[k][1], 2) + '</td></tr>';
+             }).join('') + '</table>';
+        h += '<h3>B. Register kebun</h3><table class="f"><tr><th>No.</th><th>ID kebun</th><th>Geometri</th><th>Luas (ha)</th><th>Hutan 2020 (ha)</th><th>Hilang setelah 2020 (ha)</th><th>Sinyal belum konsisten (ha)</th><th>Bebas deforestasi</th><th>Fungsi kawasan dominan</th><th>Kesimpulan</th><th>Alasan</th></tr>' +
+             results.map(function (S, i) {
+               return '<tr><td class="r">' + (i + 1) + '</td><td>' + S.id + '</td><td>' + (S.titik ? 'Titik' : 'Poligon') + '</td><td class="r">' + fmt(S.luas, 2) + '</td><td class="r">' + fmt(S.hutan, 2) +
+                 '</td><td class="r">' + fmt(S.defor, 2) + '</td><td class="r">' + fmt(S.verif, 2) + '</td><td>' + DEF[S.status] + '</td><td>' + S.kwd + '</td><td><b>' + VONIS[S.vonis][1] + '</b></td><td>' +
+                 S.alasan.charAt(0).toUpperCase() + S.alasan.slice(1) + '</td></tr>';
+             }).join('') + '</table>';
+        h += '<h3>C. Keterangan</h3><p class="kecil">Kebun memenuhi syarat jika bebas deforestasi setelah 31 Desember 2020 dan berada di Areal Penggunaan Lain. Kebun perlu dicek jika salah satu syarat belum pasti, dan tidak memenuhi syarat jika salah satu syarat dilanggar. ' +
+             'Sumber data: peta hutan 2020 JRC Uni Eropa (GFC2020 V4), sebaran sawit Forest Data Partnership, kehilangan tutupan pohon Hansen/UMD (2021–2025), peringatan radar RADD, serta kawasan hutan dan deforestasi nasional Kementerian Kehutanan, dianalisis pada grid sekitar 22 m. ' +
+             'Laporan ini adalah hasil pengecekan awal untuk uji tuntas dan bukan sertifikasi kepatuhan.</p>';
+        document.getElementById('cetak').innerHTML = h;
+      }
+      window.addEventListener('beforeprint', function () { if (results.length) buatCetak(); });
+      document.getElementById('printBtn').addEventListener('click', function () { buatCetak(); window.print(); });
 
       Promise.all([
         fetch('assets/data/eudr/meta.json').then(function (r) { return r.json(); }),

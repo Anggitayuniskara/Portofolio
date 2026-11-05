@@ -4,11 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anggita Yuniskara's Portfolio</title>
+  <meta name="description" content="Portfolio of A. A. Anggita Yuniskara Dewi, GIS and Remote Sensing Analyst. Mapping and analysing environmental change with GIS, remote sensing, and spatial data.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Anggita Yuniskara's Portfolio">
+  <meta property="og:title" content="A. A. Anggita Yuniskara Dewi, GIS and Remote Sensing Analyst">
+  <meta property="og:description" content="Mapping and analysing environmental change with GIS, remote sensing, and spatial data.">
+  <meta property="og:url" content="https://anggitayuniskara.github.io/Portofolio/">
+  <meta property="og:image" content="https://anggitayuniskara.github.io/Portofolio/assets/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -40,9 +53,13 @@
       <div class="hero-content">
         <p class="greeting">Hello, I'm</p>
         <h1>A. A. Anggita Yuniskara Dewi</h1>
-        <p class="role">Spatial & Environmental Enthusiast</p>
-        <p class="hero-sub">This portfolio showcases selected GIS projects that I have worked on throughout my academic and professional experience.</p>
-        <a href="#proyek" class="btn">View projects</a>
+        <p class="role">GIS and Remote Sensing Analyst</p>
+        <p class="hero-sub">Mapping and analysing environmental change with GIS, remote sensing, and spatial data.</p>
+        <div class="hero-actions">
+          <a href="#proyek" class="btn">View projects</a>
+          <a href="assets/cv/CV-Anggita-Yuniskara.pdf" class="btn btn-line" target="_blank" rel="noopener" download>Download CV</a>
+          <a href="#kontak" class="btn btn-line">Get in touch</a>
+        </div>
       </div>
       <div class="hero-photo">
         <div class="blob"></div>
@@ -68,76 +85,69 @@
       <div class="skills-grid-2">
         <div class="skill-item">
           <h3>Hard Skills</h3>
-          <p>Data analysis & interpretation, microsoft excel & data management, GIS (Geographic Information System), research & reporting, presentation & visualization, HRIS, recruitment tools, microsoft office suite, basic HR administration, training & development planning.</p>
+          <p>Spatial analysis and GIS mapping, remote sensing and satellite image classification, cartography and map design, spatial database management (PostGIS), flood and hydrological modeling, multi-criteria land suitability analysis, geospatial programming (Python, Google Earth Engine), machine learning for spatial prediction, field and bathymetric surveys, environmental impact and ESG analysis, data visualization and dashboards.</p>
         </div>
         <div class="skill-item">
           <h3>Soft Skills</h3>
-          <p>Analytical thinking, attention to detail, problem solving, adaptability, critical thinking, communication skills, empathy & interpersonal skills, teamwork & collaboration, time management & organization, leadership & initiative, conflict resolution, emotional intelligence.</p>
+          <p>Analytical and critical thinking, attention to detail, problem solving, adaptability, clear communication of technical results, empathy and interpersonal skills, teamwork and collaboration, time management and organization, leadership and initiative, conflict resolution, emotional intelligence, continuous learning.</p>
         </div>
       </div>
 
       <div class="tools-block">
         <h3>Tools</h3>
-        <div class="tools-grid">
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/google" alt=""><span>GW</span></div>
-            <p>Google Workspace</p>
+        <div class="tool-rows">
+          <div class="tool-row">
+            <h4>GIS &amp; remote sensing</h4>
+            <ul>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/arcgis" alt=""><span>AP</span></div>ArcGIS Pro</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/arcgis" alt=""><span>AM</span></div>ArcMap</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/qgis" alt=""><span>QG</span></div>QGIS</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/googleearthengine" alt=""><span>GE</span></div>GEE</li>
+              <li><div class="tool-logo"><img src="assets/logos/envi.png" alt=""><span>EN</span></div>ENVI</li>
+              <li><div class="tool-logo"><span>SN</span></div>SNAP</li>
+              <li><div class="tool-logo"><span>GM</span></div>Global Mapper</li>
+              <li><div class="tool-logo"><span>HR</span></div>HEC-RAS</li>
+              <li><div class="tool-logo"><span>HH</span></div>HEC-HMS</li>
+              <li><div class="tool-logo"><span>AV</span></div>Avenza Maps</li>
+              <li><div class="tool-logo"><span>Cl</span></div>Clinometer</li>
+            </ul>
           </div>
-          <div class="tool-item">
-            <div class="tool-logo fa-logo"><i class="fa-brands fa-microsoft" style="color:#F25022"></i></div>
-            <p>Microsoft Office</p>
+          <div class="tool-row">
+            <h4>Data &amp; programming</h4>
+            <ul>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/python" alt=""><span>Py</span></div>Python</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/pandas" alt=""><span>Pd</span></div>Pandas</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/numpy" alt=""><span>Np</span></div>NumPy</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/r" alt=""><span>R</span></div>R</li>
+              <li><div class="tool-logo"><span>SP</span></div>SPSS</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/postgresql" alt=""><span>SQL</span></div>SQL</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/googlecolab" alt=""><span>Co</span></div>Google Colab</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/javascript" alt=""><span>JS</span></div>JavaScript</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/html5" alt=""><span>HC</span></div>HTML/CSS</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/maplibre" alt=""><span>ML</span></div>MapLibre GL JS</li>
+            </ul>
           </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="assets/logos/canva.png" alt=""><span>Ca</span></div>
-            <p>Canva</p>
+          <div class="tool-row">
+            <h4>Visualization &amp; reporting</h4>
+            <ul>
+              <li><div class="tool-logo"><span>BI</span></div>Power BI</li>
+              <li><div class="tool-logo"><span>Tb</span></div>Tableau</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/looker" alt=""><span>LS</span></div>Looker Studio</li>
+              <li><div class="tool-logo fa-logo"><i class="fa-brands fa-microsoft" style="color:#F25022"></i></div>Microsoft Office</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/google" alt=""><span>GW</span></div>Google Workspace</li>
+              <li><div class="tool-logo"><img src="assets/logos/canva.png" alt=""><span>Ca</span></div>Canva</li>
+            </ul>
           </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/arcgis" alt=""><span>AP</span></div>
-            <p>ArcGIS Pro</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/arcgis" alt=""><span>AM</span></div>
-            <p>ArcMap</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/qgis" alt=""><span>QG</span></div>
-            <p>QGIS</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/notion" alt=""><span>No</span></div>
-            <p>Notion</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/zoom" alt=""><span>Zo</span></div>
-            <p>Zoom</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo fa-logo"><i class="fa-brands fa-linkedin" style="color:#0A66C2"></i></div>
-            <p>LinkedIn</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="assets/logos/manatal.png" alt=""><span>Ma</span></div>
-            <p>Manatal</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="assets/logos/envi.png" alt=""><span>EN</span></div>
-            <p>ENVI</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/googleearthengine" alt=""><span>GE</span></div>
-            <p>GEE</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="https://cdn.simpleicons.org/googlecolab" alt=""><span>Co</span></div>
-            <p>Google Colab</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="assets/logos/capcut.png" alt=""><span>CC</span></div>
-            <p>CapCut</p>
-          </div>
-          <div class="tool-item">
-            <div class="tool-logo"><img src="assets/logos/imovie.png" alt=""><span>iM</span></div>
-            <p>iMovie</p>
+          <div class="tool-row">
+            <h4>Work &amp; collaboration</h4>
+            <ul>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/notion" alt=""><span>No</span></div>Notion</li>
+              <li><div class="tool-logo"><img src="https://cdn.simpleicons.org/zoom" alt=""><span>Zo</span></div>Zoom</li>
+              <li><div class="tool-logo fa-logo"><i class="fa-brands fa-linkedin" style="color:#0A66C2"></i></div>LinkedIn</li>
+              <li><div class="tool-logo"><img src="assets/logos/manatal.png" alt=""><span>Ma</span></div>Manatal</li>
+              <li><div class="tool-logo"><img src="assets/logos/capcut.png" alt=""><span>CC</span></div>CapCut</li>
+              <li><div class="tool-logo"><img src="assets/logos/imovie.png" alt=""><span>iM</span></div>iMovie</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -161,7 +171,7 @@
       </div>
       <h3>Private Training</h3>
       <p class="edu-program">Geotechnical Engineering for Open Pit Mining</p>
-      <span class="edu-date">Okt 2026</span>
+      <span class="edu-date">Oct 2026</span>
     </div>
 
     <!-- 2. Integrating AI: tanpa sertifikat -->
@@ -173,7 +183,7 @@
       </div>
       <h3>Private Training</h3>
       <p class="edu-program">Integrating AI for Spatial Data Analysis</p>
-      <span class="edu-date">Okt 2026</span>
+      <span class="edu-date">Oct 2026</span>
     </div>
 
     <!-- 3. Exagama: punya sertifikat dan logo -->
@@ -181,7 +191,7 @@
       <div class="edu-logo"><img src="assets/logos/exagama.png" alt="Exagama"></div>
         <h3>Exagama</h3>
         <p class="edu-program">Environment Officer Online Training</p>
-        <span class="edu-date">Okt 2026</span>
+        <span class="edu-date">Oct 2026</span>
     </a>
 
     <!-- 4. Farisphere: tanpa sertifikat -->
@@ -193,7 +203,7 @@
       </div>
       <h3>Farisphere</h3>
       <p class="edu-program">ESG Entry Points</p>
-      <span class="edu-date">Okt 2026</span>
+      <span class="edu-date">Oct 2026</span>
     </div>  
 
     <a class="edu-card" href="https://drive.google.com/file/d/1P12Y9p8ZDhM7h1D6-bJydi1xkMTZaKxM/view?usp=drive_link" target="_blank" rel="noopener">
@@ -218,9 +228,9 @@
     </a>
 
     <a class="edu-card" href="https://drive.google.com/file/d/12pYtZ9aFg91SXUCO174ehQpvqrlYn3yh/view?usp=sharing" target="_blank" rel="noopener">
-      <div class="edu-logo"><img src="assets/logos/ui.png" alt="University of Indonesia"></div>
-      <h3>University of Indonesia</h3>
-      <p class="edu-program">Bachelor's Degree of Geography</p>
+      <div class="edu-logo"><img src="assets/logos/ui.png" alt="Universitas Indonesia"></div>
+      <h3>Universitas Indonesia</h3>
+      <p class="edu-program">Bachelor's Degree in Geography</p>
       <span class="edu-date">Aug 2021 – Jul 2025</span>
     </a>
 
@@ -265,7 +275,7 @@
       <div class="edu-logo"><img src="assets/logos/kompas.png" alt="PT Kompas Media Nusantara"></div>
       <h3>PT Kompas Media Nusantara</h3>
       <p class="edu-program">GIS Operator Internship</p>
-      <span class="edu-date">Sept 2024 – Dec 2024</span>
+      <span class="edu-date">Sep 2024 – Dec 2024</span>
     </a>
 
     <div class="edu-card no-link">
@@ -367,7 +377,7 @@
       <div class="pub-logo pub-logo--icon">
         <i class="fa-solid fa-file-lines"></i>
       </div>
-      <h3 class="pub-title">Analisi Distribusi Suhu Udara Berdastkan Model AST dan LST di Kampus UI Depok</h3>
+      <h3 class="pub-title">Analisis Distribusi Suhu Udara Berdasarkan Model AST dan LST di Kampus UI Depok</h3>
       <p class="pub-venue">Majalah Geospasial</p>
       <p class="pub-date">Agustus 2024</p>
     </a>
@@ -388,7 +398,7 @@
         <span class="about-label">Achievements</span>
         <h3>Competitions & Awards</h3>
          <ul class="achievement-list">
-    <li><strong>Silver Medal</strong>, Diponegoro Science Competition <span class="year">2024</span></li>        
+    <li><strong>Silver Medal</strong>, Diponegoro Science Competition <span class="year">2024</span></li>
     <li><strong>Bronze Medal</strong>, The 9th KIME on Ideas Competition <span class="year">2023</span></li>
     <li><strong>Top 5</strong>, National Essay Competition by Hima PLS UNY <span class="year">2024</span></li>
     <li><strong>Finalist</strong>, LKTI Soil Science in Action UNS <span class="year">2023</span></li>
@@ -422,7 +432,7 @@
 
   <div class="about-sub">
     <span class="about-label">Gallery</span>
-    <h3>Competition Documentations</h3>
+    <h3>Competition Documentation</h3>
     <div class="gallery-grid">
       <img src="lomba1.jpeg" alt="Foto lomba 1">
       <img src="lomba2.png" alt="Foto lomba 2">
@@ -450,9 +460,76 @@
     <h2>Projects</h2>
   </div>
 
+  <div class="feat-head">
+    <h3>Project highlights</h3>
+    <a class="all-link" href="#semua-project">See all projects ↓</a>
+  </div>
+  <div class="feat-grid">
+    <a class="feat-card feat-big" href="project-banjir-ciliwung.html">
+      <div class="feat-thumb"><img src="assets/maps/ciliwung-cover.jpg" alt="" loading="lazy"></div>
+      <div class="feat-body">
+        <span class="feat-cat">Flood modeling and machine learning</span>
+        <h4>Modelling Ciliwung Floods with HEC-RAS 2D and a Machine Learning Emulator</h4>
+        <p>80 HEC-RAS 2D runs scripted in Python train an emulator that rebuilds flood depth maps within about 1 cm of the full model, in milliseconds, inside an interactive rainfall web app.</p>
+        <span class="feat-tools">HEC-RAS 2D, HEC-HMS, Python, MapLibre</span>
+      </div>
+    </a>
+    <div class="feat-list">
+      <a class="feat-card feat-small" href="project-eudr.html">
+        <div class="feat-thumb"><img src="assets/maps/eudr-cover.jpg" alt="" loading="lazy"></div>
+        <div class="feat-body">
+          <span class="feat-cat">Supply chain web app</span>
+          <h4>EUDR Compliance Check for Oil Palm in Bengkalis</h4>
+          <p>97% of oil palm is deforestation-free after 2020, but half sits inside the forest estate.</p>
+        </div>
+      </a>
+      <a class="feat-card feat-small" href="project-karbon-merauke.html">
+        <div class="feat-thumb"><img src="assets/maps/karbon-cover.jpg" alt="" loading="lazy"></div>
+        <div class="feat-body">
+          <span class="feat-cat">Carbon accounting</span>
+          <h4>Forest Carbon Lost to the Merauke Food Estate</h4>
+          <p>GEDI LiDAR and Random Forest show 45,800 ha cleared since 2023, releasing 11–13 million t of CO₂.</p>
+        </div>
+      </a>
+      <a class="feat-card feat-small" href="project-natuna.html">
+        <div class="feat-thumb"><img src="assets/maps/natuna-cover.jpg" alt="" loading="lazy"></div>
+        <div class="feat-body">
+          <span class="feat-cat">Maritime surveillance</span>
+          <h4>Suspicious Fishing Vessels in the North Natuna Sea</h4>
+          <p>864 vessels narrowed to a short list, including 107 foreign vessels fishing inside Indonesia's EEZ.</p>
+        </div>
+      </a>
+      <a class="feat-card feat-small" href="project-esg-sawit.html">
+        <div class="feat-thumb"><img src="assets/maps/esg-cover.jpg" alt="" loading="lazy"></div>
+        <div class="feat-body">
+          <span class="feat-cat">ESG reporting</span>
+          <h4>GHG Inventory and Greenwashing Check for a Palm Oil Company</h4>
+          <p>83% of Scope 1 and 2 emissions come from mill wastewater methane, and three public claims are tested.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="feat-head feat-head-all" id="semua-project">
+    <h3>All projects</h3>
+  </div>
+  <nav class="cat-row" aria-label="Filter projects by category">
+    <span>Browse by category</span>
+    <a href="#proyek" data-filter="rs">Remote Sensing</a>
+    <a href="#proyek" data-filter="gis">GIS &amp; Spatial Modeling</a>
+    <a href="#proyek" data-filter="disaster">Disaster Risk &amp; Hydrology</a>
+    <a href="#proyek" data-filter="climate">Climate &amp; Air Quality</a>
+    <a href="#proyek" data-filter="ocean">Oceanography &amp; Bathymetry</a>
+    <a href="#proyek" data-filter="forest">Forest, Land &amp; Carbon</a>
+    <a href="#proyek" data-filter="esg">ESG &amp; Supply Chain</a>
+    <a href="#proyek" data-filter="web">Web Apps &amp; Dashboards</a>
+    <a href="#proyek" data-filter="social">Social &amp; Political Geography</a>
+  </nav>
+  <p class="filter-line" id="filterLine" hidden></p>
+
   <div class="projects-grid">
 
-    <a class="project-card" href="project-bioethanol.html">
+    <a class="project-card" data-cat="gis esg" href="project-bioethanol.html">
   <div class="project-thumb">
     <img src="assets/maps/sekam-padi1.jpg" alt="Peta potensi sekam padi Jawa Barat">
   </div>
@@ -464,7 +541,7 @@
   </div>
 </a>
 
-    <a class="project-card" href="projectbanjir.html">
+    <a class="project-card" data-cat="disaster gis" href="projectbanjir.html">
       <div class="project-thumb">
         <img src="assets/maps/rawan-banjir1.jpg" alt="Peta zona rawan banjir">
       </div>
@@ -476,7 +553,7 @@
       </div>
     </a>
 
-    <a class="project-card" href="projectRSI.html">
+    <a class="project-card" data-cat="rs" href="projectRSI.html">
   <div class="project-thumb">
     <img src="assets/maps/remote-sensing.jpg" alt="Peta indeks IPVI, NDWI, dan NDSoil Kabupaten Banggai">
   </div>
@@ -488,7 +565,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-batimetri.html">
+<a class="project-card" data-cat="ocean" href="project-batimetri.html">
   <div class="project-thumb">
     <img src="assets/maps/cover-batimetri.jpg" alt="Laut dan dasar laut">
   </div>
@@ -500,7 +577,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-atmosferic.html">
+<a class="project-card" data-cat="rs ocean" href="project-atmosferic.html">
   <div class="project-thumb">
     <img src="assets/maps/remote-sensing.jpg" alt="Pemanfaatan Metode Atmospheric Correction dalam Pengujian Kualitas Air di Danau Tondano, Sulawesi Utara">
   </div>
@@ -512,7 +589,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-gambut.html">
+<a class="project-card" data-cat="forest gis" href="project-gambut.html">
   <div class="project-thumb">
     <img src="assets/maps/gambut.jpeg" alt="Konservasi Lahan Gambut di Kalimantan Tengah">
   </div>
@@ -524,7 +601,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-enc.html">
+<a class="project-card" data-cat="ocean" href="project-enc.html">
   <div class="project-thumb">
     <img src="assets/maps/enc-tanjungemas.jpg" alt="Peta ENC Pelabuhan Tanjungemas">
   </div>
@@ -536,7 +613,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-sakurata.html">
+<a class="project-card" data-cat="disaster gis" href="project-sakurata.html">
   <div class="project-thumb">
     <img src="assets/maps/sakurata.jpeg" alt="Peta rawan longsor Kecamatan Gedangsari">
   </div>
@@ -548,7 +625,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-airtanah.html">
+<a class="project-card" data-cat="disaster gis" href="project-airtanah.html">
   <div class="project-thumb">
     <img src="assets/maps/airtanah-jawa.jpeg" alt="Peta potensi air tanah Pulau Jawa">
   </div>
@@ -560,7 +637,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-pltsa.html">
+<a class="project-card" data-cat="social esg" href="project-pltsa.html">
   <div class="project-thumb">
     <img src="assets/maps/pltsa.jpeg" alt="Lokasi PLTSa dan TPST Bantar Gebang">
   </div>
@@ -572,7 +649,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-ikn.html">
+<a class="project-card" data-cat="social" href="project-ikn.html">
   <div class="project-thumb">
     <img src="assets/maps/ikn.jpg" alt="IKN Nusantara">
   </div>
@@ -584,7 +661,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-salinitas.html">
+<a class="project-card" data-cat="ocean rs" href="project-salinitas.html">
   <div class="project-thumb">
     <img src="assets/maps/salinitas.jpeg" alt="Salinitas Tanjung Kenam">
   </div>
@@ -596,7 +673,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-tct.html">
+<a class="project-card" data-cat="rs forest" href="project-tct.html">
   <div class="project-thumb">
     <img src="assets/maps/remote-sensing.jpg" alt="Peta komposit Tasseled Cap Transformation Bogor">
   </div>
@@ -608,7 +685,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-jalakbali.html">
+<a class="project-card" data-cat="gis forest" href="project-jalakbali.html">
   <div class="project-thumb">
     <img src="assets/maps/jalakbali.jpg" alt="Species distribution model Jalak Bali" />
   </div>
@@ -620,7 +697,7 @@
   </div>
 </a>
 
-<a class="project-card" href="https://colab.research.google.com/drive/1_rtGBVUhJ1DVuEolZKaDt-54qwyfBsH5?usp=sharing#scrollTo=Cg0Kd0kVLeHE" target="_blank" rel="noopener">
+<a class="project-card" data-cat="rs forest" href="https://colab.research.google.com/drive/1_rtGBVUhJ1DVuEolZKaDt-54qwyfBsH5?usp=sharing#scrollTo=Cg0Kd0kVLeHE" target="_blank" rel="noopener">
   <div class="project-thumb"><img src="assets/maps/remote-sensing.jpg" alt="Analisis geospasial Taman Nasional Gunung Leuser dengan geemap"></div>
   <div class="project-body">
     <span class="project-tag">Remote Sensing</span>
@@ -630,7 +707,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-tambang.html">
+<a class="project-card" data-cat="rs forest" href="project-tambang.html">
   <div class="project-thumb"><img src="assets/maps/tambang.jpg" alt="Mining openings map of Morowali Regency"></div>
   <div class="project-body">
     <span class="project-tag">Environmental Impact</span>
@@ -640,7 +717,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-PIP.html">
+<a class="project-card" data-cat="gis social" href="project-PIP.html">
   <div class="project-thumb"><img src="assets/maps/penduduk-distribusi.jpeg" alt="Population distribution per pixel in Panjer"></div>
   <div class="project-body">
     <span class="project-tag">Spatial Modeling</span>
@@ -650,7 +727,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-surveybati.html">
+<a class="project-card" data-cat="ocean" href="project-surveybati.html">
   <div class="project-thumb">
     <img src="assets/maps/batimetri-lajur.jpg" alt="Visualisasi lajur survei batimetri">
   </div>
@@ -662,7 +739,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-iklim.html">
+<a class="project-card" data-cat="climate" href="project-iklim.html">
   <div class="project-thumb">
     <img src="assets/maps/iklim.jpg" alt="Zona iklim Schmidt-Ferguson Papua Barat">
   </div>
@@ -674,7 +751,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-udara.html">
+<a class="project-card" data-cat="climate rs" href="project-udara.html">
   <div class="project-thumb">
     <img src="assets/maps/udara-polusi.jpg" alt="Peta konsentrasi NO2 Kota Denpasar dan sekitarnya">
   </div>
@@ -686,7 +763,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-petai.html">
+<a class="project-card" data-cat="gis forest" href="project-petai.html">
   <div class="project-thumb">
     <img src="assets/maps/kesesuaian-petai.jpg" alt="Land suitability map for petai cultivation in Majalengka Regency">
   </div>
@@ -698,7 +775,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-lst.html">
+<a class="project-card" data-cat="rs climate" href="project-lst.html">
   <div class="project-thumb">
     <img src="assets/maps/lst-cover.jpg" alt="Peta Land Surface Temperature Kota Bogor 2023">
   </div>
@@ -710,7 +787,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-grimen.html">
+<a class="project-card" data-cat="social" href="project-grimen.html">
   <div class="project-thumb">
     <img src="assets/maps/makan-malam-cover.png" alt="Peta rute preferensi rumah makan mahasiswa Kost Griya Putri Mentari di Kukusan">
   </div>
@@ -722,7 +799,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-takbiran.html">
+<a class="project-card" data-cat="social" href="project-takbiran.html">
   <div class="project-thumb">
     <img src="assets/maps/takbiran-cover.jpg" alt="Sekaa Teruna memainkan baleganjur pada malam takbiran di Kampung Jawa, Denpasar">
   </div>
@@ -734,7 +811,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-bekasi.html">
+<a class="project-card" data-cat="social" href="project-bekasi.html">
   <div class="project-thumb">
     <img src="assets/maps/cover-bekasi.jpg" alt="Administrative map of Bekasi City, West Java">
   </div>
@@ -746,7 +823,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-perikanan.html">
+<a class="project-card" data-cat="climate ocean" href="project-perikanan.html">
   <div class="project-thumb">
     <img src="assets/maps/cover-perikanan.jpg" alt="Global temperature and CO2 concentration trend over 173 years">
   </div>
@@ -758,7 +835,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-recycool.html">
+<a class="project-card" data-cat="web social" href="project-recycool.html">
   <div class="project-thumb">
     <img src="assets/maps/recycool-cover.jpg" alt="Recycool app home screen with trash detection, recycling information, and waste bank map">
   </div>
@@ -770,7 +847,7 @@
   </div>
 </a>
 
-<a class="project-card" href="https://geography-ui.maps.arcgis.com/apps/dashboards/06263b02cc9b467fad477b07d28fd299" target="_blank" rel="noopener">
+<a class="project-card" data-cat="web gis" href="https://geography-ui.maps.arcgis.com/apps/dashboards/06263b02cc9b467fad477b07d28fd299" target="_blank" rel="noopener">
   <div class="project-thumb"><img src="assets/maps/charging-stations.jpg" alt="ArcGIS Dashboard for Geospatial Analysis"></div>
   <div class="project-body">
     <span class="project-tag">Dashboard</span>
@@ -780,7 +857,7 @@
   </div>
 </a>
 
-<a class="project-card" href="https://geography-ui.maps.arcgis.com/apps/webappviewer/index.html?id=6579e47441e442c9af63e6c279a824d9" target="_blank" rel="noopener">
+<a class="project-card" data-cat="web forest" href="https://geography-ui.maps.arcgis.com/apps/webappviewer/index.html?id=6579e47441e442c9af63e6c279a824d9" target="_blank" rel="noopener">
   <div class="project-thumb"><img src="assets/maps/gambut.jpeg" alt="ArcGIS Web App for Land Suitability for Dyera polyphylla Cultivation to Protect Peatlands in Central Kalimantan"></div>
   <div class="project-body">
     <span class="project-tag">Web App</span>
@@ -790,7 +867,7 @@
   </div>
 </a>
 
-<a class="project-card" href="https://storymaps.arcgis.com/stories/e242795ddf344ef784fb37712b3e7c3a" target="_blank" rel="noopener">
+<a class="project-card" data-cat="web disaster" href="https://storymaps.arcgis.com/stories/e242795ddf344ef784fb37712b3e7c3a" target="_blank" rel="noopener">
   <div class="project-thumb"><img src="assets/maps/rawan-banjir1.jpg" alt="ArcGIS StoryMap for Flood Risk Assessment in Wonosari Subdistrict"></div>
   <div class="project-body">
     <span class="project-tag">StoryMap</span>
@@ -800,7 +877,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-penjabat.html">
+<a class="project-card" data-cat="social" href="project-penjabat.html">
   <div class="project-thumb">
     <img src="assets/maps/penjabat-pilkada1.jpg" alt="Map of regions led by acting officials in the 2024 regional elections">
   </div>
@@ -812,7 +889,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-paslon.html">
+<a class="project-card" data-cat="social" href="project-paslon.html">
   <div class="project-thumb">
     <img src="assets/maps/paslon-pilkada.jpg" alt="Map of regions led by acting officials in the 2024 regional elections">
   </div>
@@ -824,19 +901,19 @@
   </div>
 </a>
 
-<a class="project-card" href="project-ikn-lahan.html">
+<a class="project-card" data-cat="rs forest" href="project-ikn-lahan.html">
   <div class="project-thumb">
     <img src="assets/maps/ikn-lahan-cover.jpg" alt="Vegetation change map in the two subdistricts planned for IKN">
   </div>
   <div class="project-body">
     <span class="project-tag">Land Use Change</span>
     <h3>Land Transformation from the Construction of the National Capital</h3>
-    <p>Mapping vegetation change in the two subdistricts planned for IKN, where about 6,700 ha of vegetation was lost between 2022 till 2024.</p>
+    <p>Mapping vegetation change in the two subdistricts planned for IKN, where about 6,700 ha of vegetation was lost between 2022 and 2024.</p>
     <span class="project-more">Read more →</span>
   </div>
 </a>
 
-<a class="project-card" href="project-bayangan.html">
+<a class="project-card" data-cat="climate" href="project-bayangan.html">
   <div class="project-thumb">
     <img src="assets/maps/hari-tanpa-bayangan1.jpg" alt="Air temperature distribution map of Jakarta during the Zero Shadow Day">
   </div>
@@ -848,7 +925,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-antartika.html">
+<a class="project-card" data-cat="social" href="project-antartika.html">
   <div class="project-thumb">
     <img src="assets/maps/perjanjian-antartika1.jpg" alt="Map of the 12 countries that signed the Antarctic Treaty in 1959">
   </div>
@@ -860,7 +937,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-cuaca.html">
+<a class="project-card" data-cat="climate disaster" href="project-cuaca.html">
   <div class="project-thumb">
     <img src="assets/maps/cuaca-ekstrem1.jpg" alt="Map of extreme weather events in Indonesia, 7–12 November 2024">
   </div>
@@ -872,7 +949,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-gelombang.html">
+<a class="project-card" data-cat="ocean disaster" href="project-gelombang.html">
   <div class="project-thumb">
     <img src="assets/maps/gelombang-bali1.png" alt="Map of accumulated high waves in the waters south of Bali">
   </div>
@@ -884,7 +961,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-sukabumi.html">
+<a class="project-card" data-cat="disaster" href="project-sukabumi.html">
   <div class="project-thumb">
     <img src="assets/maps/bencana-sukabumi1.jpg" alt="Map of districts hit by floods, landslides, and ground movement in Sukabumi Regency">
   </div>
@@ -896,7 +973,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-gletser.html">
+<a class="project-card" data-cat="climate rs" href="project-gletser.html">
   <div class="project-thumb">
     <img src="assets/maps/gletser-jayawijaya1.jpg" alt="Glacier distribution map of the Jayawijaya Mountains in 2013 and 2023">
   </div>
@@ -908,7 +985,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-megathrust.html">
+<a class="project-card" data-cat="disaster" href="project-megathrust.html">
   <div class="project-thumb">
     <img src="assets/maps/megathrust-jawa1.jpeg" alt="Seismicity map of Java Island by earthquake depth">
   </div>
@@ -920,7 +997,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-amazon.html">
+<a class="project-card" data-cat="rs disaster" href="project-amazon.html">
   <div class="project-thumb">
     <img src="assets/maps/amazon-ndwi.jpg" alt="Mean NDWI trend in the Amazon Basin, 2014–2024">
   </div>
@@ -932,19 +1009,19 @@
   </div>
 </a>
 
-<a class="project-card" href="https://anggitayuniskara.github.io/Project-1/">
+<a class="project-card" data-cat="web climate" href="https://anggitayuniskara.github.io/Project-1/">
   <div class="project-thumb">
     <img src="assets/maps/lst-cover.jpg" alt="Interactive 3D map of the Denpasar Urban Heat Map 2026">
   </div>
   <div class="project-body">
     <span class="project-tag">Urban Heat 3D Map</span>
-    <h3>Interactive 3D Map of the Denpasar Urban Heat Map 2026</h3>
+    <h3>Interactive 3D Urban Heat Map of Denpasar 2026</h3>
     <p>Interactive 3D map of the urban heat island effect in Denpasar, Bali, combining Land Surface Temperature (LST) and vegetation (NDVI) with 3D buildings.</p>
     <span class="project-more">Read more →</span>
   </div>
 </a>
 
-<a class="project-card" href="project-postgis.html">
+<a class="project-card" data-cat="gis disaster" href="project-postgis.html">
   <div class="project-thumb">
     <img src="assets/maps/postgis-cover.jpg" alt="Map of villages, flood zone, health facilities, and priority villages from a PostGIS analysis">
   </div>
@@ -956,7 +1033,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-sar.html">
+<a class="project-card" data-cat="rs disaster" href="project-sar.html">
   <div class="project-thumb">
     <img src="assets/maps/sar-genangan.jpg" alt="Estimated flood extent from Sentinel-1 SAR change detection around Demak and Semarang">
   </div>
@@ -968,7 +1045,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-terrain.html">
+<a class="project-card" data-cat="gis" href="project-terrain.html">
   <div class="project-thumb">
     <img src="assets/maps/terrain-lereng.jpg" alt="Slope class map of Sleman Regency based on Van Zuidam classification">
   </div>
@@ -980,7 +1057,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-mangrove.html">
+<a class="project-card" data-cat="forest ocean rs" href="project-mangrove.html">
   <div class="project-thumb">
     <img src="assets/maps/mangrove-cover.jpg" alt="Land cover classification map of Segara Anakan, Cilacap in 2024">
   </div>
@@ -992,7 +1069,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-coral.html">
+<a class="project-card" data-cat="ocean climate" href="project-coral.html">
   <div class="project-thumb">
     <img src="assets/maps/coral-cover.jpg" alt="Map of predicted coral bleaching risk at reef sites in Bali and Lombok in 2024">
   </div>
@@ -1004,7 +1081,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-fire.html">
+<a class="project-card" data-cat="forest disaster rs" href="project-fire.html">
   <div class="project-thumb">
     <img src="assets/maps/fire-cover.jpeg" alt="Burn severity map from Sentinel-2 dNBR over peatland in Central Kalimantan in 2026">
   </div>
@@ -1016,7 +1093,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-natuna.html">
+<a class="project-card" data-cat="ocean rs" href="project-natuna.html">
   <div class="project-thumb">
     <img src="assets/maps/natuna-cover.jpg" alt="Fishing events by Indonesian and foreign vessels in Indonesia's EEZ in the North Natuna Sea, 2024–2026">
   </div>
@@ -1028,7 +1105,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-padi.html">
+<a class="project-card" data-cat="climate gis" href="project-padi.html">
   <div class="project-thumb">
     <img src="assets/maps/padi-cover.jpg" alt="Rainfall compared with normal for each regency in Java, July to September 2026">
   </div>
@@ -1040,7 +1117,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-aqi-jabodetabek.html">
+<a class="project-card" data-cat="web climate" href="project-aqi-jabodetabek.html">
   <div class="project-thumb">
     <img src="assets/maps/udara-cover.jpg" alt="Air quality index (ISPU) for 13 cities and regencies in Jabodetabek">
   </div>
@@ -1052,7 +1129,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-amdal.html">
+<a class="project-card" data-cat="web gis" href="project-amdal.html">
   <div class="project-thumb">
     <img src="assets/maps/amdal-cover.jpg" alt="Forest area functions and mining forest-use permits in East Kalimantan">
   </div>
@@ -1064,7 +1141,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-eudr.html">
+<a class="project-card" data-cat="esg forest web" href="project-eudr.html">
   <div class="project-thumb">
     <img src="assets/maps/eudr-cover.jpg" alt="Oil palm in Bengkalis Regency by EUDR deforestation status and forest area designation">
   </div>
@@ -1076,7 +1153,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-sawit-dcf.html">
+<a class="project-card" data-cat="esg forest" href="project-sawit-dcf.html">
   <div class="project-thumb">
     <img src="assets/maps/sawit-dcf-cover.jpg" alt="Palm oil mills in Riau coloured by engagement priority over post-2020 deforestation">
   </div>
@@ -1088,7 +1165,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-morowali-satelit.html">
+<a class="project-card" data-cat="rs forest" href="project-morowali-satelit.html">
   <div class="project-thumb"><img src="assets/maps/morowali-satelit-cover.jpg" alt="Sentinel-2 image of the Morowali nickel mining corridor in 2026 with mine openings by year"></div>
   <div class="project-body">
     <span class="project-tag">Environmental Impact</span>
@@ -1098,7 +1175,7 @@
   </div>
 </a>
 
-<a class="project-card" href="project-merauke.html">
+<a class="project-card" data-cat="rs forest" href="project-merauke.html">
   <div class="project-thumb"><img src="assets/maps/merauke-cover.jpeg" alt="Sentinel-2 image of large cleared blocks near Jagebob, Merauke, in 2026"></div>
   <div class="project-body">
     <span class="project-tag">Environmental Impact</span>
@@ -1108,12 +1185,42 @@
   </div>
 </a>
 
-<a class="project-card" href="project-banjir-ciliwung.html">
+<a class="project-card" data-cat="disaster gis" href="project-banjir-ciliwung.html">
   <div class="project-thumb"><img src="assets/maps/ciliwung-cover.jpg" alt="Modelled maximum flood depth along the Ciliwung River near Kampung Melayu over a Sentinel-2 image"></div>
   <div class="project-body">
     <span class="project-tag">Flood Modeling</span>
     <h3>Modelling Ciliwung Floods from Condet to Manggarai with HEC-RAS 2D and a Machine Learning Emulator</h3>
     <p>80 HEC-RAS 2D runs scripted end to end in Python train an emulator that rebuilds flood depth maps within about 1 cm of the full model, in milliseconds, inside an interactive rainfall web app.</p>
+    <span class="project-more">Read more →</span>
+  </div>
+</a>
+
+<a class="project-card" data-cat="forest rs esg" href="project-karbon-merauke.html">
+  <div class="project-thumb"><img src="assets/maps/karbon-cover.jpg" alt="Forest biomass in 2022 beside CO2 released from cleared blocks in 2026 near Blandin Kakayo, Merauke"></div>
+  <div class="project-body">
+    <span class="project-tag">Carbon Accounting</span>
+    <h3>Forest Carbon Lost to the Merauke Food Estate, 2023–2026</h3>
+    <p>8,577 GEDI LiDAR footprints and a Random Forest biomass map show the 45,800 ha cleared since 2023 held about 6.9 million t of biomass, releasing 11–13 million t of CO₂ from trees alone.</p>
+    <span class="project-more">Read more →</span>
+  </div>
+</a>
+
+<a class="project-card" data-cat="esg" href="project-esg-sawit.html">
+  <div class="project-thumb"><img src="assets/maps/esg-cover.jpg" alt="Scope 1, 2 and 3 greenhouse gas totals of a fictional palm oil company in 2025"></div>
+  <div class="project-body">
+    <span class="project-tag">ESG Reporting</span>
+    <h3>GHG Inventory and Greenwashing Check for a Fictional Palm Oil Company</h3>
+    <p>A GHG Protocol case study on fictional data: 83% of Scope 1 and 2 emissions come from mill wastewater methane, a target calculator shows biogas beats solar, and three press-release claims are tested against the numbers.</p>
+    <span class="project-more">Read more →</span>
+  </div>
+</a>
+
+<a class="project-card" data-cat="esg web" href="project-dashboard-ghg.html">
+  <div class="project-thumb"><img src="assets/maps/esg-cover.jpg" alt="Interactive GHG emissions dashboard with monthly Scope 1, 2 and 3 bars for a fictional palm oil company"></div>
+  <div class="project-body">
+    <span class="project-tag">ESG Dashboard</span>
+    <h3>Interactive GHG Emissions Dashboard for a Fictional Palm Oil Company</h3>
+    <p>Monthly Scope 1, 2 and 3 emissions for 2024–2025 with filters by period, unit and scope, top 5 sources, carbon intensity, and an activity table with emission factors that exports to CSV.</p>
     <span class="project-more">Read more →</span>
   </div>
 </a>
@@ -1156,10 +1263,15 @@
     <div class="footer-col">
       <h4>Project Categories</h4>
       <ul>
-        <li><a href="#proyek">GIS &amp; Mapping</a></li>
-        <li><a href="#proyek">Remote Sensing</a></li>
-        <li><a href="#proyek">Disaster Risk</a></li>
-        <li><a href="#proyek">Oceanography</a></li>
+        <li><a href="#proyek" data-filter="rs">Remote Sensing</a></li>
+        <li><a href="#proyek" data-filter="gis">GIS &amp; Spatial Modeling</a></li>
+        <li><a href="#proyek" data-filter="disaster">Disaster Risk &amp; Hydrology</a></li>
+        <li><a href="#proyek" data-filter="climate">Climate &amp; Air Quality</a></li>
+        <li><a href="#proyek" data-filter="ocean">Oceanography &amp; Bathymetry</a></li>
+        <li><a href="#proyek" data-filter="forest">Forest, Land &amp; Carbon</a></li>
+        <li><a href="#proyek" data-filter="esg">ESG &amp; Supply Chain</a></li>
+        <li><a href="#proyek" data-filter="web">Web Apps &amp; Dashboards</a></li>
+        <li><a href="#proyek" data-filter="social">Social &amp; Political Geography</a></li>
       </ul>
     </div>
 
@@ -1170,6 +1282,7 @@
         <li><a href="#education">Education</a></li>
         <li><a href="#workexp">Work Experience</a></li>
         <li><a href="#sertifikat">Certifications</a></li>
+        <li><a href="#publications">Publications</a></li>
         <li><a href="#pencapaian">Achievements</a></li>
         <li><a href="#proyek">Projects</a></li>
         <li><a href="#kontak">Contact</a></li>

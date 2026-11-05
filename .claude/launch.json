@@ -4,8 +4,24 @@
     {
       "name": "portofolio",
       "runtimeExecutable": "C:/Users/Anggita/anaconda3/python.exe",
-      "runtimeArgs": ["-m", "http.server", "8765"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8765"
+      ],
       "port": 8765
+    },
+    {
+      "name": "urban-heat",
+      "runtimeExecutable": "C:/Users/Anggita/anaconda3/python.exe",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8766",
+        "--directory",
+        "D:/Project 1"
+      ],
+      "port": 8766
     }
   ]
 }

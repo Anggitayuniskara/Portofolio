@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Emisi GRK Perusahaan Sawit Fiktif 2024–2025</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    :root { --or: #142720; --or-m: #EBD9B5; --or-l: #EAECE4; --bl: #3B5A6B; --bl-d: #3B5A6B; --bl-l: #E2E8EB; --br: #C08A2E; --gr: #9AA79F; --gd: #C08A2E; }
+    body { background: var(--paper); }
+    .xl { max-width: 1320px; margin: 0 auto; padding: 18px 14px 36px; font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif; color: #222; }
+    .xl-grid { display: grid; grid-template-columns: 28fr 46fr 24fr; gap: 12px; }
+    .col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+    .top { grid-column: 1 / 3; display: grid; grid-template-columns: 1.25fr repeat(5, 1fr); gap: 10px; }
+    .judul { background: var(--or); color: #fff; font-size: 1.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 14px; line-height: 1.05; }
+    .kpi { display: flex; flex-direction: column; }
+    .kpi .h { background: var(--or); color: #fff; font-weight: 700; font-size: 0.88rem; text-align: center; padding: 3px 4px; }
+    .kpi .v { background: var(--or-l); flex: 1; text-align: center; padding: 6px 4px 5px; display: flex; flex-direction: column; justify-content: center; }
+    .kpi .v b { display: block; font-size: 1.5rem; line-height: 1.15; }
+    .kpi .v small { font-size: 0.74rem; color: #555; }
+    .banner { color: #fff; font-weight: 700; font-size: 1.05rem; text-align: center; padding: 7px 4px; }
+    .banner.coklat { background: var(--br); } .banner.biru { background: var(--bl-d); }
+    .area { padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+    .area.oranye { background: #F1ECDF; } .area.biru { background: var(--bl-l); }
+    .pn { background: #fff; padding: 6px 8px 8px; min-width: 0; }
+    .pn h3 { font-size: 0.92rem; font-weight: 700; text-align: center; margin: 0 0 4px; color: #222; }
+    .pn svg { display: block; width: 100%; height: auto; }
+    .slicer { border: 2px solid var(--bl-d); background: #fff; }
+    .slicer .sh { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.9rem; padding: 5px 8px; border-bottom: 1px solid #d9d9d9; }
+    .slicer .sh button { background: none; border: 0; cursor: pointer; color: #666; font-size: 0.85rem; padding: 0 2px; }
+    .slicer .sb { padding: 6px 8px 8px; display: grid; gap: 5px; }
+    .slicer .sb.dua { grid-template-columns: 1fr 1fr; }
+    .slicer .sb button { font: inherit; font-size: 0.88rem; text-align: left; padding: 4px 8px; border: 1px solid #c9c9c9; background: #fff; color: #222; cursor: pointer; border-radius: 2px; }
+    .slicer .sb button.on { background: var(--or-m); border-color: #C08A2E; }
+    .slicer-title { background: var(--bl-l); text-align: center; font-weight: 700; font-size: 0.92rem; padding: 4px; }
+    .ket { font-size: 0.78rem; color: #555; line-height: 1.45; margin: 10px 2px 0; }
+    .ket a { color: var(--bl-d); }
+    .tip { position: fixed; pointer-events: none; background: #fff; color: #222; border: 1px solid #a6a6a6; box-shadow: 1px 1px 3px rgba(0,0,0,.2); font: 12px/1.45 Calibri, Carlito, "Segoe UI", Arial, sans-serif; padding: 4px 7px; z-index: 1000; display: none; max-width: 260px; }
+    @media (max-width: 980px) {
+      .xl-grid { grid-template-columns: 1fr; }
+      .xl-grid > .col { grid-row: auto !important; grid-column: auto !important; }
+      .top { grid-column: auto; grid-template-columns: repeat(3, 1fr); }
+      .judul { grid-column: 1 / -1; padding: 8px 12px; font-size: 1.5rem; }
+    }
+    @media (max-width: 520px) { .top { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+
+  <header class="nav">
+    <div class="nav-mark">Anggita Yuniskara's Portfolio 2026</div>
+    <nav class="nav-links" style="display:block">
+      <a href="index.html#proyek">← Back to Projects</a>
+    </nav>
+  </header>
+
+  <main class="xl">
+    <div class="xl-grid">
+
+      <div class="top">
+        <div class="judul">Dashboard Emisi GRK</div>
+        <div class="kpi"><div class="h">Total Emisi</div><div class="v"><b id="kTot">–</b><small id="kTotD">t CO₂e</small></div></div>
+        <div class="kpi"><div class="h">Scope 1</div><div class="v"><b id="kS1">–</b><small id="kS1D">t CO₂e</small></div></div>
+        <div class="kpi"><div class="h">Scope 2</div><div class="v"><b id="kS2">–</b><small id="kS2D">t CO₂e</small></div></div>
+        <div class="kpi"><div class="h">Scope 3</div><div class="v"><b id="kS3">–</b><small id="kS3D">t CO₂e</small></div></div>
+        <div class="kpi"><div class="h">Intensitas</div><div class="v"><b id="kInt">–</b><small>t CO₂e/ton CPO</small></div></div>
+      </div>
+
+      <div class="col" style="grid-row: 1 / 3; grid-column: 3;">
+        <div class="slicer-title">Slicer</div>
+        <div class="slicer"><div class="sh">Tahun</div><div class="sb dua" id="sTahun"><button data-v="2024">2024</button><button data-v="2025" class="on">2025</button></div></div>
+        <div class="slicer"><div class="sh">Periode <button type="button" id="rPeriode" title="Hapus pilihan"><i class="fa-solid fa-filter-circle-xmark"></i></button></div>
+          <div class="sb dua" id="sPeriode"><button data-v="0" class="on" style="grid-column:1/-1">Setahun</button><button data-v="q1">Triwulan I</button><button data-v="q2">Triwulan II</button><button data-v="q3">Triwulan III</button><button data-v="q4">Triwulan IV</button></div></div>
+        <div class="slicer"><div class="sh">Unit <button type="button" id="rUnit" title="Hapus pilihan"><i class="fa-solid fa-filter-circle-xmark"></i></button></div>
+          <div class="sb" id="sUnit"><button data-v="Pabrik">Pabrik</button><button data-v="Kebun inti">Kebun inti</button><button data-v="Kantor dan perumahan">Kantor dan perumahan</button><button data-v="Rantai pasok">Rantai pasok</button></div></div>
+        <div class="slicer"><div class="sh">Scope</div><div class="sb" id="sScope" style="grid-template-columns:repeat(3,1fr)"><button data-v="1" class="on">Scope 1</button><button data-v="2" class="on">Scope 2</button><button data-v="3" class="on">Scope 3</button></div></div>
+        <div class="area biru" style="padding:6px">
+          <div class="pn"><h3>Intensitas Emisi per Bulan</h3><svg id="gInt" viewBox="0 0 300 200" role="img" aria-label="Grafik garis intensitas emisi bulanan"></svg></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="banner coklat">Komposisi Emisi</div>
+        <div class="area oranye">
+          <div class="pn"><h3>Porsi per Scope</h3><svg id="gPie" viewBox="0 0 340 190" role="img" aria-label="Diagram lingkaran porsi emisi per scope"></svg></div>
+          <div class="pn"><h3>Emisi per Unit (t CO₂e)</h3><svg id="gUnit" viewBox="0 0 340 170" role="img" aria-label="Grafik batang emisi per unit"></svg></div>
+          <div class="pn"><h3>CO₂ Biogenik dari Boiler</h3><svg id="gBio" viewBox="0 0 340 74" role="img" aria-label="CO2 biogenik"></svg></div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="banner biru">Tren dan Sumber Emisi</div>
+        <div class="area biru">
+          <div class="pn"><h3 id="hTren">Emisi Bulanan (t CO₂e)</h3><svg id="gTren" viewBox="0 0 560 230" role="img" aria-label="Grafik kolom emisi bulanan per scope"></svg></div>
+          <div class="pn"><h3>5 Sumber Emisi Terbesar (t CO₂e)</h3><svg id="gTop" viewBox="0 0 560 230" role="img" aria-label="Grafik kolom lima sumber emisi terbesar"></svg></div>
+        </div>
+      </div>
+
+    </div>
+    <p class="ket">Perusahaan dan datanya fiktif, dari project <a href="project-esg-sawit.html">Inventaris Emisi GRK dan Uji Klaim Keberlanjutan Perusahaan Sawit Fiktif</a>. Data tahunan dipecah per bulan mengikuti musim panen dan jadwal pemupukan. Emisi = aktivitas × faktor emisi (GWP IPCC AR5). Perubahan dibandingkan dengan periode yang sama tahun sebelumnya. Klik kolom pada grafik emisi bulanan untuk memilih satu bulan.</p>
+    <a class="post-back" href="index.html#proyek">← View other projects</a>
+  </main>
+
+  <div class="tip" id="tip"></div>
+
+  <script>
+    (function () {
+      var BLN = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      var BLN_P = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      var WARNA = { 1: '#2E5E4E', 2: '#C08A2E', 3: '#9AA79F' };
+      var FONT = 'font-family="Calibri, Carlito, Segoe UI, Arial, sans-serif"';
+      var D, S = { tahun: 2025, periode: '0', unit: '', scope: { 1: true, 2: true, 3: true } };
+      var el = function (id) { return document.getElementById(id); };
+      var f0 = function (v) { return Math.round(v).toLocaleString('id-ID'); };
+      var fd = function (v, d) { return v.toLocaleString('id-ID', { minimumFractionDigits: d, maximumFractionDigits: d }); };
+      var tip = el('tip');
+      function showTip(e, h) { tip.innerHTML = h; tip.style.display = 'block'; var x = e.clientX + 12; if (x + 260 > innerWidth) x = e.clientX - 260; tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px'; }
+      function hideTip() { tip.style.display = 'none'; }
+      function hover(svg, sel, f) { svg.querySelectorAll(sel).forEach(function (n) { n.addEventListener('mousemove', function (e) { showTip(e, f(n)); }); n.addEventListener('mouseleave', hideTip); }); }
+      function bulanDipilih() {
+        var p = S.periode;
+        if (p === '0') return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        if (p[0] === 'q') { var q = +p[1]; return [q * 3 - 2, q * 3 - 1, q * 3]; }
+        return [+p];
+      }
+      function labelPeriode(t) {
+        var p = S.periode;
+        if (p === '0') return String(t);
+        if (p[0] === 'q') return 'Triwulan ' + ['I', 'II', 'III', 'IV'][+p[1] - 1] + ' ' + t;
+        return BLN_P[+p - 1] + ' ' + t;
+      }
+      function jumlah(tahun, bln, pakaiScope, abaikanUnit) {
+        var o = { 1: 0, 2: 0, 3: 0, per: {}, unit: {} };
+        D.data.forEach(function (r) {
+          var s = D.sumber[r[2]];
+          if (r[0] !== tahun || bln.indexOf(r[1]) < 0 || (!abaikanUnit && S.unit && s.unit !== S.unit) || (pakaiScope && !S.scope[s.scope])) return;
+          o[s.scope] += r[4]; o.unit[s.unit] = (o.unit[s.unit] || 0) + r[4];
+          if (!o.per[r[2]]) o.per[r[2]] = 0; o.per[r[2]] += r[4];
+        });
+        return o;
+      }
+      function prod(tahun, bln) {
+        var o = { cpo: 0, bio: 0 };
+        D.bulan.forEach(function (b) { if (b[0] === tahun && bln.indexOf(b[1]) >= 0) { o.cpo += b[3]; o.bio += b[4]; } });
+        return o;
+      }
+      function ubah(a, b) {
+        if (!b) return '';
+        var p = (a / b - 1) * 100;
+        return (Math.abs(p) < 0.05 ? 'sama dengan ' : (p > 0 ? 'naik ' : 'turun ') + fd(Math.abs(p), 1) + '% dari ') + (S.tahun - 1);
+      }
+
+      function render() {
+        var bln = bulanDipilih(), t = S.tahun, a = jumlah(t, bln, true), b = t > 2024 ? jumlah(t - 1, bln, true) : null;
+        var ta = a[1] + a[2] + a[3];
+        el('kTot').textContent = f0(ta); el('kTotD').textContent = b ? ubah(ta, b[1] + b[2] + b[3]) : 't CO₂e, ' + labelPeriode(t);
+        [1, 2, 3].forEach(function (k) {
+          el('kS' + k).textContent = S.scope[k] ? f0(a[k]) : '–';
+          el('kS' + k + 'D').textContent = !S.scope[k] ? 'tidak dipilih' : b ? ubah(a[k], b[k]) : 't CO₂e';
+        });
+        var a12 = jumlah(t, bln, false), pa = prod(t, bln);
+        el('kInt').textContent = S.unit === 'Rantai pasok' ? '–' : fd((a12[1] + a12[2]) / pa.cpo, 3);
+        el('hTren').textContent = 'Emisi Bulanan ' + t + ' (t CO₂e)';
+        pie(a, ta); unit(bln); bio(pa); tren(); top5(a); intensitas();
+      }
+
+      function pie(a, ta) {
+        var svg = el('gPie'), cx = 110, cy = 95, R = 78, ang = -Math.PI / 2, h = '', ks = [1, 2, 3].filter(function (k) { return S.scope[k] && a[k] > 0; });
+        if (!ta) { svg.innerHTML = '<text x="170" y="95" ' + FONT + ' font-size="13" fill="#777" text-anchor="middle">Tidak ada data</text>'; return; }
+        ks.forEach(function (k) {
+          var fr = a[k] / ta, a2 = ang + fr * 2 * Math.PI, big = fr > 0.5 ? 1 : 0;
+          var x1 = cx + R * Math.cos(ang), y1 = cy + R * Math.sin(ang), x2 = cx + R * Math.cos(a2), y2 = cy + R * Math.sin(a2);
+          h += fr > 0.9999 ? '<circle cx="' + cx + '" cy="' + cy + '" r="' + R + '" fill="' + WARNA[k] + '" stroke="#fff" stroke-width="1.5" data-k="' + k + '"/>'
+            : '<path d="M' + cx + ',' + cy + 'L' + x1 + ',' + y1 + 'A' + R + ',' + R + ' 0 ' + big + ' 1 ' + x2 + ',' + y2 + 'Z" fill="' + WARNA[k] + '" stroke="#fff" stroke-width="1.5" data-k="' + k + '"/>';
+          ang = a2;
+        });
+        ks.forEach(function (k, i) {
+          var y = 52 + i * 42;
+          h += '<rect x="214" y="' + (y - 10) + '" width="12" height="12" fill="' + WARNA[k] + '"/><text x="232" y="' + y + '" ' + FONT + ' font-size="13" fill="#222">Scope ' + k + '</text>' +
+            '<text x="232" y="' + (y + 16) + '" ' + FONT + ' font-size="14" font-weight="700" fill="' + (k === 3 ? '#5f6b64' : WARNA[k]) + '">' + fd(a[k] / ta * 100, 1) + '%</text>';
+        });
+        svg.innerHTML = h;
+        hover(svg, '[data-k]', function (n) { var k = +n.dataset.k; return '<b>Scope ' + k + '</b><br>' + f0(a[k]) + ' t CO₂e (' + fd(a[k] / ta * 100, 1) + '%)'; });
+      }
+      function unit(bln) {
+        var svg = el('gUnit'), o = jumlah(S.tahun, bln, true, true).unit, ks = Object.keys(o).sort(function (x, y) { return o[y] - o[x]; }), mx = Math.max.apply(null, ks.map(function (k) { return o[k]; }).concat([1]));
+        var l = 158, W = 340, rh = 38, h = '';
+        ks.forEach(function (k, i) {
+          var y = 8 + i * rh, w = Math.max(40, o[k] / mx * (W - l - 8)), aktif = !S.unit || S.unit === k;
+          h += '<text x="' + (l - 6) + '" y="' + (y + 19) + '" ' + FONT + ' font-size="11" fill="#404040" text-anchor="end">' + k.toUpperCase() + '</text>';
+          h += '<rect x="' + l + '" y="' + (y + 5) + '" width="' + w + '" height="20" fill="' + (aktif ? '#C08A2E' : '#E6D3AE') + '" data-u="' + k + '" style="cursor:pointer"/>';
+          h += '<text x="' + (l + w - 5) + '" y="' + (y + 19) + '" ' + FONT + ' font-size="12" font-weight="700" fill="#fff" text-anchor="end" pointer-events="none">' + f0(o[k]) + '</text>';
+        });
+        h += '<line x1="' + l + '" x2="' + l + '" y1="6" y2="' + (8 + ks.length * rh) + '" stroke="#bfbfbf"/>';
+        svg.setAttribute('viewBox', '0 0 340 ' + (14 + ks.length * rh)); svg.innerHTML = h;
+        hover(svg, '[data-u]', function (n) { return '<b>' + n.dataset.u + '</b><br>' + f0(o[n.dataset.u]) + ' t CO₂e'; });
+        svg.querySelectorAll('[data-u]').forEach(function (n) { n.addEventListener('click', function () { S.unit = S.unit === n.dataset.u ? '' : n.dataset.u; sync(); render(); }); });
+      }
+      function bio(pa) {
+        var ok = !S.unit || S.unit === 'Pabrik';
+        el('gBio').innerHTML = '<text x="170" y="34" ' + FONT + ' font-size="26" font-weight="700" fill="#222" text-anchor="middle">' + (ok ? f0(pa.bio) : '–') + '</text>' +
+          '<text x="170" y="56" ' + FONT + ' font-size="12" fill="#555" text-anchor="middle">t CO₂, dilaporkan terpisah dari total emisi</text>';
+      }
+      function tren() {
+        var svg = el('gTren'), W = 560, H = 230, l = 14, r = 8, tp = 26, bt = 26, bw = (W - l - r) / 12, cols = [], mx = 0, bln = bulanDipilih();
+        for (var m = 1; m <= 12; m++) { var j = jumlah(S.tahun, [m], true); var s = j[1] + j[2] + j[3]; mx = Math.max(mx, s); cols.push([m, j, s]); }
+        var Y = function (v) { return H - bt - v / (mx * 1.12 || 1) * (H - tp - bt); }, h = '';
+        cols.forEach(function (c, i) {
+          var x = l + i * bw + bw * 0.18, w = bw * 0.64, y = Y(0), aktif = bln.indexOf(c[0]) >= 0;
+          [1, 2, 3].forEach(function (k) {
+            var v = c[1][k]; if (!v) return; var top = y - (Y(0) - Y(v));
+            h += '<rect x="' + x + '" y="' + top + '" width="' + w + '" height="' + Math.max(0, y - top) + '" fill="' + WARNA[k] + '" opacity="' + (aktif ? 1 : 0.35) + '"/>'; y = top;
+          });
+          h += '<text x="' + (x + w / 2) + '" y="' + (y - 5) + '" ' + FONT + ' font-size="11" fill="#404040" text-anchor="middle">' + f0(c[2]) + '</text>';
+          h += '<text x="' + (x + w / 2) + '" y="' + (H - 9) + '" ' + FONT + ' font-size="12" fill="#404040" text-anchor="middle">' + BLN[c[0] - 1] + '</text>';
+          h += '<rect x="' + (l + i * bw) + '" y="' + tp + '" width="' + bw + '" height="' + (H - tp - bt) + '" fill="transparent" data-i="' + i + '" style="cursor:pointer"/>';
+        });
+        h += '<line x1="' + l + '" x2="' + (W - r) + '" y1="' + Y(0) + '" y2="' + Y(0) + '" stroke="#bfbfbf"/>';
+        var lg = [1, 2, 3].filter(function (k) { return S.scope[k]; }), lx = W / 2 - lg.length * 36;
+        lg.forEach(function (k, j) { h += '<rect x="' + (lx + j * 72) + '" y="4" width="10" height="10" fill="' + WARNA[k] + '"/><text x="' + (lx + j * 72 + 14) + '" y="13" ' + FONT + ' font-size="12" fill="#404040">Scope ' + k + '</text>'; });
+        svg.innerHTML = h;
+        hover(svg, '[data-i]', function (n) { var c = cols[+n.dataset.i]; return '<b>' + BLN_P[c[0] - 1] + ' ' + S.tahun + '</b><br>Total ' + f0(c[2]) + ' t CO₂e' + lg.map(function (k) { return '<br>Scope ' + k + ': ' + f0(c[1][k]); }).join(''); });
+        svg.querySelectorAll('[data-i]').forEach(function (n) { n.addEventListener('click', function () { var mm = String(cols[+n.dataset.i][0]); S.periode = S.periode === mm ? '0' : mm; sync(); render(); }); });
+      }
+      function bungkus(t, n) {
+        var w = t.split(' '), out = [''], i = 0;
+        w.forEach(function (x) { if ((out[i] + ' ' + x).trim().length > n && out[i]) { out.push(''); i++; } out[i] = (out[i] + ' ' + x).trim(); });
+        return out.slice(0, 3);
+      }
+      function top5(a) {
+        var svg = el('gTop'), W = 560, H = 230, tp = 22, bt = 52, rows = Object.keys(a.per).map(function (i) { return { s: D.sumber[+i], v: a.per[i] }; }).sort(function (x, y) { return y.v - x.v; }).slice(0, 5);
+        var mx = Math.max.apply(null, rows.map(function (x) { return x.v; }).concat([1])), bw = W / 5, Y = function (v) { return H - bt - v / (mx * 1.12) * (H - tp - bt); }, h = '';
+        h += '<defs>' + [1, 2, 3].map(function (k) { return '<pattern id="p' + k + '" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="#fff"/><rect width="4" height="2.2" fill="' + WARNA[k] + '"/></pattern>'; }).join('') + '</defs>';
+        rows.forEach(function (x, i) {
+          var cx = i * bw + bw / 2, w = bw * 0.42, y = Y(x.v);
+          h += '<rect x="' + (cx - w / 2) + '" y="' + y + '" width="' + w + '" height="' + (Y(0) - y) + '" fill="url(#p' + x.s.scope + ')" stroke="' + WARNA[x.s.scope] + '" stroke-width="1" data-i="' + i + '"/>';
+          h += '<text x="' + cx + '" y="' + (y - 6) + '" ' + FONT + ' font-size="12" fill="#404040" text-anchor="middle">' + f0(x.v) + '</text>';
+          bungkus(x.s.nama, 20).forEach(function (ln, j) { h += '<text x="' + cx + '" y="' + (H - bt + 16 + j * 13) + '" ' + FONT + ' font-size="11.5" fill="#404040" text-anchor="middle">' + ln + '</text>'; });
+        });
+        if (!rows.length) h += '<text x="280" y="110" ' + FONT + ' font-size="13" fill="#777" text-anchor="middle">Tidak ada data untuk pilihan ini</text>';
+        h += '<line x1="6" x2="' + (W - 6) + '" y1="' + Y(0) + '" y2="' + Y(0) + '" stroke="#bfbfbf"/>';
+        svg.innerHTML = h;
+        hover(svg, '[data-i]', function (n) { var x = rows[+n.dataset.i]; return '<b>' + x.s.nama + '</b><br>' + f0(x.v) + ' t CO₂e<br>Scope ' + x.s.scope + ', ' + x.s.unit; });
+      }
+      function intensitas() {
+        var svg = el('gInt'), W = 300, H = 200, l = 34, r = 10, tp = 12, bt = 24, pts = [], mn = 9, mx = 0;
+        if (S.unit === 'Rantai pasok') { svg.innerHTML = '<text x="150" y="100" ' + FONT + ' font-size="12" fill="#777" text-anchor="middle">Hanya untuk Scope 1 dan 2</text>'; return; }
+        for (var m = 1; m <= 12; m++) { var j = jumlah(S.tahun, [m], false), p = prod(S.tahun, [m]), v = (j[1] + j[2]) / p.cpo; pts.push([m, v]); mn = Math.min(mn, v); mx = Math.max(mx, v); }
+        var y0 = Math.floor(mn * 20) / 20, y1 = Math.ceil(mx * 20) / 20; if (y1 - y0 < 0.1) { y0 = Math.max(0, y0 - 0.05); y1 += 0.05; }
+        var X = function (i) { return l + i / 11 * (W - l - r); }, Y = function (v) { return H - bt - (v - y0) / (y1 - y0) * (H - tp - bt); }, h = '', bln = bulanDipilih();
+        for (var k = 0; k <= 4; k++) { var vv = y0 + k * (y1 - y0) / 4; h += '<line x1="' + l + '" x2="' + (W - r) + '" y1="' + Y(vv) + '" y2="' + Y(vv) + '" stroke="#e7e6e6"/><text x="' + (l - 4) + '" y="' + (Y(vv) + 4) + '" ' + FONT + ' font-size="10.5" fill="#595959" text-anchor="end">' + fd(vv, 2) + '</text>'; }
+        h += '<polyline points="' + pts.map(function (p, i) { return X(i) + ',' + Y(p[1]); }).join(' ') + '" fill="none" stroke="#3B5A6B" stroke-width="2.25"/>';
+        pts.forEach(function (p, i) {
+          var on = bln.indexOf(p[0]) >= 0;
+          h += '<circle cx="' + X(i) + '" cy="' + Y(p[1]) + '" r="' + (on ? 4 : 3) + '" fill="' + (on ? '#3B5A6B' : '#fff') + '" stroke="#3B5A6B" stroke-width="1.5"/>';
+          if (i % 2 === 0) h += '<text x="' + X(i) + '" y="' + (H - 7) + '" ' + FONT + ' font-size="10.5" fill="#595959" text-anchor="middle">' + BLN[p[0] - 1] + '</text>';
+          h += '<rect x="' + (X(i) - 11) + '" y="' + tp + '" width="22" height="' + (H - tp - bt) + '" fill="transparent" data-i="' + i + '"/>';
+        });
+        svg.innerHTML = h;
+        hover(svg, '[data-i]', function (n) { var p = pts[+n.dataset.i]; return '<b>' + BLN_P[p[0] - 1] + ' ' + S.tahun + '</b><br>' + fd(p[1], 3) + ' t CO₂e per ton CPO'; });
+      }
+
+      function sync() {
+        el('sTahun').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', +b.dataset.v === S.tahun); });
+        el('sPeriode').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === S.periode); });
+        el('sUnit').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.dataset.v === S.unit); });
+        el('sScope').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', S.scope[b.dataset.v]); });
+      }
+      el('sTahun').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { S.tahun = +b.dataset.v; sync(); render(); }); });
+      el('sPeriode').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { S.periode = b.dataset.v; sync(); render(); }); });
+      el('sUnit').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { S.unit = S.unit === b.dataset.v ? '' : b.dataset.v; sync(); render(); }); });
+      el('sScope').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { S.scope[b.dataset.v] = !S.scope[b.dataset.v]; sync(); render(); }); });
+      el('rPeriode').addEventListener('click', function () { S.periode = '0'; sync(); render(); });
+      el('rUnit').addEventListener('click', function () { S.unit = ''; sync(); render(); });
+      fetch('assets/data/esg-dashboard.json').then(function (r) { return r.json(); }).then(function (d) { D = d; render(); });
+    })();
+  </script>
+</body>
+</html>

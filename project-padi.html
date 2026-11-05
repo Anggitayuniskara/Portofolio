@@ -56,7 +56,32 @@
       .wm-legend { font-size: 10px; padding: 6px 8px; max-width: 140px; }
       .time-label { min-width: 0; width: 100%; }
     }
+
+    /* Kontrol peta bergaya kartografi: kotak datar bergaris tipis, tanpa bayangan dan sudut bulat */
+    .wm-panel, .wm-legend, .legenda { border-radius: 0 !important; box-shadow: none !important; border: 1px solid #8f978f !important; font-family: "Segoe UI", Arial, sans-serif !important; }
+    .wm-panel header { font-weight: 600; font-size: 12px; padding: 6px 9px !important; border-bottom: 1px solid #d5d8d2 !important; }
+    .wm-panel header .caret { font-size: 10px; color: #555; margin-left: 10px; }
+    .wm-group { text-transform: none !important; letter-spacing: 0 !important; font-size: 11.5px !important; font-weight: 600; color: #3b4540 !important; margin: 8px 0 3px !important; padding-top: 6px; border-top: 1px solid #e3e5df; }
+    .wm-body > .wm-group:first-child { border-top: 0; padding-top: 0; margin-top: 0 !important; }
+    .wm-legend i { border-radius: 0 !important; }
+    .wm-legend b, .wm-legend h4 { font-weight: 600; }
+    .leaflet-popup-content-wrapper { border-radius: 2px !important; box-shadow: 0 1px 3px rgba(0,0,0,.35) !important; }
+    .leaflet-popup-tip { box-shadow: none !important; }
+    .leaflet-bar, .leaflet-bar a { border-radius: 0 !important; }
+    .leaflet-touch .leaflet-bar { border: 1px solid #8f978f !important; box-shadow: none !important; }
+    .time-bar button, .jump-bar button, .preset button, .seg button { border-radius: 2px !important; border: 1px solid #142720 !important; background: #fff; color: #142720; font-weight: 600; }
+    .time-bar button:hover, .jump-bar button:hover, .preset button:hover { background: #e9ebe3 !important; }
+    .seg { border-radius: 2px !important; border: 0 !important; gap: 0; }
+    .seg button + button { border-left: 0 !important; }
+    .seg button.on { background: #142720 !important; color: #fff !important; }
+    .app { border-radius: 0 !important; background: #fff !important; }
+    .out-row div, .hg { border-radius: 0 !important; }
+    .swipe-handle { border-radius: 2px !important; box-shadow: 0 0 0 1px #142720 !important; }
+    .swipe-tag { border-radius: 0 !important; }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -363,11 +388,11 @@
         options: { position: 'topright' },
         onAdd: function () {
           var div = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
-          var html = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Layer</div>';
+          var html = '<header>Lapisan peta <span class="caret">▼</span></header><div class="wm-body"><div class="wm-group">Lapisan</div>';
           Object.keys(LAYERS).forEach(function (k) {
             html += '<div class="wm-row"><label><input type="radio" name="wm-layer" value="' + k + '"' + (k === active ? ' checked' : '') + '>' + LAYERS[k].name + '</label></div>';
           });
-          html += '<div class="wm-group">Basemap</div>';
+          html += '<div class="wm-group">Peta dasar</div>';
           Object.keys(basemaps).forEach(function (k, i) {
             html += '<div class="wm-row"><label><input type="radio" name="wm-base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label></div>';
           });

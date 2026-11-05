@@ -19,8 +19,7 @@
     .stat-row div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
     .stat-row strong { display: block; font-size: 1.35rem; }
     .stat-row span { font-size: 0.85rem; color: #6b7280; }
-    .lanjutan { border: 1px solid var(--line); border-left: 4px solid #163a2e; border-radius: 8px; padding: 12px 16px; background: #f3f5f2; margin: 0 0 24px; }
-    .post-content .lanjutan p { margin: 0; font-size: 0.92rem; }
+    .lanjutan, .post-content p.lanjutan { font-style: italic; color: #4b5563; margin: 0 0 24px; }
     #mrkMap { width: 100%; height: 600px; border-radius: 12px; border: 1px solid var(--line); background: #0b1726; }
     .post-content #mrkMap img { border: 0; border-radius: 0; margin: 0; max-width: none; }
     .leaflet-image-layer.pix { image-rendering: pixelated; }
@@ -47,7 +46,32 @@
       .time-label { min-width: 0; width: 100%; }
       .wm-legend { font-size: 10px; }
     }
+
+    /* Kontrol peta bergaya kartografi: kotak datar bergaris tipis, tanpa bayangan dan sudut bulat */
+    .wm-panel, .wm-legend, .legenda { border-radius: 0 !important; box-shadow: none !important; border: 1px solid #8f978f !important; font-family: "Segoe UI", Arial, sans-serif !important; }
+    .wm-panel header { font-weight: 600; font-size: 12px; padding: 6px 9px !important; border-bottom: 1px solid #d5d8d2 !important; }
+    .wm-panel header .caret { font-size: 10px; color: #555; margin-left: 10px; }
+    .wm-group { text-transform: none !important; letter-spacing: 0 !important; font-size: 11.5px !important; font-weight: 600; color: #3b4540 !important; margin: 8px 0 3px !important; padding-top: 6px; border-top: 1px solid #e3e5df; }
+    .wm-body > .wm-group:first-child { border-top: 0; padding-top: 0; margin-top: 0 !important; }
+    .wm-legend i { border-radius: 0 !important; }
+    .wm-legend b, .wm-legend h4 { font-weight: 600; }
+    .leaflet-popup-content-wrapper { border-radius: 2px !important; box-shadow: 0 1px 3px rgba(0,0,0,.35) !important; }
+    .leaflet-popup-tip { box-shadow: none !important; }
+    .leaflet-bar, .leaflet-bar a { border-radius: 0 !important; }
+    .leaflet-touch .leaflet-bar { border: 1px solid #8f978f !important; box-shadow: none !important; }
+    .time-bar button, .jump-bar button, .preset button, .seg button { border-radius: 2px !important; border: 1px solid #142720 !important; background: #fff; color: #142720; font-weight: 600; }
+    .time-bar button:hover, .jump-bar button:hover, .preset button:hover { background: #e9ebe3 !important; }
+    .seg { border-radius: 2px !important; border: 0 !important; gap: 0; }
+    .seg button + button { border-left: 0 !important; }
+    .seg button.on { background: #142720 !important; color: #fff !important; }
+    .app { border-radius: 0 !important; background: #fff !important; }
+    .out-row div, .hg { border-radius: 0 !important; }
+    .swipe-handle { border-radius: 2px !important; box-shadow: 0 0 0 1px #142720 !important; }
+    .swipe-tag { border-radius: 0 !important; }
   </style>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 </head>
 <body>
 
@@ -68,7 +92,7 @@
 
     <article class="post-content">
 
-      <div class="lanjutan"><p><i class="fa-solid fa-link"></i> Project ini berangkat dari temuan di project <a href="project-fire.html">Kebakaran Hutan dan Lahan 2026</a>, yang menunjukkan bahwa sebagian besar lahan terbakar di Papua bagian selatan berada di blok-blok yang baru dibuka.</p></div>
+      <p class="lanjutan">Project ini berangkat dari temuan di project <a href="project-fire.html">Kebakaran Hutan dan Lahan 2026</a>, yang menunjukkan bahwa sebagian besar lahan terbakar di Papua bagian selatan berada di blok-blok yang baru dibuka.</p>
 
       <h2>Latar belakang</h2>
       <p>Kabupaten Merauke di Papua Selatan dikenal dengan bentang alamnya yang khas, berupa hutan dataran rendah, savana, dan rawa yang sangat luas. Sejak 2024, wilayah ini menjadi lokasi Proyek Strategis Nasional pangan dan energi, yang mencakup perkebunan tebu dan pencetakan sawah baru dalam skala ratusan ribu hektare. Rencana sebesar ini memunculkan pertanyaan yang wajar. Seberapa cepat lahan sebenarnya dibuka, dan ekosistem apa yang digantikan?</p>
@@ -128,7 +152,7 @@
       <figure class="chart-figure">
         <div id="mrkMap" role="region" aria-label="Peta interaktif pembukaan lahan di Kabupaten Merauke per triwulan 2023 sampai 2026"></div>
         <div class="time-bar">
-          <button type="button" id="playBtn"><i class="fa-solid fa-play"></i> Putar</button>
+          <button type="button" id="playBtn">▶ Putar</button>
           <input type="range" id="qSlider" min="1" max="12" value="12" aria-label="Pilih triwulan">
           <div class="time-label" id="qLabel">Juli–Oktober 2026</div>
         </div>
@@ -196,6 +220,8 @@
       <h2>Kesimpulan</h2>
       <p>Citra satelit memperlihatkan bahwa pembukaan lahan di Merauke berlangsung sangat cepat dan terus bertambah. Dalam waktu kurang dari empat tahun, sekitar 45.800 hektare lahan telah dibuka, dan lebih dari 60% di antaranya terjadi hanya dalam sepuluh bulan pertama 2026. Berbeda dari gambaran Merauke sebagai hamparan savana dan rawa, hampir 90% lahan yang dibuka sebelumnya berupa hutan. Sebagian besar pembukaan memang berada di APL atau di areal yang sudah dilepaskan dari kawasan hutan, sehingga secara status boleh dibuka. Namun ratusan hektare di hutan lindung dan hutan produksi tetap perlu diverifikasi.</p>
       <p>Meski begitu, resolusi 30 m dan ambang indeks yang dipakai bisa melewatkan pembukaan kecil, dan lahan yang dibuka lalu cepat ditanami bisa jadi tidak sempat terlihat terbuka pada komposit mana pun. Sebaliknya, rawa yang mengering di musim kemarau masih bisa terhitung sebagai pembukaan, seperti yang terlihat di Pulau Kimaam. Awan pada musim hujan membuat waktu pembukaan cenderung bergeser ke triwulan kemarau, dan data 2026 baru mencakup sampai Oktober. Karena itu, angka 45.800 hektare lebih tepat dibaca sebagai batas bawah. Pembukaan juga masih terus bertambah setiap triwulan, sehingga pemantauannya perlu dilanjutkan dengan citra radar Sentinel-1 yang tidak terhalang awan, lalu dicocokkan dengan peta hak guna usaha untuk mengetahui perusahaan mana yang membuka setiap blok.</p>
+
+      <p class="lanjutan">Berapa banyak karbon yang hilang dari pembukaan ini dihitung dengan data LiDAR GEDI di project <a href="project-karbon-merauke.html">Karbon Hutan yang Hilang dari Pembukaan Lahan Food Estate Merauke</a>.</p>
 
       <a class="post-back" href="index.html#proyek">← View other projects</a>
     </article>
@@ -284,11 +310,11 @@
         L.geoJSON(g, { style: { color: '#ffffff', weight: 2, dashArray: '6 4', fill: false }, interactive: false }).addTo(map);
       });
 
-      function stop() { if (timer) { clearInterval(timer); timer = null; } playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Putar'; }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } playBtn.innerHTML = '▶ Putar'; }
       playBtn.addEventListener('click', function () {
         if (timer) { stop(); return; }
         var q = +slider.value >= 12 ? 1 : +slider.value; draw(q);
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Jeda';
+        playBtn.innerHTML = '❚❚ Jeda';
         timer = setInterval(function () { if (+slider.value >= 12) { stop(); return; } draw(+slider.value + 1); }, 900);
       });
       slider.addEventListener('input', function () { stop(); draw(+slider.value); });
@@ -297,7 +323,7 @@
         options: { position: 'topright' },
         onAdd: function () {
           var d = L.DomUtil.create('div', 'wm-panel' + (window.innerWidth < 600 ? ' collapsed' : ''));
-          var h = '<header>Layers <i class="fa-solid fa-layer-group"></i></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
+          var h = '<header>Lapisan peta <span class="caret">▼</span></header><div class="wm-body"><div class="wm-group">Lapisan</div>' +
             '<label><input type="checkbox" data-k="buka" checked>Pembukaan lahan</label><label><input type="checkbox" data-k="ppkh" checked>Areal PPKH</label><div class="wm-group">Citra latar</div>';
           Object.keys(bases).forEach(function (k, i) { h += '<label><input type="radio" name="base" value="' + k + '"' + (i === 0 ? ' checked' : '') + '>' + k + '</label>'; });
           d.innerHTML = h + '</div>';

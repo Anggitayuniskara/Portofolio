@@ -793,8 +793,12 @@ body {
 }
 
 @media (max-width: 900px) {
-  .projects-grid { grid-template-columns: repeat(3, 3fr);
-    max-width: none;}
+  .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px; max-width: none;}
+}
+
+@media (max-width: 560px) {
+  .projects-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---------- CONTACT ---------- */
@@ -2106,3 +2110,104 @@ footer.footer .footer-copy {
 
 .map-postgis-figure #map { position: relative; z-index: 0; isolation: isolate; }
 .nav { position: sticky; top: 0; z-index: 2000; }
+/* Halaman project tidak punya tombol menu, jadi tautan kembali tetap tampil di layar sempit */
+@media (max-width: 800px) {
+  .nav:not(:has(.nav-toggle)) { gap: 12px; }
+  .nav:not(:has(.nav-toggle)) .nav-links {
+    position: static; width: auto; padding: 0; background: none; border-radius: 0; box-shadow: none;
+    opacity: 1; visibility: visible; transform: none; flex-shrink: 0;
+  }
+  .nav:not(:has(.nav-toggle)) .nav-links a { padding: 0; font-size: .9rem; white-space: nowrap; }
+  .nav:not(:has(.nav-toggle)) .nav-links a:hover { background: none; }
+}
+@media (max-width: 460px) {
+  .nav:not(:has(.nav-toggle)) .nav-mark { font-size: .88rem; }
+  .nav:not(:has(.nav-toggle)) .nav-links a { font-size: .82rem; }
+}
+
+/* Penanda kartu project yang baru saja dibuka */
+.project-card { transition: outline-color .8s ease; outline: 2px solid transparent; outline-offset: 4px; }
+.project-card.baru-dibuka { outline-color: var(--ochre); }
+
+/* Baris keterangan saringan kategori project */
+.filter-line { margin: 0 0 18px; font-size: .95rem; color: var(--ink); }
+.filter-line button { font: inherit; background: none; border: 0; padding: 0; margin-left: 6px; color: var(--ochre); text-decoration: underline; cursor: pointer; }
+
+/* Kotak tools diperkecil supaya 33 tool tidak menumpuk terlalu panjang ke bawah */
+.tools-grid { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; }
+.tool-item { padding: 10px 6px 8px; }
+.tool-logo, .tool-logo span { width: 30px; height: 30px; }
+.tool-logo { margin-bottom: 6px; }
+.tool-logo span { font-size: .7rem; }
+.tool-logo.fa-logo i { font-size: 28px; }
+.tool-item p { font-size: .72rem; }
+
+/* Tools dikelompokkan per baris kategori, bukan kotak-kotak, supaya bagian About muat satu layar */
+.tool-rows { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.tool-row { display: grid; grid-template-columns: 190px 1fr; gap: 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.tool-row h4 { margin: 0; font-size: .82rem; font-weight: 600; color: var(--ink); }
+.tool-row ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.tool-row li { display: inline-flex; align-items: center; gap: 7px; font-size: .86rem; color: #33423C; }
+.tool-row .tool-logo { width: 18px; height: 18px; margin: 0; flex-shrink: 0; }
+.tool-row .tool-logo span { width: 18px; height: 18px; font-size: .5rem; }
+.tool-row .tool-logo.fa-logo i { font-size: 17px; }
+@media (max-width: 640px) {
+  .tool-row { grid-template-columns: 1fr; gap: 6px; }
+}
+#tentang { padding-top: 36px; }
+#tentang .tools-block { margin-top: 26px; }
+#tentang .tools-block h3 { margin-bottom: 8px; }
+/* Judul bagian tidak tertutup menu atas saat diklik dari navigasi */
+html { scroll-padding-top: 76px; }
+
+/* Tombol kedua di hero */
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn-line { background: transparent; color: var(--ink); border: 1px solid var(--ink); padding: 11px 23px; }
+.btn-line:hover { background: var(--ink); color: var(--paper); }
+
+/* Featured projects: lima project utama sebelum daftar lengkap */
+.feat-head { border-bottom: 2px solid var(--ink); padding-bottom: 6px; margin: 0 0 14px; }
+.feat-head h3 { margin: 0; font-size: 1.15rem; }
+.feat-head-all { margin-top: 40px; }
+.feat-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 16px; }
+.feat-card { display: flex; text-decoration: none; color: inherit; background: #fff; border: 1px solid var(--line); transition: border-color .2s ease; }
+.feat-card:hover { border-color: var(--ochre); }
+.feat-big { flex-direction: column; }
+.feat-big .feat-thumb { aspect-ratio: 2 / 1; }
+.feat-thumb { overflow: hidden; background: var(--line); }
+.feat-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.feat-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 5px; }
+.feat-cat { font-size: .78rem; color: var(--slate); }
+.feat-card h4 { margin: 0; font-size: 1.02rem; line-height: 1.35; color: var(--ink); }
+.feat-big h4 { font-size: 1.15rem; }
+.feat-card p { margin: 0; font-size: .86rem; line-height: 1.5; color: #3A4A43; }
+.feat-tools { font-size: .78rem; color: var(--ochre); margin-top: 4px; }
+.feat-list { display: grid; gap: 12px; grid-auto-rows: 1fr; }
+.feat-small .feat-thumb { flex: 0 0 150px; }
+.feat-small .feat-body { padding: 10px 14px; }
+.feat-small h4 { font-size: .95rem; }
+.feat-small p { font-size: .8rem; }
+@media (max-width: 900px) {
+  .feat-grid { grid-template-columns: 1fr; }
+  .feat-small .feat-thumb { flex-basis: 110px; }
+}
+@media (max-width: 480px) {
+  .feat-small .feat-thumb { flex-basis: 86px; }
+  .feat-small p { display: none; }
+}
+/* Kartu featured mengikuti sudut membulat kartu project lain */
+.feat-card { border-radius: 12px; overflow: hidden; transition: border-color .2s ease, transform .25s ease; }
+.feat-card:hover { transform: translateY(-3px); }
+
+/* Ajakan ke daftar lengkap dan baris kategori */
+.feat-head:has(.all-link) { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.all-link { font-size: .9rem; font-weight: 600; color: var(--ochre); text-decoration: none; white-space: nowrap; }
+.all-link:hover { text-decoration: underline; }
+.cat-row { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: baseline; margin: -4px 0 18px; font-size: .88rem; }
+.cat-row span { color: var(--slate); margin-right: 4px; }
+.cat-row a { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; }
+.cat-row a:hover { border-bottom-color: var(--ochre); }
+.cat-row a.on { color: var(--ochre); font-weight: 600; border-bottom-color: var(--ochre); }
+
+/* Hard dan soft skills rata kanan kiri supaya kedua kolom sama rapi */
+.skills-grid-2 .skill-item p { text-align: justify; }
