@@ -2211,3 +2211,13 @@ html { scroll-padding-top: 76px; }
 
 /* Hard dan soft skills rata kanan kiri supaya kedua kolom sama rapi */
 .skills-grid-2 .skill-item p { text-align: justify; }
+
+/* Paragraf About rata kanan kiri seperti hard dan soft skills */
+#tentang .section-text, #tentang .section-text p { text-align: justify; }
+
+/* Tombol hero di HP: View projects penuh di atas, dua tombol lain sama lebar di bawahnya */
+@media (max-width: 600px) {
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+  .hero-actions .btn { text-align: center; padding-left: 8px; padding-right: 8px; }
+  .hero-actions .btn:first-child { grid-column: 1 / -1; }
+}
